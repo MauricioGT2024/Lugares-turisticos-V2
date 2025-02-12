@@ -1,84 +1,150 @@
-import PropTypes from "prop-types";
 import { useState } from "react";
-import { hospedajes } from "../../data/hospedajes";
 import {
   Box,
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  Collapse,
-  Divider,
-  Heading,
   Image,
-  SimpleGrid,
-  Stack,
+  Heading,
   Text,
+  Button,
+  Collapse,
+  useColorMode,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { hospedajes } from "../../data/hospedajes";
 
-const Hospedaje = () => {
-  const [showMap, setShowMap] = useState(null);
+const MotionBox = motion(Box);
+const MotionImage = motion(Image);
+
+const AnimatedCard = ({
+  image,
+  title,
+  description,
+  onToggle,
+  showCollapse,
+}) => {
+  const { colorMode } = useColorMode();
+  const textColor = colorMode === "light" ? "gray.800" : "whiteAlpha.900";
 
   return (
-    <>
-      <SimpleGrid columns={3} gap={8}>
-        {hospedajes.map((loc, index) => {
-          const { image, title, description, location, iframe } = loc;
-          return (
-            <Card key={index} maxW="sm">
-              <CardBody>
-                <Image src={image} alt={title} borderRadius="lg" boxSize="100%" objectFit="cover" height="400px"/>
-                <div className="hospedaje-card__location">{location}</div>
-                <Stack mt="6" spacing="3">
-                  <Heading size="md">{title}</Heading>
-                  <Text>{description}</Text>
-                </Stack>
-              </CardBody>
-              <Divider />
-              <CardFooter>
-                <ButtonGroup spacing="2">
-                  <Button
-                    className="hospedaje-card__map-button"
-                    onClick={() =>
-                      setShowMap(showMap === index ? null : index)
-                    }
-                  >
-                    {showMap === index ? "🗺️ Ocultar Mapa" : "🗺️ Ver Ubicación"}
-                  </Button>
-                </ButtonGroup>
-              </CardFooter>
-              <Collapse in={showMap === index} animateOpacity>
-                <Box
-                  className={`hospedaje-card__map ${
-                    showMap === index ? "show" : ""
-                  }`}
-                  mt={4}
-                >
-                  <iframe
-                    src={iframe}
-                    title={`Mapa de ${title}`}
-                    loading="lazy"
-                    allowFullScreen
-                    width="100%"
-                    height="400px"
-                  />
-                </Box>
-              </Collapse>
-            </Card>
-          );
-        })}
-      </SimpleGrid>
-    </>
+    <MotionBox
+      borderWidth="0px"
+      borderRadius="xl"
+      overflow="hidden"
+      position="relative"
+      display="flex"
+      flexDirection="column"
+      boxShadow="xl"
+      _hover={{
+        transform: "scale(1.05)",
+        boxShadow: "2xl",
+        cursor: "pointer",
+        transition: "all 0.3s ease",
+      }}
+      transition="all 0.3s ease"
+      mb={{ base: 4, md: 6 }}
+    >
+      <Box
+        height={{ base: "200px", md: "300px", lg: "400px" }}
+        width="100%"
+        position="relative"
+        overflow="hidden"
+      >
+        <MotionImage
+          src={image}
+          alt={title}
+          objectFit="cover"
+          height="100%"
+          width="100%"
+          initial={{ opacity: 0.8 }}
+          whileHover={{ opacity: 1 }}
+          transition="all 0.3s ease"
+        />
+      </Box>
+
+      <Box
+        position="absolute"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+        textAlign="center"
+        color={textColor}
+        width="100%"
+      >
+        <Heading
+          size="md"
+          fontWeight="bold"
+          mb={2}
+          fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+        >
+          {title}
+        </Heading>
+        <Text mb={3} fontSize={{ base: "sm", md: "md", lg: "lg" }}>
+          {description}
+        </Text>
+        <Button
+          colorScheme="teal"
+          onClick={onToggle}
+          size="sm"
+          fontSize={{ base: "xs", md: "sm", lg: "md" }}
+          variant="solid"
+        >
+          {showCollapse ? "Ocultar Mapa" : "Ver Mapa"}
+        </Button>
+      </Box>
+    </MotionBox>
   );
 };
 
-Hospedaje.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  location: PropTypes.string.isRequired,
-  image: PropTypes.string.isRequired,
-  iframe: PropTypes.string.isRequired,
+const CardContainer = () => {
+  const [collapseStates, setCollapseStates] = useState(
+    new Array(hospedajes.length).fill(false)
+  );
+
+  const toggleCollapse = (index) => {
+    setCollapseStates((prevStates) =>
+      prevStates.map((state, idx) => (idx === index ? !state : state))
+    );
+  };
+
+  return (
+    <Box
+      display="grid"
+      gridTemplateColumns={{
+        base: "1fr",
+        md: "repeat(2, 1fr)",
+        lg: "repeat(3, 1fr)",
+      }}
+      gap={6}
+      mt={10}
+      mx="auto"
+      maxWidth="1200px"
+      px={{ base: 4, md: 4 }}
+    >
+      {hospedajes.map((card, index) => (
+        <Box key={index}>
+          <AnimatedCard
+            image={card.image}
+            title={card.title}
+            description={card.description}
+            iframe={card.iframe}
+            onToggle={() => toggleCollapse(index)}
+            showCollapse={collapseStates[index]}
+          />
+          <Collapse in={collapseStates[index]} animateOpacity>
+            <Box p="1rem" mt="4" bg="gray.50" rounded="md" shadow="md">
+              <iframe
+                src={card.iframe}
+                width="100%"
+                height="300"
+                style={{ border: "none" }}
+                loading="lazy"
+                title={`Mapa de ${card.title}`}
+              />
+            </Box>
+          </Collapse>
+        </Box>
+      ))}
+    </Box>
+  );
 };
 
-export default Hospedaje;
+export default CardContainer;

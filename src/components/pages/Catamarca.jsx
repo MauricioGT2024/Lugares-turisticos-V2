@@ -1,108 +1,129 @@
 import {
-  Card,
-  Stack,
-  Image,
-  Heading,
-  Text,
-  Divider,
+  Box,
   Button,
-  Link as ChakraLink,
-  ButtonGroup,
+  Card,
   CardBody,
-  CardFooter,
+  Heading,
+  HStack,
+  Image,
   SimpleGrid,
+  SlideFade,
+  Tag,
+  Text,
+  useColorMode,
 } from "@chakra-ui/react";
-import PropTypes from "prop-types";
-import { CSSTransition } from "react-transition-group";
-import { locations } from '../../data/catamarca'
-import { useState } from "react"; // Importamos useState para manejar el estado del mapa
+import { motion } from "framer-motion";
+import { useState } from "react";
+import { locations } from "../../data/catamarca";
 
-const LocationCard = ({ location }) => {
-  const [isMapVisible, setIsMapVisible] = useState(true); // Estado para mostrar/ocultar el mapa
+const MotionBox = motion(Box);
+const MotionImage = motion(Image);
 
-  // Función para ocultar el mapa
-  const toggleMapVisibility = () => {
-    setIsMapVisible((prev) => !prev); // Cambiar el estado entre true y false
+const Catamarca = () => {
+  const { colorMode } = useColorMode();
+  const textColor = colorMode === "light" ? "gray.800" : "whiteAlpha.900";
+  const [openStates, setOpenStates] = useState(
+    locations.map(() => false)
+  );
+
+  const handleToggle = (index) => {
+    const newOpenStates = [...openStates];
+    newOpenStates[index] = !newOpenStates[index];
+    setOpenStates(newOpenStates);
   };
 
   return (
-    <Card maxW="sm" width="100%" height="auto" overflow="hidden">
-      <CardBody p={0} display="flex" flexDirection="column" justifyContent="space-between">
-        {/* Imagen que cubre todo el espacio disponible sin distorsionarse */}
-        <div style={{ width: '100%', height: '200px', overflow: 'hidden' }}>
-          <Image
-            src={location.imgSrc}
-            alt={location.title}
-            borderRadius="lg"
-            width="100%"
-            height="100%"
-            objectFit="cover"  // Asegura que la imagen se ajuste sin distorsionarse
-            loading="lazy"
-          />
-        </div>
-        
-        <Stack mt="6" spacing="3" padding="1rem">
-          <Heading size="md">{location.title}</Heading>
-          <Text>{location.description}</Text>
-        </Stack>
-      </CardBody>
+    <>
+      <SimpleGrid columns={{ sm: 1, md: 2, lg: 4 }} gap={10} margin={6}>
+        {locations.map((loc, index) => (
+          <Card
+            key={index}
+            maxW="sm"
+            borderRadius="xl"
+            overflow="hidden"
+            boxShadow="lg"
+            position="relative"
+            _hover={{
+              transform: "scale(1.05)",
+              boxShadow: "2xl",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            height={openStates[index] ? "auto" : "600px"}
+            transition="height 0.3s ease"
+          >
+            <Box
+              position="relative"
+              height={{ base: "200px", md: "300px", lg: "600px" }}
+              width="100%"
+              overflow="hidden"
+            >
+              <MotionImage
+                src={loc.imgSrc}
+                alt={loc.title}
+                objectFit="cover"
+                height="100%"
+                width="100%"
+                initial={{ opacity: 0.8 }}
+                whileHover={{ opacity: 1 }}
+                transition="all 0.3s ease"
+              />
+              {/* Descripción visible en el hover */}
+              <Box
+                position="absolute"
+                top="50%"
+                left="50%"
+                transform="translate(-50%, -50%)"
+                textAlign="center"
+                color="white"
+                width="100%"
+                opacity={0}
+                _hover={{
+                  opacity: 1,
+                  transition: "opacity 0.3s ease",
+                }}
+              >
+                <Heading
+                  size="md"
+                  fontWeight="bold"
+                  mb={2}
+                  fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}
+                >
+                  {loc.title}
+                </Heading>
+                <Text mb={3} fontSize={{ base: "sm", md: "md", lg: "lg" }}>
+                  {loc.description}
+                </Text>
+                <Button
+                  colorScheme="teal"
+                  size="sm"
+                  onClick={() => handleToggle(index)}
+                  variant="solid"
+                >
+                  {openStates[index] ? "Ocultar Mapa" : "Ver Mapa"}
+                </Button>
+              </Box>
+            </Box>
 
-      <Divider />
-      <CardFooter>
-        <ButtonGroup spacing="2">
-          {/* Botón para ver el mapa */}
-          {isMapVisible && (
-            <ChakraLink href={location.path} isExternal>
-              <Button variant="solid" colorScheme="blue">
-                Visitar Mapa
-              </Button>
-            </ChakraLink>
-          )}
-          
-          {/* Botón para ocultar el mapa */}
-          <Button onClick={toggleMapVisibility} variant="outline" colorScheme="red">
-            {isMapVisible ? "Ocultar Mapa" : "Mostrar Mapa"}
-          </Button>
-        </ButtonGroup>
-      </CardFooter>
+            {/* Cuerpo del card con información adicional */}
+            <CardBody>
+              <HStack mt="5" spacing="3">
+                <Tag textColor="black" variant="outline">
+                  {loc.lugar}
+                </Tag>
+              </HStack>
 
-      {/* Mostrar el mapa solo si isMapVisible es true */}
-      {isMapVisible && (
-        <div style={{ padding: "1rem" }}>
-          <iframe
-            src={location.mapSrc}
-            width="100%"
-            height="300"
-            style={{ border: "none" }}
-            loading="lazy"
-          ></iframe>
-        </div>
-      )}
-    </Card>
-  );
-};
-
-LocationCard.propTypes = {
-  location: PropTypes.shape({
-    imgSrc: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    mapSrc: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired
-  }).isRequired,
-};
-
-const Catamarca = () => {
-  return (
-    <div className="catamarca-details">
-      <SimpleGrid columns={3} gap={7}>
-        {locations.map((location, index) => (
-          <CSSTransition key={index} timeout={500} classNames="card" appear={true}>
-            <LocationCard location={location} />
-          </CSSTransition>
+              {/* SlideFade para mostrar el iframe */}
+              <SlideFade in={openStates[index]} unmountOnExit>
+                <Box>
+                  <iframe width="270px" src={loc.mapSrc}></iframe>
+                </Box>
+              </SlideFade>
+            </CardBody>
+          </Card>
         ))}
       </SimpleGrid>
-    </div>
+    </>
   );
 };
 

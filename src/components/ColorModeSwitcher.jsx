@@ -11,7 +11,7 @@ const ColorModeSwitcher = () => {
       aria-label="Toggle color mode"
       onClick={toggleColorMode}
       variant="outline"
-      colorScheme="teal"
+      colorScheme="green"
       ml={2}
     />
   );

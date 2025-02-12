@@ -28,13 +28,6 @@ export const hospedajes = [
     iframe: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3522.048934772148!2d-67.60029222503097!3d-28.022980140505496!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95a32951a0389295%3A0xd82f57e34fc47d93!2sEl%20Zorro%20Gris!5e0!3m2!1ses-419!2sar!4v1728574509814!5m2!1ses-419!2sar"
   },
   {
-    title: "Hospedaje Las Termas",
-    description: "Alojamiento con acceso a aguas termales.",
-    location: "Fiambalá",
-    image: "/img/Hospedaje/Hospedaje Las Termas.webp",
-    iframe: "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.864111568023!2d-67.62005602504607!3d-27.69059452615323!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x969e30f162b7c3bf%3A0xc0fae64d7300a261!2sHospedaje%20Las%20Termas!5e0!3m2!1ses-419!2sar!4v1728574549820!5m2!1ses-419!2sar"
-  },
-  {
     title: "Tejada Hotel",
     description: "Hotel con servicios completos en un ambiente tranquilo.",
     location: "Tinogasta",

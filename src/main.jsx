@@ -17,5 +17,4 @@ createRoot(document.getElementById("root")).render(
     <CSSReset />
     <App />
   </ChakraProvider>,
-  document.getElementById("root")
 );

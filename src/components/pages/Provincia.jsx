@@ -19,7 +19,7 @@ import { SimpleGrid } from "@chakra-ui/react";
 const Provincia = () => {
   return (
     <>
-      <SimpleGrid columns={4} gap={7}>
+      <SimpleGrid columns={4} gap={7} mt={7}>
         {departamentos.map((loc, index) => (
           <Card key={index} maxW="sm">
             <CardBody>
