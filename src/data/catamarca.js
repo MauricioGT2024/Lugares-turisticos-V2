@@ -1,5 +1,6 @@
 export const locations = [
   {
+    id: 1,
     imgSrc:
       "img/San Fernando Del Valle De Catamarca/Gruta de la Virgen del Valle.webp",
     title: "Gruta de la Virgen del Valle",
@@ -11,6 +12,7 @@ export const locations = [
     lugar: "Catamarca",
   },
   {
+    id: 2,
     imgSrc: "img/San Fernando Del Valle De Catamarca/Dique El Jumeal.webp",
     title: "Dique El Jumeal",
     description:
@@ -21,6 +23,7 @@ export const locations = [
     lugar: "Catamarca",
   },
   {
+    id: 3,
     imgSrc: "img/San Fernando Del Valle De Catamarca/Dique Las Pirquitas.webp",
     title: "Dique Las Pirquitas",
     description:
@@ -31,6 +34,7 @@ export const locations = [
     lugar: "Catamarca",
   },
   {
+    id: 4,
     imgSrc: "img/San Fernando Del Valle De Catamarca/El Rodeo.webp",
     title: "El Rodeo",
     description:
@@ -41,6 +45,7 @@ export const locations = [
     lugar: "Catamarca",
   },
   {
+    id: 5,
     imgSrc:
       "img/San Fernando Del Valle De Catamarca/Catedral Basílica de Nuestra Señora del Valle.webp",
     title: "Catedral Basílica de Nuestra Señora del Valle",
@@ -52,6 +57,7 @@ export const locations = [
     lugar: "Catamarca",
   },
   {
+    id: 6,
     imgSrc:
       "img/San Fernando Del Valle De Catamarca/La Fiesta Nacional e Internacional del Poncho.webp",
     title: "La Fiesta Nacional e Internacional del Poncho",

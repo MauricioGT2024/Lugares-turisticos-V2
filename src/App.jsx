@@ -1,21 +1,48 @@
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import { motion } from 'framer-motion';
-import { Suspense, lazy } from 'react';
+import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import { motion } from "framer-motion";
+import { Suspense, lazy } from "react";
+import Error404 from './pages/Error404'
+import Footer from "./pages/Footer";
 
 function App() {
-  const LazyProvincia = lazy(() => import('./components/pages/Provincia'));
-  const LazyCatamarca = lazy(() => import('./components/pages/Catamarca'));
-  const LazyHospedaje = lazy(() => import('./components/pages/Hospedaje'));
+  const LazyProvincia = lazy(() => import("./pages/Provincia"));
+  const LazyCatamarca = lazy(() => import("./pages/Catamarca"));
+  const LazyHospedaje = lazy(() => import("./pages/Hospedaje"));
+  const LazyHome = lazy(() => import("./pages/Home"));
 
   return (
     <Router>
       <Navbar />
-      <LazyLoading redirectPath="/otra-ruta">
-      </LazyLoading>
-
+      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
+          <Route
+            path="*"
+            element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Error404/>
+              </motion.div>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <LazyHome />
+              </motion.div>
+            }
+          />
           <Route
             path="/provincia"
             element={
@@ -57,10 +84,9 @@ function App() {
           />
         </Routes>
       </Suspense>
+      <Footer/>
     </Router>
   );
 }
 
 export default App;
-
-

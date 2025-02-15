@@ -1,21 +1,33 @@
 // src/components/Navbar.jsx
-import { Box, Flex, Heading, Button, Spacer, Stack, IconButton, useDisclosure, VStack } from '@chakra-ui/react';
-import { Link } from 'react-router-dom'; // Importar Link de react-router-dom
-import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons'; // Íconos para el menú hamburguesa
-import { motion } from 'framer-motion'; // Importar motion de framer-motion
+import { 
+  Box, 
+  Flex, 
+  Heading, 
+  Button, 
+  Spacer, 
+  Stack, 
+  IconButton, 
+  useDisclosure, 
+  VStack, 
+  Image 
+} from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { motion } from 'framer-motion';
 import ColorModeSwitcher from './ColorModeSwitcher';
 
 const Navbar = () => {
   const { isOpen, onToggle } = useDisclosure(); // Hook para manejar el estado del menú
 
   return (
+    <>
     <Box bg="teal.500" p={4}>
       <Flex maxW="1200px" mx="auto" align="center" justify="space-between">
         {/* Logo como enlace a la página de inicio */}
         <Link to="/">
           <Heading color="white" size="md">
-            Mi App
-          </Heading>
+          <Image src='/navbar.png' width="28" alt="Navbar logo" />
+        </Heading>
         </Link>
 
         <Spacer />
@@ -34,7 +46,7 @@ const Navbar = () => {
         <Stack
           direction="row"
           spacing={4}
-          display={{ base: 'none', md: 'flex' }} // Ocultar en pantallas pequeñas
+          display={{ base: 'none', md: 'flex' }}
         >
           <Link to="/">
             <motion.div
@@ -115,7 +127,7 @@ const Navbar = () => {
           </Link>
         </Stack>
 
-        <ColorModeSwitcher /> {/* Botón para alternar el modo de color */}
+        <ColorModeSwitcher />
       </Flex>
 
       {/* Menú desplegable (hamburguesa) para pantallas pequeñas */}
@@ -123,7 +135,7 @@ const Navbar = () => {
         <VStack
           spacing={4}
           align="stretch"
-          display={{ md: 'none' }} // Solo se muestra en pantallas pequeñas
+          display={{ md: 'none' }}
           mt={4}
         >
           <Link to="/">
@@ -185,6 +197,7 @@ const Navbar = () => {
         </VStack>
       )}
     </Box>
+    </>
   );
 };
 

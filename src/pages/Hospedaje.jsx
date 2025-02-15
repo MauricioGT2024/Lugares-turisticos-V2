@@ -9,7 +9,8 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { hospedajes } from "../../data/hospedajes";
+import { hospedajes } from "../data/hospedajes";
+import PropTypes from "prop-types";
 
 const MotionBox = motion(Box);
 const MotionImage = motion(Image);
@@ -94,6 +95,14 @@ const AnimatedCard = ({
   );
 };
 
+
+AnimatedCard.propTypes = {
+  image: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  showCollapse: PropTypes.bool.isRequired,
+};
 const CardContainer = () => {
   const [collapseStates, setCollapseStates] = useState(
     new Array(hospedajes.length).fill(false)
