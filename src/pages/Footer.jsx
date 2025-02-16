@@ -17,6 +17,7 @@ import {
   FaInstagram,
   FaLinkedin,
   FaGithub,
+  FaDiscord,
 } from "react-icons/fa";
 
 const Footer = () => {
@@ -110,9 +111,9 @@ const Footer = () => {
                   _hover={{ color: "blue.500" }}
                 />
               </Link>
-              <Link href="https://twitter.com/creator" isExternal>
+              <Link href="https://discord.com/channels/@mauricio0392" isExternal>
                 <Icon
-                  as={FaTwitter}
+                  as={FaDiscord}
                   w={6}
                   h={6}
                   color={textColor}

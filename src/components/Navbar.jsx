@@ -1,203 +1,102 @@
-// src/components/Navbar.jsx
-import { 
-  Box, 
-  Flex, 
-  Heading, 
-  Button, 
-  Spacer, 
-  Stack, 
-  IconButton, 
-  useDisclosure, 
-  VStack, 
-  Image 
+import PropTypes from 'prop-types';
+import {
+  Box,
+  Flex,
+  Heading,
+  Button,
+  Spacer,
+  Stack,
+  IconButton,
+  useDisclosure,
+  VStack,
+  Image
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { motion } from 'framer-motion';
 import ColorModeSwitcher from './ColorModeSwitcher';
 
+const navItems = [
+  { path: '/', label: 'Inicio' },
+  { path: '/about', label: 'Sobre Nosotros' },
+  { path: '/hospedaje', label: 'Hospedaje' },
+  { path: '/provincia', label: 'Provincia' }
+];
+
+const NavButton = ({ path, label }) => {
+  NavButton.propTypes = {
+    path: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired
+  };
+  
+  return (
+    <Link to={path}>
+      <Button
+        colorScheme="teal"
+        variant="solid"
+        color="white"
+        _hover={{
+          bg: 'teal.600',
+          transform: 'scale(1.05)',
+          transition: 'all 0.2s ease'
+        }}
+        _active={{
+          bg: 'teal.700'
+        }}
+        borderRadius="md"
+        px={6}
+        py={3}
+      >
+        {label}
+      </Button>
+    </Link>
+  );
+
+};
+
 const Navbar = () => {
-  const { isOpen, onToggle } = useDisclosure(); // Hook para manejar el estado del menú
+  const { isOpen, onToggle } = useDisclosure();
 
   return (
-    <>
     <Box bg="teal.500" p={4}>
       <Flex maxW="1200px" mx="auto" align="center" justify="space-between">
-        {/* Logo como enlace a la página de inicio */}
         <Link to="/">
           <Heading color="white" size="md">
-          <Image src='/navbar.png' width="28" alt="Navbar logo" />
-        </Heading>
+            <Image src="/navbar.png" width="28" alt="Navbar logo" />
+          </Heading>
         </Link>
 
         <Spacer />
 
-        {/* Icono del menú hamburguesa para pantallas pequeñas */}
         <IconButton
           icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
           aria-label="Toggle navigation"
           onClick={onToggle}
           colorScheme="teal"
           variant="outline"
-          display={{ md: 'none' }} // Mostrar solo en pantallas pequeñas
+          display={{ md: "none" }}
         />
 
-        {/* Menú de navegación: solo visible en pantallas medianas y grandes */}
         <Stack
           direction="row"
           spacing={4}
-          display={{ base: 'none', md: 'flex' }}
+          display={{ base: "none", md: "flex" }}
         >
-          <Link to="/">
-            <motion.div
-              whileHover={{ scale: 1.1 }} // Efecto de hover: agrandar el botón
-              transition={{ duration: 0.3 }}
-            >
-              <Button
-                colorScheme="teal"
-                variant="solid"
-                color="white"
-                _hover={{
-                  bg: "teal.600",
-                  transform: "scale(1.1)",
-                  transition: "all 0.3s ease",
-                }}
-                _active={{
-                  bg: "teal.700",
-                }}
-                borderRadius="md"
-                px={6}
-                py={3}
-              >
-                Inicio
-              </Button>
-            </motion.div>
-          </Link>
-
-          <Link to="/hospedaje">
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Button
-                colorScheme="teal"
-                variant="solid"
-                color="white"
-                _hover={{
-                  bg: "teal.600",
-                  transform: "scale(1.1)",
-                  transition: "all 0.3s ease",
-                }}
-                _active={{
-                  bg: "teal.700",
-                }}
-                borderRadius="md"
-                px={6}
-                py={3}
-              >
-                Hospedaje
-              </Button>
-            </motion.div>
-          </Link>
-
-          <Link to="/provincia">
-            <motion.div
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Button
-                colorScheme="teal"
-                variant="solid"
-                color="white"
-                _hover={{
-                  bg: "teal.600",
-                  transform: "scale(1.1)",
-                  transition: "all 0.3s ease",
-                }}
-                _active={{
-                  bg: "teal.700",
-                }}
-                borderRadius="md"
-                px={6}
-                py={3}
-              >
-                Provincia
-              </Button>
-            </motion.div>
-          </Link>
+          {navItems.map((item) => (
+            <NavButton key={item.path} {...item} />
+          ))}
         </Stack>
 
         <ColorModeSwitcher />
       </Flex>
 
-      {/* Menú desplegable (hamburguesa) para pantallas pequeñas */}
       {isOpen && (
-        <VStack
-          spacing={4}
-          align="stretch"
-          display={{ md: 'none' }}
-          mt={4}
-        >
-          <Link to="/">
-            <Button
-              colorScheme="teal"
-              variant="solid"
-              color="white"
-              width="full"
-              _hover={{
-                bg: "teal.600",
-              }}
-              _active={{
-                bg: "teal.700",
-              }}
-              px={6}
-              py={3}
-            >
-              Inicio
-            </Button>
-          </Link>
-
-          <Link to="/hospedaje">
-            <Button
-              colorScheme="teal"
-              variant="solid"
-              color="white"
-              width="full"
-              _hover={{
-                bg: "teal.600",
-              }}
-              _active={{
-                bg: "teal.700",
-              }}
-              px={6}
-              py={3}
-            >
-              Hospedaje
-            </Button>
-          </Link>
-
-          <Link to="/provincia">
-            <Button
-              colorScheme="teal"
-              variant="solid"
-              color="white"
-              width="full"
-              _hover={{
-                bg: "teal.600",
-              }}
-              _active={{
-                bg: "teal.700",
-              }}
-              px={6}
-              py={3}
-            >
-              Provincia
-            </Button>
-          </Link>
+        <VStack spacing={4} align="stretch" display={{ md: "none" }} mt={4}>
+          {navItems.map((item) => (
+            <NavButton key={item.path} {...item} />
+          ))}
         </VStack>
       )}
     </Box>
-    </>
   );
 };
 

@@ -1,0 +1,23 @@
+.location-card {
+  height: 470px;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+.location-card.expanded {
+  height: auto;
+  
+}
+
+.card-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.map-container {
+  flex-grow: 1;
+  overflow: hidden;
+  max-height: 250px;
+}
