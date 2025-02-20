@@ -8,9 +8,10 @@ import {
   SimpleGrid,
   Text,
   useColorModeValue,
+  Link,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { locations } from "../data/fiambala";
+import { location } from "../data/antofagasta";
 
 const LocationCard = ({ location, isOpen, onToggle }) => {
   const bgColor = useColorModeValue("white", "gray.700");
@@ -44,13 +45,26 @@ const LocationCard = ({ location, isOpen, onToggle }) => {
         <Text mb={3} fontSize="sm">
           {location.description}
         </Text>
-        <Button
-          colorScheme="teal"
-          size="sm"
-          onClick={() => onToggle(location.id)}
-        >
-          {isOpen ? "Ocultar Mapa" : "Mostrar Mapa"}
-        </Button>
+
+        {/* Contenedor flex para los botones */}
+        <Box display="flex" flexDirection="row" gap={4} mt={3}>
+          <Button
+            colorScheme="teal"
+            size="md"
+            onClick={() => onToggle(location.id)}
+          >
+            {isOpen ? "Ocultar Mapa" : "Mostrar Mapa"}
+          </Button>
+
+          <Link
+            href={location.path}
+            isExternal
+            style={{ textDecoration: "none" }}
+          >
+            <Button colorScheme="blue">Ver en Wikipedia</Button>
+          </Link>
+        </Box>
+
         {isOpen && (
           <motion.div
             initial={{ scaleY: 0, opacity: 0 }}
@@ -104,7 +118,7 @@ LocationCard.propTypes = {
   onToggle: PropTypes.func.isRequired,
 };
 
-const Fiambala = () => {
+const Antofagasta = () => {
   const [openLocationId, setOpenLocationId] = useState(null);
 
   const handleToggle = (id) => {
@@ -114,16 +128,18 @@ const Fiambala = () => {
   return (
     <Box p={6}>
       <Heading as="h1" size="xl" mb={6}>
-        Fiambalá
+        Antofagasta De la Sierra
       </Heading>
       <Text mb={6}>
-        Fiambalá es una localidad conocida por sus paisajes desérticos, termas
-        naturales y rica historia cultural.
+        Antofagasta de la Sierra, un tesoro escondido en la provincia de
+        Catamarca, es famoso por su belleza paisajística, su rica biodiversidad
+        y la calidez de su gente.
       </Text>
 
       <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gap={6}>
-        {locations.map((location) => (
+        {location.map((location) => (
           <LocationCard
+            path={location.path}
             key={location.id}
             location={location}
             isOpen={openLocationId === location.id}
@@ -135,4 +151,4 @@ const Fiambala = () => {
   );
 };
 
-export default Fiambala;
+export default Antofagasta;

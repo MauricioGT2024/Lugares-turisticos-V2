@@ -25,6 +25,6 @@ export const departamentos = [
     name: "Antofagasta de la Sierra",
     image: "img/Antofagasta-de-la-Sierra/Capital.webp",
     description: "Descubre los paisajes volcánicos y salares de la Puna",
-    path: "/Antofagasta-De-La-Sierra",
+    path: "/antofagasta",
   },
 ];

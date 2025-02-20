@@ -11,6 +11,7 @@ import {
   Select,
   Text,
   useColorModeValue,
+  Link,
 } from "@chakra-ui/react";
 import { locations } from "../data/catamarca";
 
@@ -32,7 +33,7 @@ const LocationCard = ({ location, expandedId, setExpandedId }) => {
 
   return (
     <Box
-      maxW="sm"
+      maxW="md"
       borderRadius="xl"
       overflow="hidden"
       boxShadow="lg"
@@ -52,20 +53,32 @@ const LocationCard = ({ location, expandedId, setExpandedId }) => {
         />
       </Box>
 
-      <Box p={4} className="card-content">
+      <Box p={4} display="flex" flexDirection="column" height="100%">
         <Heading size="md" mb={2}>
           {location.title}
         </Heading>
         <Text mb={3} fontSize="sm">
           {location.description}
         </Text>
-        <Button
-          colorScheme="teal"
-          size="sm"
-          onClick={() => setExpandedId(isExpanded ? null : location.id)}
-        >
-          {isExpanded ? "Ocultar Mapa" : "Ver Mapa"}
-        </Button>
+
+        {/* Contenedor flex para los botones */}
+        <Box display="flex" flexDirection="row" gap={4} mt={3}>
+          <Button
+            colorScheme="teal"
+            size="md"
+            onClick={() => setExpandedId(isExpanded ? null : location.id)}
+          >
+            {isExpanded ? "Ocultar Mapa" : "Mostrar Mapa"}
+          </Button>
+
+          <Link
+            href={location.wiki}
+            isExternal
+            style={{ textDecoration: "none" }}
+          >
+            <Button colorScheme="blue">Ver en Wikipedia</Button>
+          </Link>
+        </Box>
         {isExpanded && (
           <Box mt={3}>
             <Text fontSize="sm" mb={2}>

@@ -12,14 +12,28 @@ function App() {
   const LazyCatamarca = lazy(() => import("./pages/Catamarca"));
   const LazyHospedaje = lazy(() => import("./pages/Hospedaje"));
   const LazyHome = lazy(() => import("./pages/Home"));
-  const LazyFiambala = lazy(() => import("./pages/Fiambala"))
+  const LazyFiambala = lazy(() => import("./pages/Fiambala"));
+  const LazyAntofagasta = lazy(() => import("./pages/Antofagasta"));
 
   return (
     <Router>
       <Navbar />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
-        <Route
+          <Route
+            path="/antofagasta"
+            element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <LazyAntofagasta />
+              </motion.div>
+            }
+          />
+          <Route
             path="/about"
             element={
               <motion.div
@@ -28,7 +42,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <About/>
+                <About />
               </motion.div>
             }
           />
@@ -41,7 +55,7 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Error404/>
+                <Error404 />
               </motion.div>
             }
           />
@@ -106,13 +120,13 @@ function App() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <LazyFiambala/>
+                <LazyFiambala />
               </motion.div>
             }
           />
         </Routes>
       </Suspense>
-      <Footer/>
+      <Footer />
     </Router>
   );
 }
