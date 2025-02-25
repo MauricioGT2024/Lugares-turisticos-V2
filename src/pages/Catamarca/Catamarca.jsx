@@ -1,11 +1,10 @@
 import { useState } from "react";
-import "./Catamarca.css";
 import PropTypes from "prop-types";
 import {
   Box,
   Button,
   Flex,
-  Grid,
+  SimpleGrid as ChakraSimpleGrid,
   Heading,
   Image,
   Select,
@@ -13,17 +12,18 @@ import {
   useColorModeValue,
   Link,
 } from "@chakra-ui/react";
-import { locations } from "../data/catamarca";
+import { locations } from "../../data/catamarca";
+import { motion } from "framer-motion";
 
 const LocationCard = ({ location, expandedId, setExpandedId }) => {
   LocationCard.propTypes = {
     location: PropTypes.shape({
       id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      imgSrc: PropTypes.string.isRequired,
+      img: PropTypes.string.isRequired,
       mapSrc: PropTypes.string.isRequired,
-      area: PropTypes.string.isRequired,
+      category: PropTypes.string.isRequired,
     }).isRequired,
     expandedId: PropTypes.number,
     setExpandedId: PropTypes.func.isRequired,
@@ -39,9 +39,9 @@ const LocationCard = ({ location, expandedId, setExpandedId }) => {
       boxShadow="lg"
       bg={bgColor}
       position="relative"
-      className={`location-card ${isExpanded ? "expanded" : ""}`}
+      height={isExpanded ? "auto" : "485px"}
       transition="all 0.3s ease"
-      _hover={{ transform: "translateY(-5px)" }}
+      _hover={{ transform: "translateY(-10px)" }}
     >
       <Box position="relative" height="300px" overflow="hidden">
         <Image
@@ -80,21 +80,34 @@ const LocationCard = ({ location, expandedId, setExpandedId }) => {
           </Link>
         </Box>
         {isExpanded && (
-          <Box mt={3}>
-            <Text fontSize="sm" mb={2}>
-              Área: {location.area}
-            </Text>
-            <Box height="200px" className="map-container">
-              <iframe
-                src={location.mapSrc}
-                title={`Map of ${location.title}`}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-              />
+          <motion.div
+            initial={{ scaleY: 0, opacity: 0 }}
+            animate={{ scaleY: 1, opacity: 1 }}
+            exit={{ scaleY: 0, opacity: 0 }}
+            transition={{ duration: 0.6 }}
+            style={{
+              overflow: "hidden",
+              transformOrigin: "top",
+              position: "relative",
+              width: "100%",
+            }}
+          >
+            <Box mt={3}>
+              <Text fontSize="sm" mb={2}>
+                Área: {location.area}
+              </Text>
+              <Box height="200px" className="map-container">
+                <iframe
+                  src={location.mapSrc}
+                  title={`Map of ${location.title}`}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                />
+              </Box>
             </Box>
-          </Box>
+          </motion.div>
         )}
       </Box>
     </Box>
@@ -103,42 +116,52 @@ const LocationCard = ({ location, expandedId, setExpandedId }) => {
 
 const Catamarca = () => {
   const [selectedArea, setSelectedArea] = useState("all");
-  const [expandedId, setExpandedId] = useState(null);
-
+  const [openLocationId, setOpenLocationId] = useState(null);
+  const handleToggle = (id) => {
+    setOpenLocationId((prevId) => (prevId === id ? null : id));
+  };
   const filteredLocations =
     selectedArea === "all"
       ? locations
       : locations.filter((loc) => loc.area === selectedArea);
 
   const areas = [...new Set(locations.map((loc) => loc.area))];
+  const bgColor = useColorModeValue("white", "gray.700");
 
   return (
     <Box p={6}>
-      <Heading as="h1" size="xl" mb={6}>
+      <Heading as="h1" size="xl" mb={6} fontFamily="JetBrains Mono">
         Catamarca
       </Heading>
-      <Text mb={6}>
+      <Text mb={6} fontStyle="oblique">
         Catamarca, ubicada en el noroeste de Argentina, es una provincia rica en
         historia y cultura, con paisajes naturales impresionantes y experiencias
         turísticas variadas.
       </Text>
-      <Flex mb={6} align="center">
-        <Text mr={2}>Filtrar por área:</Text>
-        <Select
-          value={selectedArea}
-          onChange={(e) => setSelectedArea(e.target.value)}
-          maxW="200px"
-        >
-          <option value="all">Todas</option>
-          {areas.map((area) => (
-            <option key={area} value={area}>
-              {area}
-            </option>
-          ))}
-        </Select>
-      </Flex>
+      <Box as="Grid" justifyContent="center" gap={3} alignItems="center" mb={6}>
+        <Flex alignItems="center" gap={3} justifyContent="center" mb={6}>
+          <Text textAlign="center" fontWeight="bold">
+            Filtrar por:
+          </Text>
+          <Select
+            color={useColorModeValue("gray.700", "gray.300")}
+            size="md"
+            maxW="150px"
+            alignItems="center"
+            bg={bgColor}
+            onChange={(e) => setSelectedArea(e.target.value)}
+          >
+            <option value="all">Todas</option>
+            {areas.map((area) => (
+              <option key={area} value={area}>
+                {area}
+              </option>
+            ))}
+          </Select>
+        </Flex>
+      </Box>
 
-      <Grid
+      <ChakraSimpleGrid
         templateColumns={{
           base: "1fr",
           md: "repeat(2, 1fr)",
@@ -150,11 +173,13 @@ const Catamarca = () => {
           <LocationCard
             key={location.id}
             location={location}
-            expandedId={expandedId}
-            setExpandedId={setExpandedId}
+            isOpen={openLocationId === location.id}
+            onToggle={handleToggle}
+            expandedId={openLocationId}
+            setExpandedId={setOpenLocationId}
           />
         ))}
-      </Grid>
+      </ChakraSimpleGrid>
     </Box>
   );
 };

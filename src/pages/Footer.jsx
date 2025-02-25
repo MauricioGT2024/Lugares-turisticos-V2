@@ -50,7 +50,7 @@ const Footer = () => {
               <Link href="/">
                 <Box>
                   <Image
-                    src="/public/logo.png"
+                    src="/logo.png"
                     alt="Logo"
                     width="150px"
                     mb={4}

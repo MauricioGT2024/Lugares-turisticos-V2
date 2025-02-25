@@ -9,17 +9,31 @@ import About from "./pages/About";
 
 function App() {
   const LazyProvincia = lazy(() => import("./pages/Provincia"));
-  const LazyCatamarca = lazy(() => import("./pages/Catamarca"));
+  const LazyCatamarca = lazy(() => import("./pages/Catamarca/Catamarca"));
   const LazyHospedaje = lazy(() => import("./pages/Hospedaje"));
   const LazyHome = lazy(() => import("./pages/Home"));
   const LazyFiambala = lazy(() => import("./pages/Fiambala"));
   const LazyAntofagasta = lazy(() => import("./pages/Antofagasta"));
+  const LazyTinogasta = lazy(() => import("./pages/Tinogasta"))
 
   return (
     <Router>
       <Navbar />
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
+          <Route
+            path="/tinogasta"
+            element={
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <LazyTinogasta />
+              </motion.div>
+            }
+          />
           <Route
             path="/antofagasta"
             element={

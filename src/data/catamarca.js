@@ -10,7 +10,7 @@ export const locations = [
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224679.84862245177!2d-65.944013521875!3d-28.370256435358243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9424264fb5a448e3%3Axae112f88ce456aa9!2sGruta%20de%20la%20Virgen%20del%20Valle!5e0!3m2!1ses-419!2sar!4v1725200621926!5m2!1ses-419!2sar",
     path: "https://maps.google.com/maps?ll=-28.418648,-65.799384&z=10&t=m&hl=es-419&gl=AR&mapclient=embed&cid=12542858701826255529",
     lugar: "Catamarca",
-    area: "Centro",
+    area: "Noroeste",
     wiki: "https://es.wikipedia.org/wiki/Virgen_del_Valle",
   },
   {
@@ -77,7 +77,7 @@ export const locations = [
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224679.84862245177!2d-65.944013521875!3d-28.370256435358243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94242fea64817755%3A0x12a068eda95f2dce!2sFiesta%20Nacional%20e%20Internacional%20Del%20Poncho!5e0!3m2!1ses-419!2sar!4v1725200736641!5m2!1ses-419!2sar",
     path: "https://maps.google.com/maps?ll=-28.448032,-65.756709&z=10&t=m&hl=es-419&gl=AR&mapclient=embed&cid=1342188058914532814",
     lugar: "Catamarca",
-    area: "Centro",
+    area: "Noroeste",
     wiki: "https://turismo.catamarca.gob.ar/fiesta-nacional-del-poncho/",
   },
 ];

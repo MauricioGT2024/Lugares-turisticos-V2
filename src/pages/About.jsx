@@ -1,3 +1,4 @@
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:1780292374.
 import {
   Box,
   Heading,
@@ -15,7 +16,7 @@ const About = () => {
   const textColor = useColorModeValue("gray.600", "gray.300");
 
   return (
-    <Box bg={bgColor} minH="100vh" py={10}>
+    <Box bg={bgColor} minH="100vh" py={10} fontFamily={"JetBrains Mono"}>
       <VStack spacing={8} maxW="1200px" mx="auto" px={4}>
         <Heading as="h1" size="2xl" textAlign="center" color="teal.500">
           Acerca de Catamarca Turismo
@@ -97,7 +98,7 @@ const About = () => {
             </Box>
             <Box textAlign="center">
               <Image
-                src="https://images.unsplash.com/photo-1593696954577-259b8e930c6f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                src="https://images.unsplash.com/photo-1589301731137-9da5e888b87a"
                 alt="Culture"
                 borderRadius="lg"
                 mb={4}

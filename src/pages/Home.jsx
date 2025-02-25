@@ -1,53 +1,22 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import {
   Box,
   Heading,
   Text,
-  Image,
-  Flex,
-  Button,
   SimpleGrid,
-  useColorModeValue,
-  Spinner,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Image,
+  Button,
   Alert,
   AlertIcon,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { useColorModeValue } from "@chakra-ui/react";
 
 const Home = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const textColor = useColorModeValue("gray.700", "gray.300");
-  const buttonColor = useColorModeValue("blue.500", "blue.300");
-  const bgColor = useColorModeValue("gray.100", "gray.900");
-
-  // Get current month for seasonal greeting
-  const month = new Date().getMonth();
-  const season =
-    month >= 11 || month <= 1
-      ? "verano"
-      : month >= 2 && month <= 4
-      ? "otoño"
-      : month >= 5 && month <= 7
-      ? "invierno"
-      : "primavera";
-
-  // Simulate async data fetching
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        setIsLoading(false);
-      } catch (err) {
-        setError(err.message);
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
   const places = [
     {
       name: "Valle Viejo, Catamarca",
@@ -69,76 +38,80 @@ const Home = () => {
     },
   ];
 
+  const textColor = useColorModeValue("gray.700", "gray.300");
+  const month = new Date().getMonth();
+  const season =
+    month >= 11 || month <= 1
+      ? "verano"
+      : month >= 2 && month <= 4
+      ? "otoño"
+      : month >= 5 && month <= 7
+      ? "invierno"
+      : "primavera";
+
+  const [error, setError] = React.useState(null);
   return (
-    <Box bg={bgColor} color={textColor} py={10}>
-      <Box textAlign="center" mb={10}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <Heading as="h1" size="2xl" color={textColor}>
-            ¡Bienvenidos a la Provincia de Catamarca!
-          </Heading>
-          <Text fontSize="xl" mt={2} color={textColor}>
-            Descubre Lugares Turísticos Asombrosos de Catamarca
-          </Text>
-          <Text fontSize="lg" mt={1} color={textColor}>
-            Estamos en temporada de {season}, el mejor momento para visitar.
-          </Text>
-          <Text fontSize="xl" mt={2} color={textColor}>
-            Explora los destinos más hermosos de la provincia.
-          </Text>
-        </motion.div>
-      </Box>
-      {isLoading ? (
-        <Flex justify="center" py={10}>
-          <Spinner size="xl" />
-        </Flex>
-      ) : error ? (
-        <Alert status="error" variant="subtle" my={4}>
+    <Box textAlign="center" color={textColor} mt={3} mb={10}>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <Heading as="h1" size="2xl" color={textColor}>
+          ¡Bienvenidos a la Provincia de Catamarca!
+        </Heading>
+        <Text fontSize="xl" mt={2} color={textColor}>
+          Descubre Lugares Turísticos Asombrosos de Catamarca
+        </Text>
+        <Text fontSize="lg" mt={1} color={textColor}>
+          Estamos en temporada de {season}, el mejor momento para visitar.
+        </Text>
+        <Text fontSize="xl" mt={2} color={textColor}>
+          Explora los destinos más hermosos de la provincia.
+        </Text>
+      </motion.div>
+
+      {error && (
+        <Alert status="error" mb={5}>
           <AlertIcon />
-          Error al cargar los datos: {error}
+          {error}
         </Alert>
-      ) : (
-        <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={8} textAlign>
-          {places.map((place, index) => (
-            <Box key={index} borderRadius="lg" overflow="hidden" boxShadow="md">
+      )}
+      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={8}>
+        {places.map((place, index) => (
+          <Card
+            key={index}
+            maxW="sm"
+            bg={useColorModeValue("gray.100", "gray.700")}
+          >
+            <CardHeader>
+              <Heading size="md" color={textColor}>
+                {place.name}
+              </Heading>
+            </CardHeader>
+            <CardBody>
               <Image
                 src={place.image}
                 alt={place.name}
-                height="250px"
-                objectFit="contain"
+                height="200px"
+                width="100%"
+                objectFit="cover"
               />
-              <Box p={4}>
-                <Heading as="h2" size="lg" mb={2} color={textColor}>
-                  {place.name}
-                </Heading>
-                <Text fontSize="md" color={textColor}>
-                  {place.description}
-                </Text>
-                <Button
-                  mt={4}
-                  colorScheme="blue"
-                  onClick={() => (window.location.href = "provincia")}
-                >
-                  Aprende Más
-                </Button>
-              </Box>
-            </Box>
-          ))}
-        </SimpleGrid>
-      )}
-      <Flex justify="center" mt={10}>
-        <Button
-          variant="unstyled"
-          colorScheme={buttonColor}
-          size="lg"
-          onClick={() => (window.location.href = "provincia")}
-        >
-          Ver Todos Los Destinos
-        </Button>
-      </Flex>
+              <Text mt={2} color={textColor}>
+                {place.description}
+              </Text>
+            </CardBody>
+            <CardFooter>
+              <Button
+                colorScheme="blue"
+                onClick={() => (window.location.href = "provincia")}
+              >
+                Aprende Más
+              </Button>
+            </CardFooter>
+          </Card>
+        ))}
+      </SimpleGrid>
     </Box>
   );
 };
