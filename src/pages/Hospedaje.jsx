@@ -132,7 +132,6 @@ const CardContainer = () => {
         <Select
           value={selectedDepartment}
           onChange={(e) => setSelectedDepartment(e.target.value)}
-          placeholder="Seleccionar departamento"
           bg={useColorModeValue("white", "gray.700")}
         >
           <option value="all">Todos los departamentos</option>

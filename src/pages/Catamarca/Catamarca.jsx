@@ -32,85 +32,91 @@ const LocationCard = ({ location, expandedId, setExpandedId }) => {
   const bgColor = useColorModeValue("white", "gray.700");
 
   return (
-    <Box
-      maxW="md"
-      borderRadius="xl"
-      overflow="hidden"
-      boxShadow="lg"
-      bg={bgColor}
-      position="relative"
-      height={isExpanded ? "auto" : "485px"}
-      transition="all 0.3s ease"
-      _hover={{ transform: "translateY(-10px)" }}
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <Box position="relative" height="300px" overflow="hidden">
-        <Image
-          src={location.imgSrc}
-          alt={location.title}
-          objectFit="cover"
-          height="100%"
-          width="100%"
-        />
-      </Box>
-
-      <Box p={4} display="flex" flexDirection="column" height="100%">
-        <Heading size="md" mb={2}>
-          {location.title}
-        </Heading>
-        <Text mb={3} fontSize="sm">
-          {location.description}
-        </Text>
-
-        {/* Contenedor flex para los botones */}
-        <Box display="flex" flexDirection="row" gap={4} mt={3}>
-          <Button
-            colorScheme="teal"
-            size="md"
-            onClick={() => setExpandedId(isExpanded ? null : location.id)}
-          >
-            {isExpanded ? "Ocultar Mapa" : "Mostrar Mapa"}
-          </Button>
-
-          <Link
-            href={location.wiki}
-            isExternal
-            style={{ textDecoration: "none" }}
-          >
-            <Button colorScheme="blue">Ver en Wikipedia</Button>
-          </Link>
+      <Box
+        maxW="md"
+        borderRadius="xl"
+        overflow="hidden"
+        boxShadow="lg"
+        bg={bgColor}
+        position="relative"
+        height={isExpanded ? "auto" : "485px"}
+        transition="all 0.3s ease"
+        _hover={{ transform: "translateY(-10px)" }}
+      >
+        <Box position="relative" height="300px" overflow="hidden">
+          <Image
+            src={location.imgSrc}
+            alt={location.title}
+            objectFit="cover"
+            height="100%"
+            width="100%"
+          />
         </Box>
-        {isExpanded && (
-          <motion.div
-            initial={{ scaleY: 0, opacity: 0 }}
-            animate={{ scaleY: 1, opacity: 1 }}
-            exit={{ scaleY: 0, opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            style={{
-              overflow: "hidden",
-              transformOrigin: "top",
-              position: "relative",
-              width: "100%",
-            }}
-          >
-            <Box mt={3}>
-              <Text fontSize="sm" mb={2}>
-                Área: {location.area}
-              </Text>
-              <Box height="200px" className="map-container">
-                <iframe
-                  src={location.mapSrc}
-                  title={`Map of ${location.title}`}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                />
+
+        <Box p={4} display="flex" flexDirection="column" height="100%">
+          <Heading size="md" mb={2}>
+            {location.title}
+          </Heading>
+          <Text mb={3} fontSize="sm">
+            {location.description}
+          </Text>
+
+          {/* Contenedor flex para los botones */}
+          <Box display="flex" flexDirection="row" gap={4} mt={3}>
+            <Button
+              colorScheme="teal"
+              size="md"
+              onClick={() => setExpandedId(isExpanded ? null : location.id)}
+            >
+              {isExpanded ? "Ocultar Mapa" : "Mostrar Mapa"}
+            </Button>
+
+            <Link
+              href={location.wiki}
+              isExternal
+              style={{ textDecoration: "none" }}
+            >
+              <Button colorScheme="blue">Ver en Wikipedia</Button>
+            </Link>
+          </Box>
+          {isExpanded && (
+            <motion.div
+              initial={{ scaleY: 0, opacity: 0 }}
+              animate={{ scaleY: 1, opacity: 1 }}
+              exit={{ scaleY: 0, opacity: 0 }}
+              transition={{ duration: 0.6 }}
+              style={{
+                overflow: "hidden",
+                transformOrigin: "top",
+                position: "relative",
+                width: "100%",
+              }}
+            >
+              <Box mt={3}>
+                <Text fontSize="sm" mb={2}>
+                  Área: {location.area}
+                </Text>
+                <Box height="200px" className="map-container">
+                  <iframe
+                    src={location.mapSrc}
+                    title={`Map of ${location.title}`}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                  />
+                </Box>
               </Box>
-            </Box>
-          </motion.div>
-        )}
+            </motion.div>
+          )}
+        </Box>
       </Box>
-    </Box>
+    </motion.div>
   );
 };
 

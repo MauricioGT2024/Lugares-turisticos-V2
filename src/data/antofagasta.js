@@ -45,7 +45,7 @@ export const location = [
     mapSrc:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3567.7851114639307!2d-66.93046749999999!3d-26.591270099999992!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941f8c108b376119%3A0xc3c451e257d82dff!2sLaguna%20Blanca%2C%20Catamarca!5e0!3m2!1ses-419!2sar!4v1740007866449!5m2!1ses-419!2sar",
     path: "https://es.wikipedia.org/wiki/Reserva_de_biosfera_Laguna_Blanca", // Wikipedia
-    lugar: "Belen",
+    lugar: "Aviafauna",
     categoria: "Laguna",
   },
   {
@@ -58,7 +58,7 @@ export const location = [
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56646.8974741926!2d-67.6174517859375!3d-26.0205264!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941a8f887313a32f%3A0x87076a9d8e1f15f8!2sVolc%C3%A1n%20Antofagasta!5e0!3m2!1ses-419!2sar!4v1708603047803!5m2!1ses-419!2sar",
     path: "https://es.wikipedia.org/wiki/Volc%C3%A1n_Antofagasta", // Wikipedia
 
-    lugar: "Catamarca",
+    lugar: "Antofagasta de la Sierra",
     categoria: "Volcan",
   },
   {
@@ -70,7 +70,7 @@ export const location = [
     mapSrc:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56611.5915543205!2d-66.86691555319293!3d-25.90896805308198!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x941a97f1a40f96f5%3A0x30e821e29b5c0f06!2sCerro%20Gal%C3%A1n!5e0!3m2!1ses-419!2sar!4v1708603152841!5m2!1ses-419!2sar",
     path: "https://es.wikipedia.org/wiki/Cerro_Gal%C3%A1n", // Wikipedia
-    lugar: "Catamarca",
+    lugar: "Antofagasta de la Sierra",
     categoria: "Volcan",
   },
   {
@@ -82,7 +82,7 @@ export const location = [
     mapSrc:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113397.53815521642!2d-67.11001521603434!3d-25.36860221429687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9419d42a7049c6d3%3A0x4508f76e69214e00!2sSalar%20del%20Hombre%20Muerto!5e0!3m2!1ses-419!2sar!4v1708603204602!5m2!1ses-419!2sar",
     path: "https://es.wikipedia.org/wiki/Salar_del_Hombre_Muerto", // Wikipedia
-    lugar: "Catamarca",
+    lugar: "Puna de Atacama",
     categoria: "Salar",
   },
 ];

@@ -3,7 +3,7 @@ export const locations = [
     id: 1,
     name: "Plaza 25 de Mayo",
     description: "Plaza principal de Tinogasta, un lugar de encuentro.",
-    imgSrc: "../../public/img/Tinogasta/Plaza 25 de Mayo.jpg",
+    imgSrc: "../../img/Tinogasta/Plaza 25 de Mayo.jpg",
     category: "Plazas",
     mapUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3520.6570514823225!2d-67.5670938252704!3d-28.06549424235247!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x969e05538eb34939%3A0x864de5b7d495b0fa!2sPlaza%2025%20De%20Mayo!5e0!3m2!1ses-419!2sar!4v1740407889975!5m2!1ses-419!2sar",

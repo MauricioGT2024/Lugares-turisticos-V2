@@ -16,93 +16,101 @@ import { locations } from "../data/fiambala";
 
 const LocationCard = ({ location, isOpen, onToggle }) => {
   const bgColor = useColorModeValue("white", "gray.700");
+  const selectVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.9 } },
+  };
 
   return (
-    <Box
-      maxW="sm"
-      borderRadius="xl"
-      overflow="hidden"
-      boxShadow="lg"
-      bg={bgColor}
-      position="relative"
-      minHeight="400px"
-      height={isOpen ? "auto" : "485px"}
-      transition="all 0.3s ease"
-      _hover={{ transform: "translateY(-10px)" }}
-    >
-      <Box position="relative" height="300px" overflow="hidden">
-        <Image
-          src={location.imgSrc}
-          alt={location.title}
-          objectFit="cover"
-          height="100%"
-          width="100%"
-        />
-      </Box>
+    <>
+      <motion.div variants={selectVariants} initial="hidden" animate="visible">
+        <Box
+          maxW="sm"
+          borderRadius="xl"
+          overflow="hidden"
+          boxShadow="lg"
+          bg={bgColor}
+          position="relative"
+          minHeight="400px"
+          height={isOpen ? "auto" : "485px"}
+          transition="all 0.3s ease"
+          _hover={{ transform: "translateY(-10px)" }}
+        >
+          <Box position="relative" height="300px" overflow="hidden">
+            <Image
+              src={location.imgSrc}
+              alt={location.title}
+              objectFit="cover"
+              height="100%"
+              width="100%"
+            />
+          </Box>
 
-      <Box p={4} display="flex" flexDirection="column" height="100%">
-        <Heading size="md" mb={2}>
-          {location.title}
-        </Heading>
-        <Text mb={3} fontSize="sm">
-          {location.description}
-        </Text>
-        <Box display="flex" flexDirection="row" gap={4} mt={3}>
-          <Button
-            colorScheme="teal"
-            size="md"
-            onClick={() => onToggle(location.id)}
-          >
-            {isOpen ? "Ocultar Mapa" : "Mostrar Mapa"}
-          </Button>
-
-          <Link
-            href={location.path}
-            isExternal
-            style={{ textDecoration: "none" }}
-          >
-            <Button colorScheme="blue">Ver Mas Informacion...</Button>
-          </Link>
-        </Box>
-
-        {isOpen && (
-          <motion.div
-            initial={{ scaleY: 0, opacity: 0 }}
-            animate={{ scaleY: 1, opacity: 1 }}
-            exit={{ scaleY: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            style={{
-              overflow: "hidden",
-              transformOrigin: "top",
-              position: "relative",
-              width: "100%",
-            }}
-          >
-            <Box mt={3} pb={4} bg={bgColor} position="relative" zIndex="1">
-              <Text mb={3} fontSize="sm">
-                Mapa de {location.title}
-              </Text>
-              <Box
-                mt={3}
-                flex="1"
-                overflow="hidden"
-                position="relative"
-                zIndex="1"
+          <Box p={4} display="flex" flexDirection="column" height="100%">
+            <Heading size="md" mb={2}>
+              {location.title}
+            </Heading>
+            <Text mb={3} fontSize="sm">
+              {location.description}
+            </Text>
+            <Box display="flex" flexDirection="row" gap={4} mt={3}>
+              <Button
+                colorScheme="teal"
+                size="md"
+                onClick={() => onToggle(location.id)}
               >
-                <iframe
-                  src={location.mapSrc}
-                  title={`Map of ${location.title}`}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                />
-              </Box>
+                {isOpen ? "Ocultar Mapa" : "Mostrar Mapa"}
+              </Button>
+
+              <Link
+                href={location.path}
+                isExternal
+                style={{ textDecoration: "none" }}
+              >
+                <Button colorScheme="blue">Ver Mas Informacion...</Button>
+              </Link>
             </Box>
-          </motion.div>
-        )}
-      </Box>
-    </Box>
+
+            {isOpen && (
+              <motion.div
+                initial={{ scaleY: 0, opacity: 0 }}
+                animate={{ scaleY: 1, opacity: 1 }}
+                exit={{ scaleY: 0, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{
+                  overflow: "hidden",
+                  transformOrigin: "top",
+                  position: "relative",
+                  width: "100%",
+                }}
+              >
+                <Box mt={3} pb={4} bg={bgColor} position="relative" zIndex="1">
+                  <Text mb={3} fontSize="sm">
+                    Mapa de {location.title}
+                  </Text>
+                  <Box
+                    mt={3}
+                    flex="1"
+                    overflow="hidden"
+                    position="relative"
+                    zIndex="1"
+                  >
+                    <iframe
+                      src={location.mapSrc}
+                      title={`Map of ${location.title}`}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen
+                    />
+                  </Box>
+                </Box>
+              </motion.div>
+            )}
+          </Box>
+        </Box>
+      </motion.div>
+    </>
   );
 };
 
@@ -149,6 +157,9 @@ const Fiambala = () => {
 
       {/* Filtro de categoría */}
       <motion.div variants={selectVariants} initial="hidden" animate="visible">
+        <Text textAlign="center" fontWeight="bold" mr={2} gap={0}>
+          Filtrar por:
+        </Text>
         <Select
           value={categoryFilter}
           maxW="15em"

@@ -12,6 +12,7 @@ import {
   Button,
   Alert,
   AlertIcon,
+  Link,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useColorModeValue } from "@chakra-ui/react";
@@ -39,6 +40,8 @@ const Home = () => {
   ];
 
   const textColor = useColorModeValue("gray.700", "gray.300");
+  const bgColor = useColorModeValue("white", "gray.700");
+
   const month = new Date().getMonth();
   const season =
     month >= 11 || month <= 1
@@ -77,7 +80,7 @@ const Home = () => {
           {error}
         </Alert>
       )}
-      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={8}>
+      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={8} mx={6} mt={5}>
         {places.map((place, index) => (
           <Card
             key={index}
@@ -112,6 +115,31 @@ const Home = () => {
           </Card>
         ))}
       </SimpleGrid>
+      <Button
+        mt={6}
+        colorScheme="teal"
+        variant="solid"
+        color="white"
+        bg={bgColor}
+        _hover={{
+          bg: {
+            teal: "teal.600",
+          },
+          transform: "scale(1.05)",
+          transition: "all 0.2s ease",
+        }}
+        _active={{
+          bg: "teal.700",
+        }}
+        borderRadius="md"
+        px={6}
+        py={3}
+        onClick={() => {
+          window.location.href = "provincia";
+        }}
+      >
+        Ver Provincia
+      </Button>
     </Box>
   );
 };

@@ -98,6 +98,7 @@ const Navbar = () => {
         <Stack
           direction="row"
           spacing={4}
+          gap={6}
           display={{ base: "none", md: "flex" }}
         >
           {navItems.map((item) => (
@@ -108,8 +109,15 @@ const Navbar = () => {
         <ColorModeSwitcher />
       </Flex>
 
-      {isOpen && (
-        <VStack spacing={4} align="stretch" display={{ md: "none" }} mt={4}>
+      {isOpen && ( //display={{ md: "grid" }} mt={4}
+        <VStack
+          spacing={4}
+          align="stretch"
+          display={{ md: "none", base: "grid" }}
+          justifyContent={"end"}
+          justifyItems={"end"}
+          mt={4}
+        >
           {navItems.map((item) => (
             <NavButton key={item.path} {...item} />
           ))}
