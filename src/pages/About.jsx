@@ -80,7 +80,7 @@ const About = () => {
           <Heading as="h2" size="lg" mb={6} color="teal.500" textAlign="center">
             ¿Porque visitar Catamarca?
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={6}>
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
             <Box textAlign="center">
               <Image
                 src="https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
@@ -96,20 +96,7 @@ const About = () => {
                 naturales.
               </Text>
             </Box>
-            <Box textAlign="center">
-              <Image
-                src="https://images.unsplash.com/photo-1589301731137-9da5e888b87a"
-                alt="Culture"
-                borderRadius="lg"
-                mb={4}
-              />
-              <Text fontWeight="bold" mb={2}>
-                Cultura Rica
-              </Text>
-              <Text color={textColor}>
-                Experimenta festivales tradicionales y artesanía local.
-              </Text>
-            </Box>
+
             <Box textAlign="center">
               <Image
                 src="https://images.unsplash.com/photo-1503220317375-aaad61436b1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"

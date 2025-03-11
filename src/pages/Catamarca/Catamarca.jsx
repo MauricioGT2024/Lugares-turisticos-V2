@@ -4,7 +4,7 @@ import {
   Box,
   Button,
   Flex,
-  SimpleGrid as ChakraSimpleGrid,
+  SimpleGrid,
   Heading,
   Image,
   Select,
@@ -144,7 +144,16 @@ const Catamarca = () => {
         historia y cultura, con paisajes naturales impresionantes y experiencias
         turísticas variadas.
       </Text>
-      <Box as="Grid" justifyContent="center" gap={3} alignItems="center" mb={6}>
+      <SimpleGrid
+        templateColumns={{
+          base: "1fr",
+          md: "repeat(3, 1fr)",
+          lg: "repeat(4, 1fr)",
+        }}
+        gap={3}
+        alignItems="center"
+        mb={6}
+      >
         <Flex alignItems="center" gap={3} justifyContent="center" mb={6}>
           <Text textAlign="center" fontWeight="bold">
             Filtrar por:
@@ -165,9 +174,9 @@ const Catamarca = () => {
             ))}
           </Select>
         </Flex>
-      </Box>
+      </SimpleGrid>
 
-      <ChakraSimpleGrid
+      <SimpleGrid
         templateColumns={{
           base: "1fr",
           md: "repeat(2, 1fr)",
@@ -185,7 +194,7 @@ const Catamarca = () => {
             setExpandedId={setOpenLocationId}
           />
         ))}
-      </ChakraSimpleGrid>
+      </SimpleGrid>
     </Box>
   );
 };

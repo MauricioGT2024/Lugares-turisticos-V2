@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { motion } from "framer-motion";
 import { Suspense, lazy } from "react";
-import Error404 from './pages/Error404'
+import Error404 from "./pages/Error404";
 import Footer from "./pages/Footer";
 import About from "./pages/About";
 
@@ -14,7 +14,7 @@ function App() {
   const LazyHome = lazy(() => import("./pages/Home"));
   const LazyFiambala = lazy(() => import("./pages/Fiambala"));
   const LazyAntofagasta = lazy(() => import("./pages/Antofagasta"));
-  const LazyTinogasta = lazy(() => import("./pages/Tinogasta"))
+  const LazyTinogasta = lazy(() => import("./pages/Tinogasta"));
 
   return (
     <Router>

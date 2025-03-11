@@ -12,7 +12,6 @@ import {
   Button,
   Alert,
   AlertIcon,
-  Link,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useColorModeValue } from "@chakra-ui/react";
@@ -40,7 +39,7 @@ const Home = () => {
   ];
 
   const textColor = useColorModeValue("gray.700", "gray.300");
-  const bgColor = useColorModeValue("white", "gray.700");
+  const bgColor = useColorModeValue("blue.400", "gray.700");
 
   const month = new Date().getMonth();
   const season =
@@ -118,7 +117,7 @@ const Home = () => {
       <Button
         mt={6}
         colorScheme="teal"
-        variant="solid"
+        variant="link"
         color="white"
         bg={bgColor}
         _hover={{
