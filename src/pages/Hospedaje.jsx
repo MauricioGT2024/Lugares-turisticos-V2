@@ -32,12 +32,11 @@ const AnimatedCard = ({
 
   return (
     <MotionBox
-      borderWidth="0px"
       borderRadius="xl"
       overflow="hidden"
       position="relative"
-      display="flex"
-      flexDirection="column"
+      display="grid"
+      gridTemplateRows="1fr auto"
       boxShadow="xl"
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 300 }}

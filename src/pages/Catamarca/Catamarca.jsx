@@ -144,16 +144,7 @@ const Catamarca = () => {
         historia y cultura, con paisajes naturales impresionantes y experiencias
         turísticas variadas.
       </Text>
-      <SimpleGrid
-        templateColumns={{
-          base: "1fr",
-          md: "repeat(3, 1fr)",
-          lg: "repeat(4, 1fr)",
-        }}
-        gap={3}
-        alignItems="center"
-        mb={6}
-      >
+      <SimpleGrid gap={3} alignItems="center" mb={6}>
         <Flex alignItems="center" gap={3} justifyContent="center" mb={6}>
           <Text textAlign="center" fontWeight="bold">
             Filtrar por:
