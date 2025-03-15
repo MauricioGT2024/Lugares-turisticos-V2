@@ -1,13 +1,22 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Suspense, lazy } from "react";
+import LoadingSpinner from "./components/LoadingSpinner";
 import Error404 from "./pages/Error404";
 import Footer from "./pages/Footer";
 import About from "./pages/About";
 
-function App() {
+const pageTransition = {
+  initial: { opacity: 0, x: -20 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 20 },
+  transition: { duration: 0.3 }
+};
+
+function AppContent() {
+  const location = useLocation();
   const LazyProvincia = lazy(() => import("./pages/Provincia"));
   const LazyCatamarca = lazy(() => import("./pages/Catamarca/Catamarca"));
   const LazyHospedaje = lazy(() => import("./pages/Hospedaje"));
@@ -17,130 +26,95 @@ function App() {
   const LazyTinogasta = lazy(() => import("./pages/Tinogasta"));
 
   return (
-    <Router>
+    <>
       <Navbar />
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
-          <Route
-            path="/tinogasta"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <LazyTinogasta />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/antofagasta"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <LazyAntofagasta />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <About />
-              </motion.div>
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Error404 />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <LazyHome />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/provincia"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <LazyProvincia />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/catamarca"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <LazyCatamarca />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/hospedaje"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <LazyHospedaje />
-              </motion.div>
-            }
-          />
-          <Route
-            path="/fiambala"
-            element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <LazyFiambala />
-              </motion.div>
-            }
-          />
-        </Routes>
+      <Suspense fallback={<LoadingSpinner />}>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route
+              path="/tinogasta"
+              element={
+                <motion.div {...pageTransition}>
+                  <LazyTinogasta />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/antofagasta"
+              element={
+                <motion.div {...pageTransition}>
+                  <LazyAntofagasta />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <motion.div {...pageTransition}>
+                  <About />
+                </motion.div>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <motion.div {...pageTransition}>
+                  <Error404 />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <motion.div {...pageTransition}>
+                  <LazyHome />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/provincia"
+              element={
+                <motion.div {...pageTransition}>
+                  <LazyProvincia />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/catamarca"
+              element={
+                <motion.div {...pageTransition}>
+                  <LazyCatamarca />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/hospedaje"
+              element={
+                <motion.div {...pageTransition}>
+                  <LazyHospedaje />
+                </motion.div>
+              }
+            />
+            <Route
+              path="/fiambala"
+              element={
+                <motion.div {...pageTransition}>
+                  <LazyFiambala />
+                </motion.div>
+              }
+            />
+          </Routes>
+        </AnimatePresence>
       </Suspense>
       <Footer />
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

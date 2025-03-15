@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { useColorModeValue } from "@chakra-ui/react";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const places = [
@@ -104,41 +105,37 @@ const Home = () => {
               </Text>
             </CardBody>
             <CardFooter>
-              <Button
-                colorScheme="blue"
-                onClick={() => (window.location.href = "provincia")}
-              >
-                Aprende Más
-              </Button>
+              <Link to="/provincia">
+                <Button colorScheme="blue">Aprende Más</Button>
+              </Link>
             </CardFooter>
           </Card>
         ))}
       </SimpleGrid>
-      <Button
-        mt={6}
-        colorScheme="teal"
-        variant="link"
-        color="white"
-        bg={bgColor}
-        _hover={{
-          bg: {
-            teal: "teal.600",
-          },
-          transform: "scale(1.05)",
-          transition: "all 0.2s ease",
-        }}
-        _active={{
-          bg: "teal.700",
-        }}
-        borderRadius="md"
-        px={6}
-        py={3}
-        onClick={() => {
-          window.location.href = "provincia";
-        }}
-      >
-        Ver Provincia
-      </Button>
+      <Link to="/provincia">
+        <Button
+          mt={6}
+          colorScheme="teal"
+          variant="link"
+          color="white"
+          bg={bgColor}
+          _hover={{
+            bg: {
+              teal: "teal.600",
+            },
+            transform: "scale(1.05)",
+            transition: "all 0.2s ease",
+          }}
+          _active={{
+            bg: "teal.700",
+          }}
+          borderRadius="md"
+          px={6}
+          py={3}
+        >
+          Ver Provincia
+        </Button>
+      </Link>
     </Box>
   );
 };
