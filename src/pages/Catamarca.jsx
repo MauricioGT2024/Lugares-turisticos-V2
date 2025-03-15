@@ -12,7 +12,7 @@ import {
   useColorModeValue,
   Link,
 } from "@chakra-ui/react";
-import { locations } from "../../data/catamarca";
+import { locations } from "../data/catamarca";
 import { motion } from "framer-motion";
 
 const LocationCard = ({ location, expandedId, setExpandedId }) => {

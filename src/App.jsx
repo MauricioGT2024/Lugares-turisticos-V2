@@ -18,7 +18,7 @@ const pageTransition = {
 function AppContent() {
   const location = useLocation();
   const LazyProvincia = lazy(() => import("./pages/Provincia"));
-  const LazyCatamarca = lazy(() => import("./pages/Catamarca/Catamarca"));
+  const LazyCatamarca = lazy(() => import("./pages/Catamarca"));
   const LazyHospedaje = lazy(() => import("./pages/Hospedaje"));
   const LazyHome = lazy(() => import("./pages/Home"));
   const LazyFiambala = lazy(() => import("./pages/Fiambala"));
