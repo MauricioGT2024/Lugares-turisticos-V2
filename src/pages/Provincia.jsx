@@ -83,7 +83,7 @@ const DepartamentoCard = ({ loc }) => {
               position="absolute"
               top="4"
               right="4"
-              colorScheme="teal"
+              colorScheme=""
               fontSize="sm"
               borderRadius="full"
               px="3"

@@ -14,7 +14,7 @@ const Path = (props) => (
 const Hamburger = ({ isOpen, toggle, color }) => {
   return (
     <Box
-      display={{ base: "flex", md: "none" }}
+      display={{ base: "flex", lg: "none" }}  // Cambiado de md a lg
       as="button"
       aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
       onClick={toggle}

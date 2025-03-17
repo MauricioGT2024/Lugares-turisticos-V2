@@ -23,6 +23,7 @@ import {
   MenuItem,
   Text,
   Divider,
+  Grid,
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -36,12 +37,6 @@ const navItems = [
     label: "Departamentos",
     path: "/provincia",
     icon: FaMapMarkedAlt,
-    children: [
-      { path: "/antofagasta", label: "Antofagasta" },
-      { path: "/tinogasta", label: "Tinogasta" },
-      { path: "/fiambala", label: "Fiambalá" },
-      { path: "/catamarca", label: "Catamarca" },
-    ],
   },
   { path: "/hospedaje", label: "Hospedaje", icon: FaBed },
   { path: "/about", label: "Sobre Nosotros", icon: FaInfoCircle },
@@ -90,7 +85,7 @@ const NavLink = ({ item, isMobile, onClose }) => {
             _hover={{ bg: hoverBg }}
           />
         </Flex>
-        <MenuList>
+        <MenuList justifyContent={{ base: "center", md: "end" }}>
           {item.children.map((child) => (
             <MenuItem
               key={child.path}
@@ -108,14 +103,24 @@ const NavLink = ({ item, isMobile, onClose }) => {
   }
 
   return (
-    <Tooltip label={`Ir a ${item.label}`} placement="bottom" hasArrow>
-      <MotionBox whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
+    <Tooltip
+      label={`Ir a ${item.label}`}
+      placement={isMobile ? "left" : "bottom"}
+      hasArrow
+    >
+      <MotionBox 
+        whileHover={{ y: -2 }} 
+        whileTap={{ scale: 0.95 }}
+        initial={false} // Evita animación inicial
+      >
         <Link to={item.path} onClick={handleClick}>
           <Button
             variant={isActive ? "solid" : "ghost"}
             bg={isActive ? activeBg : "transparent"}
             color={isActive ? activeColor : linkColor}
             leftIcon={<item.icon />}
+            width={isMobile ? "full" : "auto"}
+            justifyContent={isMobile ? "flex-end" : "center"}
             _hover={{
               bg: hoverBg,
               transform: "translateY(-2px)",
@@ -148,12 +153,12 @@ NavLink.propTypes = {
 };
 
 const Navbar = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const  { isOpen, onOpen, onClose } = useDisclosure();
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const menuBgColor = useColorModeValue("white", "gray.800");
 
-  const MotionFlex = motion(Flex);
+  const MotionGrid = motion.create(Grid);
 
   return (
     <Box
@@ -170,17 +175,21 @@ const Navbar = () => {
         "rgba(26, 32, 44, 0.8)"
       )}
     >
-      <Container maxW="8xl" px={{ base: 2, md: 4 }}>
-        <MotionFlex
+      <Container maxW="8xl" px={{ base: 2, md: 8 }}>
+        <MotionGrid
           h={{ base: "4rem", md: "5rem" }}
-          align="center"
-          justify="space-between"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          templateColumns="auto 1fr auto"
+          gap={4}
+          alignItems="center"
+          initial={false} // Evita animación inicial
         >
+          {/* Logo - Extremo izquierdo */}
           <Link to="/">
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              initial={false} // Evita animación inicial
+            >
               <Image
                 src="/navbar.png"
                 alt="Logo"
@@ -190,34 +199,40 @@ const Navbar = () => {
             </motion.div>
           </Link>
 
+          {/* Navegación - Centro */}
           <Stack
             direction="row"
-            spacing={{ base: 2, md: 4 }}
+            spacing={{ base: 2, lg: 8 }}
+            justify="center"
             align="center"
-            display={{ base: "none", md: "flex" }}
+            display={{ base: "none", lg: "flex" }}
           >
-            <AnimatePresence>
-              {navItems.map((item) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <NavLink item={item} />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-            <ColorModeSwitcher />
+            {navItems.map((item) => (
+              <motion.div
+                key={item.label}
+                initial={false} // Evita animación inicial
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.2 }}
+              >
+                <NavLink item={item} />
+              </motion.div>
+            ))}
           </Stack>
 
-          <Hamburger
-            isOpen={isOpen}
-            toggle={onOpen}
-            color={useColorModeValue("gray.800", "white")}
-          />
-        </MotionFlex>
+          {/* Controles - Extremo derecho */}
+          <Flex justify="flex-end" align="center" gap={4}>
+            <Box display={{ base: "none", lg: "block" }}>
+              <ColorModeSwitcher />
+            </Box>
+            <Box display={{ base: "block", lg: "none" }}>
+              <Hamburger
+                isOpen={isOpen}
+                toggle={onOpen}
+                color={useColorModeValue("gray.800", "white")}
+              />
+            </Box>
+          </Flex>
+        </MotionGrid>
       </Container>
 
       <Drawer
@@ -255,18 +270,19 @@ const Navbar = () => {
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.label}
+                  style={{ textAlign: 'right' }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
-                    duration: 0.3,
-                    delay: index * 0.1,
+                    duration: 0.2,
+                    delay: index * 0.05 // Reducido el delay
                   }}
                 >
                   <NavLink item={item} isMobile onClose={onClose} />
                 </motion.div>
               ))}
               <Divider my={4} />
-              <Box textAlign="center">
+              <Box textAlign="right">
                 <ColorModeSwitcher
                   size="lg"
                   width="full"

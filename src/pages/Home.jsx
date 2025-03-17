@@ -6,68 +6,97 @@ import {
   Text,
   SimpleGrid,
   Card,
-  CardHeader,
   CardBody,
-  CardFooter,
   Image,
   Button,
   Alert,
   AlertIcon,
+  VStack,
+  Container,
+  Badge,
+  Flex,
+  Icon,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { useColorModeValue } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { places } from "../data/home";
+import { FaMapMarkedAlt, FaArrowRight } from "react-icons/fa";
 
 const MotionCard = motion(Card);
+const MotionBox = motion(Box);
 
-// Componente de tarjeta optimizado
-const PlaceCard = memo(({ place, textColor }) => {
-  return (
-    <MotionCard
-      maxW="sm"
-      bg={useColorModeValue("gray.100", "gray.700")}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      transition={{ duration: 0.2 }}
-      mx={9}
-      p={3}
-    >
-      <CardHeader py={2} px={3}>
-        <Heading size="sm" color={textColor}>
+const PlaceCard = memo(({ place, textColor }) => (
+  <MotionCard
+    maxW="full"
+    bg={useColorModeValue("white", "gray.800")}
+    whileHover={{ y: -8, boxShadow: "xl" }}
+    whileTap={{ scale: 0.98 }}
+    transition={{ duration: 0.3 }}
+    overflow="hidden"
+    borderRadius="xl"
+    boxShadow="md"
+    position="relative"
+  >
+    <Box position="relative" overflow="hidden" height="200px">
+      <Image
+        src={place.image}
+        alt={place.name}
+        width="100%"
+        height="100%"
+        objectFit="cover"
+        loading="lazy"
+        fallbackSrc="/placeholder.jpg"
+        transition="transform 0.3s ease-in-out"
+        _groupHover={{ transform: "scale(1.1)" }}
+      />
+      <Badge
+        position="absolute"
+        top="4"
+        right="4"
+        colorScheme="blue"
+        borderRadius="full"
+        px="3"
+        py="1"
+      >
+        Explorar
+      </Badge>
+    </Box>
+
+    <CardBody p="6">
+      <VStack align="start" spacing="4">
+        <Heading size="md" color={textColor}>
           {place.name}
         </Heading>
-      </CardHeader>
-      <CardBody py={2} px={3}>
-        <Image
-          src={place.image}
-          alt={place.name}
-          height="150px"
-          width="100%"
-          objectFit="cover"
-          loading="lazy"
-          fallbackSrc="/placeholder.jpg"
-        />
-        <Text mt={2} color={textColor} fontSize="sm" noOfLines={3}>
+        <Text color={textColor} fontSize="sm" noOfLines={3}>
           {place.description}
         </Text>
-      </CardBody>
-      <CardFooter py={2} px={3}>
-        <Link to="/provincia">
-          <Button colorScheme="blue" size="sm">
-            Aprende Más
+        <Link to={place.path} style={{ width: "100%" }}>
+          <Button
+            rightIcon={<Icon as={FaArrowRight} />}
+            colorScheme="teal"
+            size="sm"
+            width="full"
+            variant="outline"
+            _hover={{
+              transform: "translateX(4px)",
+              boxShadow: "md",
+            }}
+          >
+            Descubrir
           </Button>
         </Link>
-      </CardFooter>
-    </MotionCard>
-  );
-});
+      </VStack>
+    </CardBody>
+  </MotionCard>
+));
 
 PlaceCard.propTypes = {
   place: PropTypes.shape({
     name: PropTypes.string.isRequired,
     image: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
   }).isRequired,
   textColor: PropTypes.string.isRequired,
 };
@@ -76,83 +105,107 @@ PlaceCard.displayName = "PlaceCard";
 
 const Home = () => {
   const textColor = useColorModeValue("gray.700", "gray.300");
-  const bgColor = useColorModeValue("blue.400", "gray.700");
-  const [error, setError] = React.useState(null);
+  const bgGradient = useColorModeValue(
+    "linear(to-b, teal.50, gray.50)",
+    "linear(to-b, gray.900, gray.800)"
+  );
 
-  const getSeason = () => {
-    const month = new Date().getMonth();
-    if (month >= 11 || month <= 1) return "verano";
-    if (month >= 2 && month <= 4) return "otoño";
-    if (month >= 5 && month <= 7) return "invierno";
-    return "primavera";
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+    },
   };
 
   return (
     <Box
       as="main"
-      textAlign="center"
-      color={textColor}
-      mt={3}
-      mb={10}
-      role="main"
-      aria-label="Página principal de Catamarca Turismo"
+      minH="calc(100vh - 80px)"
+      bgGradient={bgGradient}
+      py={{ base: 8, md: 12 }}
+      px={4}
     >
-      <Box
-        as={motion.div}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Heading as="h1" size="2xl" color={textColor}>
-          ¡Bienvenidos a la Provincia de Catamarca!
-        </Heading>
-        <Text fontSize="xl" mt={2} color={textColor}>
-          Descubre Lugares Turísticos Asombrosos de Catamarca
-        </Text>
-        <Text fontSize="lg" mt={1} color={textColor}>
-          Estamos en temporada de {getSeason()}, el mejor momento para visitar.
-        </Text>
-        <Text fontSize="xl" mt={2} color={textColor}>
-          Explora los destinos más hermosos de la provincia.
-        </Text>
-      </Box>
+      <Container maxW="7xl">
+        <VStack spacing={12}>
+          <MotionBox
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            textAlign="center"
+          >
+            <Badge
+              colorScheme="teal"
+              fontSize="sm"
+              mb={4}
+              px={4}
+              py={1}
+              borderRadius="full"
+            >
+              Bienvenidos
+            </Badge>
+            <Heading
+              as="h1"
+              size={{ base: "2xl", md: "3xl" }}
+              bgGradient="linear(to-r, teal.400, blue.500)"
+              bgClip="text"
+              mb={4}
+              fontWeight="bold"
+            >
+              Descubre Catamarca
+            </Heading>
+            <Text fontSize={{ base: "lg", md: "xl" }} color={textColor} maxW="2xl" mx="auto">
+              Explora los destinos más hermosos de la provincia y vive experiencias únicas.
+            </Text>
+          </MotionBox>
 
-      {error && (
-        <Alert status="error" mb={5}>
-          <AlertIcon />
-          {error}
-        </Alert>
-      )}
+          <MotionBox
+            as={SimpleGrid}
+            columns={{ base: 1, md: 2, lg: 3 }}
+            spacing={8}
+            w="full"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            {places.map((place, index) => (
+              <motion.div key={index} variants={itemVariants}>
+                <PlaceCard place={place} textColor={textColor} />
+              </motion.div>
+            ))}
+          </MotionBox>
 
-      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} spacing={4} mx={4} mt={4}>
-        {places.map((place, index) => (
-          <PlaceCard key={index} place={place} textColor={textColor} />
-        ))}
-      </SimpleGrid>
-
-      <Link to="/provincia">
-        <Button
-          mt={6}
-          colorScheme="teal"
-          variant="solid"
-          color="white"
-          bg={bgColor}
-          _hover={{
-            transform: "scale(1.05)",
-            boxShadow: "lg",
-          }}
-          _active={{
-            transform: "scale(0.95)",
-            bg: "teal.700",
-          }}
-          borderRadius="md"
-          px={6}
-          py={3}
-          aria-label="Ver más detalles sobre la provincia"
-        >
-          Ver Provincia
-        </Button>
-      </Link>
+          <Flex justify="center">
+            <Link to="/provincia">
+              <Button
+                size="lg"
+                colorScheme="teal"
+                rightIcon={<FaMapMarkedAlt />}
+                _hover={{
+                  transform: "translateY(-2px)",
+                  boxShadow: "lg",
+                }}
+                _active={{
+                  transform: "translateY(0)",
+                }}
+                px={8}
+              >
+                Explorar Provincia
+              </Button>
+            </Link>
+          </Flex>
+        </VStack>
+      </Container>
     </Box>
   );
 };

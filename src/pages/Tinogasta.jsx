@@ -4,6 +4,8 @@ import {
   Box,
   Button,
   Container,
+  Grid,
+  GridItem,
   Heading,
   Image,
   Select,
@@ -15,16 +17,15 @@ import {
   Badge,
   IconButton,
   Tooltip,
-  useDisclosure,
+  Flex,
 } from "@chakra-ui/react";
 import { locations } from "../data/tinogasta";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaMapMarkedAlt, FaInfoCircle } from "react-icons/fa";
+import { FaMapMarkedAlt, FaInfoCircle, FaFilter } from "react-icons/fa";
 
 const LocationCard = ({ location, isOpen, onToggle }) => {
   const bgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.700", "gray.200");
-  const { isOpen: isTooltipOpen, onToggle: onTooltipToggle } = useDisclosure();
 
   return (
     <motion.div
@@ -44,7 +45,7 @@ const LocationCard = ({ location, isOpen, onToggle }) => {
         transition="all 0.3s"
         _hover={{ transform: "translateY(-8px)", boxShadow: "2xl" }}
       >
-        <Box position="relative" height="300px">
+        <Box position="relative" height="300px" overflow="hidden">
           <Image
             src={location.imgSrc}
             alt={location.name}
@@ -63,21 +64,22 @@ const LocationCard = ({ location, isOpen, onToggle }) => {
             borderRadius="full"
             px="3"
             py="1"
+            backdropFilter="blur(8px)"
           >
             {location.category}
           </Badge>
         </Box>
 
-        <VStack p="6" align="stretch" spacing="4">
+        <VStack p="6" align="stretch" spacing="2">
           <Heading size="md" color={textColor}>
             {location.name}
           </Heading>
           
-          <Text color={textColor} fontSize="sm" noOfLines={3}>
+          <Text color={textColor} fontSize="md" noOfLines={3}>
             {location.description}
           </Text>
 
-          <Box display="flex" gap="4">
+          <Flex gap="4" mt="2">
             <Tooltip label={isOpen ? "Ocultar mapa" : "Ver ubicación"}>
               <IconButton
                 icon={<FaMapMarkedAlt />}
@@ -85,29 +87,35 @@ const LocationCard = ({ location, isOpen, onToggle }) => {
                 variant="outline"
                 onClick={() => onToggle(location.id)}
                 aria-label="Toggle map"
+                size="lg"
                 isRound
-                _hover={{ transform: "scale(1.1)" }}
+                _hover={{ 
+                  transform: "scale(1.1)",
+                  boxShadow: "md" 
+                }}
               />
             </Tooltip>
 
-            <Tooltip label="Más información">
-              <Link
-                href={location.path}
-                isExternal
-                style={{ textDecoration: "none" }}
-                flex="1"
+            <Link
+              href={location.path}
+              isExternal
+              style={{ textDecoration: "none" }}
+              flex="1"
+            >
+              <Button
+                leftIcon={<FaInfoCircle />}
+                colorScheme="blue"
+                width="full"
+                size="lg"
+                _hover={{
+                  transform: "translateY(-2px)",
+                  boxShadow: "md"
+                }}
               >
-                <Button
-                  leftIcon={<FaInfoCircle />}
-                  colorScheme="blue"
-                  width="full"
-                  _hover={{ transform: "translateY(-2px)" }}
-                >
-                  Más detalles
-                </Button>
-              </Link>
-            </Tooltip>
-          </Box>
+                Más detalles
+              </Button>
+            </Link>
+          </Flex>
 
           <AnimatePresence>
             {isOpen && (
@@ -121,7 +129,7 @@ const LocationCard = ({ location, isOpen, onToggle }) => {
                   mt="4"
                   borderRadius="lg"
                   overflow="hidden"
-                  height="250px"
+                  height="300px"
                   boxShadow="inner"
                 >
                   <iframe
@@ -186,64 +194,105 @@ const Tinogasta = () => {
   ];
 
   return (
-    <Container maxW="8xl" py="12" px={{ base: "4", md: "8" }}>
-      <VStack spacing="8" as={motion.div} initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
-        <Heading
-          as="h1"
-          size="2xl"
-          textAlign="center"
-          fontFamily="JetBrains Mono"
-          color={textColor}
+    <Box bg={bgColor} minH="100vh" py="12">
+      <Container maxW="8xl" px={{ base: 4, md: 8 }}>
+        <Grid
+          templateColumns={{ base: "1fr", lg: "250px 1fr" }}
+          gap={8}
         >
-          Tinogasta
-        </Heading>
-        
-        <Text
-          fontSize="xl"
-          textAlign="center"
-          color={textColor}
-          maxW="3xl"
-          mx="auto"
-        >
-          Descubre Tinogasta, una joya en el oeste de Catamarca, donde la tradición 
-          vitivinícola se une con paisajes impresionantes y una rica historia cultural.
-        </Text>
+          {/* Sidebar */}
+          <GridItem>
+            <Box
+              position="sticky"
+              top="20"
+              bg={useColorModeValue("white", "gray.800")}
+              p={6}
+              borderRadius="xl"
+              boxShadow="sm"
+            >
+              <VStack spacing={4}>
+                <Heading size="md" color={textColor}>
+                  Filtrar por categoría
+                </Heading>
+                <Select
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  bg={useColorModeValue("white", "gray.700")}
+                  icon={<FaFilter />}
+                  size="lg"
+                >
+                  <option value="">Todas las categorías</option>
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </Select>
+              </VStack>
+            </Box>
+          </GridItem>
 
-        <Box w={{ base: "100%", md: "300px" }}>
-          <Select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            bg={useColorModeValue("white", "gray.700")}
-            placeholder="Filtrar por categoría"
-          >
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </Select>
-        </Box>
+          {/* Main Content */}
+          <GridItem>
+            <VStack spacing={8} align="stretch">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <VStack spacing={4} textAlign="center" mb={8}>
+                  <Badge
+                    colorScheme="teal"
+                    px="4"
+                    py="1"
+                    borderRadius="full"
+                    fontSize="sm"
+                  >
+                    Explora
+                  </Badge>
+                  <Heading
+                    as="h1"
+                    size="2xl"
+                    bgGradient="linear(to-r, teal.400, blue.500)"
+                    bgClip="text"
+                    fontFamily="JetBrains Mono"
+                  >
+                    Tinogasta
+                  </Heading>
+                  <Text
+                    fontSize="xl"
+                    color={textColor}
+                    maxW="3xl"
+                    mx="auto"
+                  >
+                    Descubre Tinogasta, una joya en el oeste de Catamarca, donde la tradición 
+                    vitivinícola se une con paisajes impresionantes y una rica historia cultural.
+                  </Text>
+                </VStack>
+              </motion.div>
 
-        <SimpleGrid
-          columns={{ base: 1, md: 2, lg: 3 }}
-          spacing="8"
-          w="full"
-          as={motion.div}
-          layout
-        >
-          <AnimatePresence>
-            {filteredLocations.map((location) => (
-              <LocationCard 
-                key={location.id}
-                location={location}
-                isOpen={openLocationId === location.id}
-                onToggle={handleToggle}
-              />
-            ))}
-          </AnimatePresence>
-        </SimpleGrid>
-      </VStack>
-    </Container>
+              <SimpleGrid
+                columns={{ base: 1, lg: 2, xl: 3 }}
+                spacing={8}
+                as={motion.div}
+                layout
+              >
+                <AnimatePresence mode="wait">
+                  {filteredLocations.map((location) => (
+                    <LocationCard
+                      key={location.id}
+                      location={location}
+                      isOpen={openLocationId === location.id}
+                      onToggle={handleToggle}
+                    />
+                  ))}
+                </AnimatePresence>
+              </SimpleGrid>
+            </VStack>
+          </GridItem>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 
