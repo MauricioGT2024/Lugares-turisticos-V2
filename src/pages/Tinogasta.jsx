@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
   Button,
-  Flex,
-  Grid,
+  Container,
   Heading,
   Image,
   Select,
@@ -12,188 +11,239 @@ import {
   useColorModeValue,
   Link,
   SimpleGrid,
+  VStack,
+  Badge,
+  IconButton,
+  Tooltip,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { locations } from "../data/tinogasta";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaMapMarkedAlt, FaInfoCircle } from "react-icons/fa";
 
 const LocationCard = ({ location, isOpen, onToggle }) => {
-  LocationCard.propTypes = {
-    location: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-      imgSrc: PropTypes.string.isRequired,
-      mapUrl: PropTypes.string.isRequired,
-      area: PropTypes.string.isRequired,
-    }).isRequired,
-    isOpen: PropTypes.bool.isRequired,
-    onToggle: PropTypes.func.isRequired,
-  };
-
-  const bgColor = useColorModeValue("white", "gray.700");
-
-    const selectVariants = {
-      hidden: { opacity: 0, y: -20 },
-      visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-    };
+  const bgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.700", "gray.200");
+  const { isOpen: isTooltipOpen, onToggle: onTooltipToggle } = useDisclosure();
 
   return (
-    <motion.div variants={selectVariants} initial="hidden" animate="visible">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.5 }}
+      layout
+    >
       <Box
-        maxW="md"
-        borderRadius="xl"
+        borderRadius="2xl"
         overflow="hidden"
-        boxShadow="lg"
         bg={bgColor}
+        boxShadow="xl"
         position="relative"
-        height={isOpen ? "auto" : "485px"}
-        transition="all 0.3s ease"
-        _hover={{ transform: "translateY(-5px)" }}
+        height={isOpen ? "auto" : "500px"}
+        transition="all 0.3s"
+        _hover={{ transform: "translateY(-8px)", boxShadow: "2xl" }}
       >
-        <Box position="relative" height="300px" overflow="hidden">
+        <Box position="relative" height="300px">
           <Image
             src={location.imgSrc}
             alt={location.name}
             objectFit="cover"
-            height="100%"
-            width="100%"
+            w="100%"
+            h="100%"
+            transition="transform 0.5s"
+            _hover={{ transform: "scale(1.05)" }}
           />
+          <Badge
+            position="absolute"
+            top="4"
+            right="4"
+            colorScheme="teal"
+            fontSize="sm"
+            borderRadius="full"
+            px="3"
+            py="1"
+          >
+            {location.category}
+          </Badge>
         </Box>
 
-        <Box p={4} display="flex" flexDirection="column" height="100%">
-          <Heading size="md" mb={2}>
+        <VStack p="6" align="stretch" spacing="4">
+          <Heading size="md" color={textColor}>
             {location.name}
           </Heading>
-          <Text mb={3} fontSize="sm">
+          
+          <Text color={textColor} fontSize="sm" noOfLines={3}>
             {location.description}
           </Text>
 
-          {/* Contenedor flex para los botones */}
-          <Box display="flex" flexDirection="row" gap={4} mt={3}>
-            <Button
-              colorScheme="teal"
-              size="md"
-              onClick={() => onToggle(location.id)}
-            >
-              {isOpen ? "Ocultar Mapa" : "Mostrar Mapa"}
-            </Button>
+          <Box display="flex" gap="4">
+            <Tooltip label={isOpen ? "Ocultar mapa" : "Ver ubicación"}>
+              <IconButton
+                icon={<FaMapMarkedAlt />}
+                colorScheme="teal"
+                variant="outline"
+                onClick={() => onToggle(location.id)}
+                aria-label="Toggle map"
+                isRound
+                _hover={{ transform: "scale(1.1)" }}
+              />
+            </Tooltip>
 
-            <Link
-              href={location.path}
-              isExternal
-              style={{ textDecoration: "none" }}
-            >
-              <Button colorScheme="blue">Ver Mas Informacion...</Button>
-            </Link>
+            <Tooltip label="Más información">
+              <Link
+                href={location.path}
+                isExternal
+                style={{ textDecoration: "none" }}
+                flex="1"
+              >
+                <Button
+                  leftIcon={<FaInfoCircle />}
+                  colorScheme="blue"
+                  width="full"
+                  _hover={{ transform: "translateY(-2px)" }}
+                >
+                  Más detalles
+                </Button>
+              </Link>
+            </Tooltip>
           </Box>
-          {isOpen && (
-            <motion.div
-              initial={{ scaleY: 0, opacity: 0 }}
-              animate={{ scaleY: 1, opacity: 1 }}
-              exit={{ scaleY: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              style={{
-                overflow: "hidden",
-                transformOrigin: "top",
-                position: "relative",
-                width: "100%",
-              }}
-            >
-              <Box mt={3} pb={4} bg={bgColor} position="relative" zIndex="1">
-                <Text mb={3} fontSize="sm">
-                  Mapa de {location.name}
-                </Text>
+
+          <AnimatePresence>
+            {isOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+              >
                 <Box
-                  mt={3}
-                  flex="1"
+                  mt="4"
+                  borderRadius="lg"
                   overflow="hidden"
-                  position="relative"
-                  zIndex="1"
+                  height="250px"
+                  boxShadow="inner"
                 >
                   <iframe
                     src={location.mapUrl}
-                    name={`Map of ${location.name}`}
+                    title={`Mapa de ${location.name}`}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     allowFullScreen
+                    loading="lazy"
                   />
                 </Box>
-              </Box>
-            </motion.div>
-          )}
-        </Box>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </VStack>
       </Box>
     </motion.div>
   );
 };
 
+LocationCard.propTypes = {
+  location: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    imgSrc: PropTypes.string.isRequired,
+    mapUrl: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    path: PropTypes.string.isRequired,
+  }).isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+};
+
 const Tinogasta = () => {
   const [openLocationId, setOpenLocationId] = useState(null);
-  const [categoryFilter, setCategoryFilter] = useState(""); // Filtro por categoría
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+  const textColor = useColorModeValue("gray.800", "gray.100");
 
   const handleToggle = (id) => {
     setOpenLocationId((prevId) => (prevId === id ? null : id));
   };
-  // Animaciones para El filtro de categoría
-  const selectVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-  };
-  // Filtrar las ubicaciones según la categoría seleccionada
-  const filteredLocations = categoryFilter
-    ? locations.filter((location) => location.category === categoryFilter)
-    : locations;
-  const bgColor = useColorModeValue("white", "gray.700");
-  return (
-    <Box p={6}>
-      <Heading as="h1" size="xl" mb={6} fontFamily={"JetBrains Mono"}>
-        Tinogasta
-      </Heading>
-      <Text mb={6} fontStyle={"oblique"}>
-        Tinogasta, una joya en el oeste de Catamarca, se presenta como un oasis
-        entre montañas y desierto. Este municipio es conocido por su tradición
-        vitivinícola, la belleza de sus paisajes de viñedos y dunas, y su rica
-        historia precolombina y colonial.
-      </Text>
 
-      {/* Filtro de categoría */}
-      <motion.div variants={selectVariants} initial="hidden" animate="visible">
-        <Text textAlign="center" fontWeight="bold" mr={2} gap={0}>
-          Filtrar por:
-        </Text>
-        <Select
-          value={categoryFilter}
-          maxW="15em"
-          margin="auto"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          bg={bgColor}
-          placeholder="Todos"
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          mb={6}
+  const filteredLocations = useMemo(
+    () =>
+      categoryFilter
+        ? locations.filter((loc) => loc.category === categoryFilter)
+        : locations,
+    [categoryFilter]
+  );
+
+  const categories = [
+    "Plazas",
+    "Iglesias",
+    "Museos",
+    "Balnearios",
+    "Naturaleza",
+    "Camping",
+    "Miradores"
+  ];
+
+  return (
+    <Container maxW="8xl" py="12" px={{ base: "4", md: "8" }}>
+      <VStack spacing="8" as={motion.div} initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }}>
+        <Heading
+          as="h1"
+          size="2xl"
+          textAlign="center"
+          fontFamily="JetBrains Mono"
+          color={textColor}
         >
-          <option value="Plazas">Plazas</option>
-          <option value="Iglesias">Iglesias</option>
-          <option value="Museos">Museos</option>
-          <option value="Balnearios">Balnearios</option>
-          <option value="Naturaleza">Naturaleza</option>
-          <option value="Camping">Camping</option>
-          <option value="Miradores">Miradores</option>
-        </Select>
-      </motion.div>
-      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gap={6}>
-        {filteredLocations.map((location) => (
-          <LocationCard
-            key={location.id}
-            location={location}
-            isOpen={openLocationId === location.id}
-            onToggle={handleToggle}
-          />
-        ))}
-      </SimpleGrid>
-    </Box>
+          Tinogasta
+        </Heading>
+        
+        <Text
+          fontSize="xl"
+          textAlign="center"
+          color={textColor}
+          maxW="3xl"
+          mx="auto"
+        >
+          Descubre Tinogasta, una joya en el oeste de Catamarca, donde la tradición 
+          vitivinícola se une con paisajes impresionantes y una rica historia cultural.
+        </Text>
+
+        <Box w={{ base: "100%", md: "300px" }}>
+          <Select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            bg={useColorModeValue("white", "gray.700")}
+            placeholder="Filtrar por categoría"
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </Select>
+        </Box>
+
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 3 }}
+          spacing="8"
+          w="full"
+          as={motion.div}
+          layout
+        >
+          <AnimatePresence>
+            {filteredLocations.map((location) => (
+              <LocationCard 
+                key={location.id}
+                location={location}
+                isOpen={openLocationId === location.id}
+                onToggle={handleToggle}
+              />
+            ))}
+          </AnimatePresence>
+        </SimpleGrid>
+      </VStack>
+    </Container>
   );
 };
 

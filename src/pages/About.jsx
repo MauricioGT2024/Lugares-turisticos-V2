@@ -1,4 +1,3 @@
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:1780292374.
 import {
   Box,
   Heading,
@@ -9,111 +8,231 @@ import {
   Link,
   Button,
   useColorModeValue,
+  Icon,
+  Container,
+  Divider,
+  Badge,
+  HStack,
+  Tooltip,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
+import { 
+  FaMapMarkedAlt, 
+  FaBook, 
+  FaHiking, 
+  FaHotel, 
+  FaCalendarAlt, 
+  FaInfoCircle,
+  FaExternalLinkAlt 
+} from "react-icons/fa";
 
-const About = () => {
-  const bgColor = useColorModeValue("gray.50", "gray.800");
-  const textColor = useColorModeValue("gray.600", "gray.300");
+const FeatureCard = ({ icon, title, description }) => {
+  const cardBg = useColorModeValue("white", "gray.800");
+  const iconBg = useColorModeValue("teal.100", "teal.900");
 
   return (
-    <Box bg={bgColor} minH="100vh" py={10} fontFamily={"JetBrains Mono"}>
-      <VStack spacing={8} maxW="1200px" mx="auto" px={4}>
-        <Heading as="h1" size="2xl" textAlign="center" color="teal.500">
-          Acerca de Catamarca Turismo
+    <motion.div
+      whileHover={{ y: -5 }}
+      whileTap={{ scale: 0.95 }}
+    >
+      <Box
+        bg={cardBg}
+        p={6}
+        borderRadius="xl"
+        boxShadow="lg"
+        position="relative"
+        overflow="hidden"
+      >
+        <Box
+          bg={iconBg}
+          w={12}
+          h={12}
+          borderRadius="full"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          mb={4}
+        >
+          <Icon as={icon} w={6} h={6} color="teal.500" />
+        </Box>
+        <Heading size="md" mb={3} color="teal.500">
+          {title}
         </Heading>
-
-        <Text fontSize="xl" textAlign="center" color={textColor} maxW="800px">
-          Bienvenido a la guía oficial de turismo de Catamarca, Argentina.
-          Nuestra misión es mostrar la belleza y cultura de esta increíble
-          provincia, ayudando a los visitantes a descubrir sus joyas ocultas y
-          planificar su viaje perfecto.
+        <Text fontSize="md" color={useColorModeValue("gray.600", "gray.300")}>
+          {description}
         </Text>
+      </Box>
+    </motion.div>
+  );
+};
 
-        <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10} w="100%">
-          <Box>
-            <Heading as="h2" size="lg" mb={4} color="teal.500">
-              Acerca de Catamarca
-            </Heading>
-            <Text fontSize="lg" color={textColor}>
-              Catamarca es una provincia del noroeste argentino conocida por sus
-              impresionantes paisajes, rica historia y cálida hospitalidad.
-              Desde las majestuosas montañas de los Andes hasta los coloridos
-              festivales locales, Catamarca ofrece una experiencia única para
-              cada viajero.
-            </Text>
-          </Box>
-
-          <Box>
-            <Heading as="h2" size="lg" mb={4} color="teal.500">
-              Nuestras caracteristicas
-            </Heading>
-            <Text fontSize="lg" color={textColor}>
-              • Guías de viaje completas
-              <br />
-              • Mapas interactivos y ubicaciones
-              <br />
-              • Recomendaciones de alojamiento
-              <br />
-              • Eventos y festivales locales
-              <br />• Información cultural y consejos
-            </Text>
-          </Box>
-        </SimpleGrid>
-
-        <Box textAlign="center" mt={8}>
-          <Heading as="h3" size="md" mb={4} color="teal.500">
-            Web Oficial de Turismo{" "}
-          </Heading>
-          <Button
-            as={Link}
-            href="https://turismo.catamarca.gob.ar/"
-            target="_blank"
-            rel="noopener noreferrer"
+const ImageCard = ({ image, title, description }) => {
+  const cardBg = useColorModeValue("white", "gray.800");
+  
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Box
+        bg={cardBg}
+        borderRadius="2xl"
+        overflow="hidden"
+        boxShadow="lg"
+      >
+        <Box position="relative" height="250px">
+          <Image
+            src={image}
+            alt={title}
+            objectFit="cover"
+            w="100%"
+            h="100%"
+            transition="transform 0.3s"
+            _hover={{ transform: "scale(1.1)" }}
+          />
+          <Badge
+            position="absolute"
+            top="4"
+            right="4"
             colorScheme="teal"
-            size="lg"
+            fontSize="sm"
+            px="3"
+            py="1"
+            borderRadius="full"
           >
-            Visita el sitio oficial
-          </Button>
+            Explorar
+          </Badge>
         </Box>
-
-        <Box mt={10} w="100%">
-          <Heading as="h2" size="lg" mb={6} color="teal.500" textAlign="center">
-            ¿Porque visitar Catamarca?
+        <Box p={6}>
+          <Heading size="md" mb={2}>
+            {title}
           </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={6}>
-            <Box textAlign="center">
-              <Image
-                src="https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                alt="Mountains"
-                borderRadius="lg"
-                mb={4}
-              />
-              <Text fontWeight="bold" mb={2}>
-                Paisajes Impresionantes
-              </Text>
-              <Text color={textColor}>
-                Explora las impresionantes montañas de los Andes y maravillas
-                naturales.
-              </Text>
-            </Box>
-
-            <Box textAlign="center">
-              <Image
-                src="https://images.unsplash.com/photo-1503220317375-aaad61436b1b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                alt="Adventure"
-                borderRadius="lg"
-                mb={4}
-              />
-              <Text fontWeight="bold" mb={2}>
-                Actividades de Aventura
-              </Text>
-              <Text color={textColor}>
-                Disfruta de senderismo, trekking y aventuras al aire libre.
-              </Text>
-            </Box>
-          </SimpleGrid>
+          <Text color={useColorModeValue("gray.600", "gray.300")}>
+            {description}
+          </Text>
         </Box>
-      </VStack>
+      </Box>
+    </motion.div>
+  );
+};
+
+const About = () => {
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+  const textColor = useColorModeValue("gray.600", "gray.300");
+  
+  const features = [
+    {
+      icon: FaBook,
+      title: "Guías Completas",
+      description: "Información detallada y actualizada sobre destinos turísticos.",
+    },
+    {
+      icon: FaMapMarkedAlt,
+      title: "Mapas Interactivos",
+      description: "Ubicaciones precisas y rutas recomendadas para tu viaje.",
+    },
+    {
+      icon: FaHotel,
+      title: "Alojamiento",
+      description: "Las mejores opciones de hospedaje para cada presupuesto.",
+    },
+    {
+      icon: FaCalendarAlt,
+      title: "Eventos Locales",
+      description: "Calendario actualizado de festivales y eventos culturales.",
+    },
+    {
+      icon: FaHiking,
+      title: "Actividades",
+      description: "Experiencias únicas y aventuras al aire libre.",
+    },
+    {
+      icon: FaInfoCircle,
+      title: "Información Cultural",
+      description: "Historia, tradiciones y consejos para viajeros.",
+    },
+  ];
+
+  return (
+    <Box bg={bgColor} minH="100vh" py={12}>
+      <Container maxW="7xl">
+        <VStack spacing={12}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <VStack spacing={4} textAlign="center" mb={8}>
+              <Heading
+                as="h1"
+                size="2xl"
+                bgGradient="linear(to-r, teal.400, blue.500)"
+                bgClip="text"
+                letterSpacing="tight"
+              >
+                Acerca de Catamarca Turismo
+              </Heading>
+              <Text fontSize="xl" color={textColor} maxW="2xl">
+                Tu guía definitiva para explorar las maravillas de Catamarca.
+                Descubre paisajes impresionantes, rica cultura y experiencias únicas.
+              </Text>
+            </VStack>
+          </motion.div>
+
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} w="full">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <FeatureCard {...feature} />
+              </motion.div>
+            ))}
+          </SimpleGrid>
+
+          <Divider my={8} />
+
+          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} w="full">
+            <ImageCard
+              image="https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d"
+              title="Paisajes Majestuosos"
+              description="Explora las impresionantes montañas de los Andes y descubre maravillas naturales únicas."
+            />
+            <ImageCard
+              image="https://images.unsplash.com/photo-1503220317375-aaad61436b1b"
+              title="Aventuras Sin Límites"
+              description="Vive experiencias inolvidables con actividades al aire libre y deportes de aventura."
+            />
+          </SimpleGrid>
+
+          <Box textAlign="center" mt={8}>
+            <Heading as="h3" size="lg" mb={6} color="teal.500">
+              ¿Listo para explorar?
+            </Heading>
+            <HStack spacing={4} justify="center">
+              <Tooltip label="Visita el sitio oficial">
+                <Button
+                  as={Link}
+                  href="https://turismo.catamarca.gob.ar/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  colorScheme="teal"
+                  size="lg"
+                  rightIcon={<FaExternalLinkAlt />}
+                  _hover={{
+                    transform: "translateY(-2px)",
+                    boxShadow: "lg",
+                  }}
+                >
+                  Sitio Oficial
+                </Button>
+              </Tooltip>
+            </HStack>
+          </Box>
+        </VStack>
+      </Container>
     </Box>
   );
 };

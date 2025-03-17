@@ -10,107 +10,107 @@ import {
   useColorModeValue,
   Select,
   Link,
+  Container,
+  Tag,
+  VStack,
 } from "@chakra-ui/react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaMapMarkedAlt, FaInfoCircle, FaMapMarkerAlt, FaFilter } from "react-icons/fa";
 import { locations } from "../data/fiambala";
 
 const LocationCard = ({ location, isOpen, onToggle }) => {
-  const bgColor = useColorModeValue("white", "gray.700");
-  const selectVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.9 } },
-  };
-
+  const bgColor = useColorModeValue("white", "gray.800");
+  
   return (
-    <>
-      <motion.div variants={selectVariants} initial="hidden" animate="visible">
-        <Box
-          maxW="sm"
-          borderRadius="xl"
-          overflow="hidden"
-          boxShadow="lg"
-          bg={bgColor}
-          position="relative"
-          minHeight="400px"
-          height={isOpen ? "auto" : "485px"}
-          transition="all 0.3s ease"
-          _hover={{ transform: "translateY(-10px)" }}
-        >
-          <Box position="relative" height="300px" overflow="hidden">
-            <Image
-              src={location.imgSrc}
-              alt={location.title}
-              objectFit="cover"
-              height="100%"
-              width="100%"
-            />
-          </Box>
-
-          <Box p={4} display="flex" flexDirection="column" height="100%">
-            <Heading size="md" mb={2}>
-              {location.title}
-            </Heading>
-            <Text mb={3} fontSize="sm">
-              {location.description}
-            </Text>
-            <Box display="flex" flexDirection="row" gap={4} mt={3}>
-              <Button
-                colorScheme="teal"
-                size="md"
-                onClick={() => onToggle(location.id)}
-              >
-                {isOpen ? "Ocultar Mapa" : "Mostrar Mapa"}
-              </Button>
-
-              <Link
-                href={location.path}
-                isExternal
-                style={{ textDecoration: "none" }}
-              >
-                <Button colorScheme="blue">Ver Mas Informacion...</Button>
-              </Link>
-            </Box>
-
-            {isOpen && (
-              <motion.div
-                initial={{ scaleY: 0, opacity: 0 }}
-                animate={{ scaleY: 1, opacity: 1 }}
-                exit={{ scaleY: 0, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                style={{
-                  overflow: "hidden",
-                  transformOrigin: "top",
-                  position: "relative",
-                  width: "100%",
-                }}
-              >
-                <Box mt={3} pb={4} bg={bgColor} position="relative" zIndex="1">
-                  <Text mb={3} fontSize="sm">
-                    Mapa de {location.title}
-                  </Text>
-                  <Box
-                    mt={3}
-                    flex="1"
-                    overflow="hidden"
-                    position="relative"
-                    zIndex="1"
-                  >
-                    <iframe
-                      src={location.mapSrc}
-                      title={`Map of ${location.title}`}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
-                      allowFullScreen
-                    />
-                  </Box>
-                </Box>
-              </motion.div>
-            )}
-          </Box>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ y: -5 }}
+    >
+      <Box
+        borderRadius="2xl"
+        overflow="hidden"
+        bg={bgColor}
+        boxShadow="xl"
+        position="relative"
+        transition="all 0.3s"
+        _hover={{ transform: "scale(1.02)" }}
+      >
+        <Box position="relative" height="250px">
+          <Image
+            src={location.imgSrc}
+            alt={location.title}
+            objectFit="cover"
+            height="100%"
+            width="100%"
+            transition="transform 0.3s"
+            _hover={{ transform: "scale(1.1)" }}
+          />
+          <Tag
+            position="absolute"
+            top="4"
+            right="4"
+            colorScheme="teal"
+            size="md"
+          >
+            {location.category}
+          </Tag>
         </Box>
-      </motion.div>
-    </>
+
+        <VStack p={6} align="start" spacing={4}>
+          <Heading size="md" fontWeight="bold">
+            {location.title}
+          </Heading>
+          <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
+            {location.description}
+          </Text>
+          <Box display="flex" gap={4} width="100%">
+            <Button
+              colorScheme="teal"
+              variant={isOpen ? "solid" : "outline"}
+              onClick={() => onToggle(location.id)}
+              flex="1"
+              leftIcon={<FaMapMarkedAlt />}
+            >
+              {isOpen ? "Ocultar Mapa" : "Ver Mapa"}
+            </Button>
+            <Link
+              href={location.path}
+              isExternal
+              style={{ textDecoration: "none" }}
+              flex="1"
+            >
+              <Button colorScheme="blue" width="100%" leftIcon={<FaInfoCircle />}>
+                Más Info
+              </Button>
+            </Link>
+          </Box>
+        </VStack>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0 }}
+              animate={{ height: "auto" }}
+              exit={{ height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Box p={6} borderTop="1px" borderColor="gray.200">
+                <iframe
+                  src={location.mapSrc}
+                  title={`Mapa de ${location.title}`}
+                  width="100%"
+                  height="300px"
+                  style={{ border: 0, borderRadius: "12px" }}
+                  allowFullScreen
+                />
+              </Box>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Box>
+    </motion.div>
   );
 };
 
@@ -128,68 +128,80 @@ LocationCard.propTypes = {
 
 const Fiambala = () => {
   const [openLocationId, setOpenLocationId] = useState(null);
-  const [categoryFilter, setCategoryFilter] = useState(""); // Filtro por categoría
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const bgColor = useColorModeValue("gray.50", "gray.900");
 
   const handleToggle = (id) => {
     setOpenLocationId((prevId) => (prevId === id ? null : id));
   };
 
-  const bgColor = useColorModeValue("white", "gray.700");
-
   const filteredLocations = categoryFilter
     ? locations.filter((location) => location.category === categoryFilter)
     : locations;
 
-  const selectVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
-  };
-
   return (
-    <Box p={6}>
-      <Heading as="h1" size="xl" mb={6} fontFamily="JetBrains Mono">
-        Fiambalá
-      </Heading>
-      <Text mb={6} fontStyle={"italic"}>
-        Fiambalá es una localidad conocida por sus paisajes desérticos, termas
-        naturales y rica historia cultural.
-      </Text>
-
-      {/* Filtro de categoría */}
-      <motion.div variants={selectVariants} initial="hidden" animate="visible">
-        <Text textAlign="center" fontWeight="bold" mr={2} gap={0}>
-          Filtrar por:
-        </Text>
-        <Select
-          value={categoryFilter}
-          maxW="15em"
-          margin="auto"
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          bg={bgColor}
-          placeholder="Selecciona una categoría"
-          onChange={(e) => setCategoryFilter(e.target.value)}
-          mb={6}
+    <Container maxW="container.xl" py={12}>
+      <VStack spacing={8} align="stretch">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
         >
-          <option value="Desierto">Desierto</option>
-          <option value="Cultura">Cultura</option>
-          <option value="Termas">Termas</option>
-          <option value="Mirador">Mirador</option>
-        </Select>
-      </motion.div>
+          <Heading
+            as="h1"
+            size="2xl"
+            textAlign="center"
+            mb={4}
+            fontFamily="JetBrains Mono"
+          >
+            Fiambalá
+          </Heading>
+          <Text
+            textAlign="center"
+            fontSize="xl"
+            fontStyle="italic"
+            color={useColorModeValue("gray.600", "gray.400")}
+            mb={8}
+          >
+            Descubre la magia de Fiambalá, donde el desierto, las termas y la
+            cultura se encuentran
+          </Text>
+        </motion.div>
 
-      <SimpleGrid columns={{ sm: 1, md: 2, lg: 3 }} gap={6}>
-        {filteredLocations.map((location) => (
-          <LocationCard
-            key={location.id}
-            location={location}
-            isOpen={openLocationId === location.id}
-            onToggle={handleToggle}
-          />
-        ))}
-      </SimpleGrid>
-    </Box>
+        <Box textAlign="center" mb={8}>
+          <Select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            maxW="xs"
+            mx="auto"
+            bg={useColorModeValue("white", "gray.700")}
+            borderRadius="lg"
+            icon={<FaFilter />}
+          >
+            <option value="">Todas las categorías</option>
+            <option value="Desierto">Desierto</option>
+            <option value="Cultura">Cultura</option>
+            <option value="Termas">Termas</option>
+            <option value="Mirador">Mirador</option>
+          </Select>
+        </Box>
+
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 3 }}
+          spacing={8}
+          px={{ base: 4, md: 0 }}
+        >
+          {filteredLocations.map((location) => (
+            <LocationCard
+              key={location.id}
+              location={location}
+              isOpen={openLocationId === location.id}
+              onToggle={handleToggle}
+            />
+          ))}
+        </SimpleGrid>
+      </VStack>
+    </Container>
   );
 };
 

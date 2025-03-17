@@ -13,6 +13,7 @@ const ColorModeSwitcher = () => {
       variant="outline"
       colorScheme="green"
       ml={2}
+      transform={colorMode === "light" ? "rotate(0deg)" : "rotate(180deg)"}
     />
   );
 };

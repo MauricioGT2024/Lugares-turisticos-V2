@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
   Button,
+  Container,
   Flex,
   SimpleGrid,
   Heading,
@@ -11,153 +12,213 @@ import {
   Text,
   useColorModeValue,
   Link,
+  VStack,
+  Badge,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { motion, AnimatePresence } from "framer-motion";
 import { locations } from "../data/catamarca";
-import { motion } from "framer-motion";
+import { ChevronDownIcon, CloseIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+
+const MotionBox = motion(Box);
 
 const LocationCard = ({ location, expandedId, setExpandedId }) => {
-  LocationCard.propTypes = {
-    location: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-      img: PropTypes.string.isRequired,
-      mapSrc: PropTypes.string.isRequired,
-      category: PropTypes.string.isRequired,
-    }).isRequired,
-    expandedId: PropTypes.number,
-    setExpandedId: PropTypes.func.isRequired,
-  };
   const isExpanded = expandedId === location.id;
   const bgColor = useColorModeValue("white", "gray.700");
+  const textColor = useColorModeValue("gray.700", "gray.200");
+  const { isOpen, onToggle } = useDisclosure();
+
+  const handleExpand = useCallback(() => {
+    setExpandedId(isExpanded ? null : location.id);
+    onToggle();
+  }, [isExpanded, location.id, setExpandedId, onToggle]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
+    <MotionBox
+      layout="position"
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
     >
       <Box
-        maxW="md"
         borderRadius="xl"
         overflow="hidden"
-        boxShadow="lg"
+        boxShadow="xl"
         bg={bgColor}
         position="relative"
-        height={isExpanded ? "auto" : "485px"}
-        transition="all 0.3s ease"
-        _hover={{ transform: "translateY(-10px)" }}
+        height={isExpanded ? "auto" : "500px"}
+        transition="all 0.3s ease-in-out"
+        _hover={{ transform: "translateY(-8px)", boxShadow: "2xl" }}
       >
-        <Box position="relative" height="300px" overflow="hidden">
+        <Box position="relative" height="280px" overflow="hidden">
           <Image
             src={location.imgSrc}
             alt={location.title}
             objectFit="cover"
             height="100%"
             width="100%"
+            transition="transform 0.3s ease-in-out"
+            _hover={{ transform: "scale(1.05)" }}
           />
+          <Badge
+            position="absolute"
+            top={4}
+            right={4}
+            colorScheme="teal"
+            fontSize="xs"
+            borderRadius="full"
+            px={3}
+            py={1}
+          >
+            {location.area}
+          </Badge>
         </Box>
 
-        <Box p={4} display="flex" flexDirection="column" height="100%">
-          <Heading size="md" mb={2}>
+        <VStack p={6} spacing={4} align="stretch">
+          <Heading size="md" color={textColor}>
             {location.title}
           </Heading>
-          <Text mb={3} fontSize="sm">
+          <Text fontSize="sm" color={textColor} opacity={0.9}>
             {location.description}
           </Text>
 
-          {/* Contenedor flex para los botones */}
-          <Box display="flex" flexDirection="row" gap={4} mt={3}>
+          <Flex gap={4} mt="auto">
             <Button
               colorScheme="teal"
-              size="md"
-              onClick={() => setExpandedId(isExpanded ? null : location.id)}
+              onClick={handleExpand}
+              flex={1}
+              _hover={{ transform: "translateY(-2px)" }}
+              leftIcon={isExpanded ? <CloseIcon /> : <ChevronDownIcon />}
             >
-              {isExpanded ? "Ocultar Mapa" : "Mostrar Mapa"}
+              {isExpanded ? "Ocultar" : "Ver más"}
             </Button>
 
             <Link
               href={location.wiki}
               isExternal
-              style={{ textDecoration: "none" }}
+              flex={1}
+              _hover={{ textDecoration: "none" }}
             >
-              <Button colorScheme="blue">Ver en Wikipedia</Button>
+              <Button
+                colorScheme="blue"
+                width="full"
+                _hover={{ transform: "translateY(-2px)" }}
+                leftIcon={<ExternalLinkIcon />}
+              >
+                Wikipedia
+              </Button>
             </Link>
-          </Box>
-          {isExpanded && (
-            <motion.div
-              initial={{ scaleY: 0, opacity: 0 }}
-              animate={{ scaleY: 1, opacity: 1 }}
-              exit={{ scaleY: 0, opacity: 0 }}
-              transition={{ duration: 0.6 }}
-              style={{
-                overflow: "hidden",
-                transformOrigin: "top",
-                position: "relative",
-                width: "100%",
-              }}
-            >
-              <Box mt={3}>
-                <Text fontSize="sm" mb={2}>
-                  Área: {location.area}
-                </Text>
-                <Box height="200px" className="map-container">
+          </Flex>
+
+          <AnimatePresence>
+            {isExpanded && (
+              <MotionBox
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                overflow="hidden"
+              >
+                <Box
+                  mt={4}
+                  height="250px"
+                  borderRadius="lg"
+                  overflow="hidden"
+                  boxShadow="inner"
+                >
                   <iframe
                     src={location.mapSrc}
-                    title={`Map of ${location.title}`}
+                    title={`Mapa de ${location.title}`}
                     width="100%"
                     height="100%"
                     style={{ border: 0 }}
                     allowFullScreen
+                    loading="lazy"
                   />
                 </Box>
-              </Box>
-            </motion.div>
-          )}
-        </Box>
+              </MotionBox>
+            )}
+          </AnimatePresence>
+        </VStack>
       </Box>
-    </motion.div>
+    </MotionBox>
   );
+};
+
+LocationCard.propTypes = {
+  location: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    imgSrc: PropTypes.string.isRequired,
+    mapSrc: PropTypes.string.isRequired,
+    area: PropTypes.string.isRequired,
+    wiki: PropTypes.string.isRequired,
+  }).isRequired,
+  expandedId: PropTypes.number,
+  setExpandedId: PropTypes.func.isRequired,
 };
 
 const Catamarca = () => {
   const [selectedArea, setSelectedArea] = useState("all");
-  const [openLocationId, setOpenLocationId] = useState(null);
-  const handleToggle = (id) => {
-    setOpenLocationId((prevId) => (prevId === id ? null : id));
-  };
-  const filteredLocations =
-    selectedArea === "all"
-      ? locations
-      : locations.filter((loc) => loc.area === selectedArea);
+  const [expandedId, setExpandedId] = useState(null);
 
-  const areas = [...new Set(locations.map((loc) => loc.area))];
+  const { filteredLocations, areas } = useMemo(() => {
+    const filtered =
+      selectedArea === "all"
+        ? locations
+        : locations.filter((loc) => loc.area === selectedArea);
+    const uniqueAreas = [...new Set(locations.map((loc) => loc.area))];
+    return { filteredLocations: filtered, areas: uniqueAreas };
+  }, [selectedArea]);
+
   const bgColor = useColorModeValue("white", "gray.700");
+  const textColor = useColorModeValue("gray.700", "gray.200");
 
   return (
-    <Box p={6}>
-      <Heading as="h1" size="xl" mb={6} fontFamily="JetBrains Mono">
-        Catamarca
-      </Heading>
-      <Text mb={6} fontStyle="oblique">
-        Catamarca, ubicada en el noroeste de Argentina, es una provincia rica en
-        historia y cultura, con paisajes naturales impresionantes y experiencias
-        turísticas variadas.
-      </Text>
-      <SimpleGrid gap={3} alignItems="center" mb={6}>
-        <Flex alignItems="center" gap={3} justifyContent="center" mb={6}>
-          <Text textAlign="center" fontWeight="bold">
-            Filtrar por:
+    <Container maxW="8xl" py={10}>
+      <VStack spacing={8} mb={12}>
+        <Heading
+          as="h1"
+          size="2xl"
+          fontFamily="JetBrains Mono"
+          color={textColor}
+          textAlign="center"
+        >
+          Explora Catamarca
+        </Heading>
+        <Text
+          fontSize="xl"
+          textAlign="center"
+          color={textColor}
+          maxW="3xl"
+          mx="auto"
+        >
+          Descubre la magia del noroeste argentino a través de sus paisajes,
+          cultura e historia. Cada rincón de Catamarca tiene una historia única
+          que contar.
+        </Text>
+
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          align="center"
+          gap={4}
+          w="full"
+          maxW="md"
+          mx="auto"
+        >
+          <Text fontWeight="bold" color={textColor} whiteSpace="nowrap">
+            Filtrar por área:
           </Text>
           <Select
-            color={useColorModeValue("gray.700", "gray.300")}
-            size="md"
-            maxW="150px"
-            alignItems="center"
-            bg={bgColor}
+            value={selectedArea}
             onChange={(e) => setSelectedArea(e.target.value)}
+            bg={bgColor}
+            color={textColor}
+            size="lg"
           >
-            <option value="all">Todas</option>
+            <option value="all">Todas las áreas</option>
             {areas.map((area) => (
               <option key={area} value={area}>
                 {area}
@@ -165,28 +226,26 @@ const Catamarca = () => {
             ))}
           </Select>
         </Flex>
-      </SimpleGrid>
+      </VStack>
 
       <SimpleGrid
-        templateColumns={{
-          base: "1fr",
-          md: "repeat(2, 1fr)",
-          lg: "repeat(3, 1fr)",
-        }}
-        gap={6}
+        columns={{ base: 1, md: 2, lg: 3 }}
+        spacing={8}
+        as={motion.div}
+        layout
       >
-        {filteredLocations.map((location) => (
-          <LocationCard
-            key={location.id}
-            location={location}
-            isOpen={openLocationId === location.id}
-            onToggle={handleToggle}
-            expandedId={openLocationId}
-            setExpandedId={setOpenLocationId}
-          />
-        ))}
+        <AnimatePresence>
+          {filteredLocations.map((location) => (
+            <LocationCard
+              key={location.id}
+              location={location}
+              expandedId={expandedId}
+              setExpandedId={setExpandedId}
+            />
+          ))}
+        </AnimatePresence>
       </SimpleGrid>
-    </Box>
+    </Container>
   );
 };
 
