@@ -59,10 +59,10 @@ export const locations = [
     imgSrc: "img/Fiambala/Termas de Fiambala.webp",
     title: "Termas de Fiambalá",
     description:
-      "Complejo de aguas termales con propiedades curativas, en un entorno desértico y montañoso.",
+      "Desde una fantástica quebrada a los pies de la Cordillera de los Andes, a solo 17 km. de la ciudad de Fiambalá surgen las increíbles Termas de Fiambalá. Un maravilloso lugar donde se conjugan la aventura y la paz, una propuesta única para disfrutar del bienestar del agua termal.",
     category: "Termas",
     mapSrc:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56498.95374376925!2d-67.62239257832026!3d-27.742451399999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x969e2523d2348297%3A0xeba404dd89c8abae!2sTermas%20de%20Fiambala!5e0!3m2!1ses-419!2sar!4v1725208627514!5m2!1ses-419!2sar",
-    path: "",
+    path: "https://www.visitcatamarca.com/imperdibles/termas-de-fiambal%C3%A1",
   },
 ];

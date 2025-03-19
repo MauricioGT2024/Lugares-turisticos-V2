@@ -1,7 +1,7 @@
 export const location = [
   {
     id: 1,
-    imgSrc: "img/Antofagasta-de-la-Sierra/Capital.webp",
+    imgSrc: "/img/Antofagasta-de-la-Sierra/Capital.webp",
     title: "Antofagasta de la Sierra",
     description:
       "Antofagasta de la Sierra es un oasis en medio de un paisaje desértico. Sus lagunas, volcanes y campos de piedra pómez son un atractivo único.",
@@ -13,7 +13,7 @@ export const location = [
   },
   {
     id: 2,
-    imgSrc: "img/Antofagasta-de-la-Sierra/Volcán Carachi Pampa.png",
+    imgSrc: "/img/Antofagasta-de-la-Sierra/Volcán Carachi Pampa.png",
     title: "Volcán Carachi Pampa",
     // Wikipedia
     description:
@@ -26,7 +26,7 @@ export const location = [
   },
   {
     id: 3,
-    imgSrc: "img/Antofagasta-de-la-Sierra/Campo de Piedra Pómez.webp",
+    imgSrc: "/img/Antofagasta-de-la-Sierra/Campo de Piedra Pómez.webp",
     title: "Campo de Piedra Pómez",
     description:
       "Un paisaje surrealista de formaciones de piedra pómez, ideal para explorar y capturar fotografías únicas.", // Wikipedia
@@ -38,7 +38,7 @@ export const location = [
   },
   {
     id: 4,
-    imgSrc: "img/Antofagasta-de-la-Sierra/Laguna Blanca.png",
+    imgSrc: "/img/Antofagasta-de-la-Sierra/Laguna Blanca.png",
     title: "Laguna Blanca",
     description:
       "Un hermoso cuerpo de agua con una gran diversidad de avifauna, rodeado de un paisaje montañoso.",
@@ -50,7 +50,7 @@ export const location = [
   },
   {
     id: 5,
-    imgSrc: "img/Antofagasta-de-la-Sierra/Volcan Antofagasta.webp",
+    imgSrc: "/img/Antofagasta-de-la-Sierra/Volcan Antofagasta.webp",
     title: "Volcán Antofagasta",
     description:
       "Imponente volcán con senderos para trekking y vistas espectaculares del altiplano.",
@@ -63,7 +63,7 @@ export const location = [
   },
   {
     id: 6,
-    imgSrc: "img/Antofagasta-de-la-Sierra/Cerro Galán.webp",
+    imgSrc: "/img/Antofagasta-de-la-Sierra/Cerro Galán.webp",
     title: "Cerro Galán",
     description:
       "Un gigantesco volcán que alberga una caldera de grandes dimensiones con un paisaje único.",
@@ -75,7 +75,7 @@ export const location = [
   },
   {
     id: 7,
-    imgSrc: "img/Antofagasta-de-la-Sierra/salar del Hombre Muerto.webp",
+    imgSrc: "/img/Antofagasta-de-la-Sierra/salar del Hombre Muerto.webp",
     title: "Salar del Hombre Muerto",
     description:
       "Un salar extenso que se destaca por sus costras de sal y el contraste con el cielo.",

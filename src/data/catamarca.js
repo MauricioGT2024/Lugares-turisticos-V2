@@ -37,7 +37,7 @@ export const locations = [
     path: "https://maps.google.com/maps?ll=-28.270839,-65.738847&z=10&t=m&hl=es-419&gl=AR&mapclient=embed&cid=10330556873721422657",
     lugar: "Catamarca",
     area: "Sureste",
-    wiki: "https://turismo.catamarca.gob.ar/dique-las-pirquitas-fme/",
+    wiki: "https://www.visitcatamarca.com/imperdibles/dique-las-pirquitas",
   },
   {
     id: 4,
@@ -64,7 +64,7 @@ export const locations = [
     path: "https://maps.google.com/maps?ll=-28.468993,-65.779928&z=10&t=m&hl=es-419&gl=AR&mapclient=embed&cid=15223769491502248577",
     lugar: "Catamarca",
     area: "Centro",
-    wiki: "https://es.wikipedia.org/wiki/Catedral_bas%C3%ADlica_de_Nuestra_Se%C3%B1ora_del_Valle",
+    wiki: "https://www.visitcatamarca.com/imperdibles/catedral-bas%C3%ADlica-nuestra-se%C3%B1ora-del-valle",
   },
   {
     id: 6,
@@ -72,7 +72,7 @@ export const locations = [
       "img/San Fernando Del Valle De Catamarca/La Fiesta Nacional e Internacional del Poncho.webp",
     title: "La Fiesta Nacional e Internacional del Poncho",
     description:
-      "Atractivo turístico con vistas panorámicas de montañas y valles, popular entre visitantes y fotógrafos.",
+      "Durante el mes de Julio, Catamarca es sede de la fiesta de invierno más importante de Argentina, la “Fiesta Nacional e Internacional del Poncho”, reconocida por su espíritu artesanal y su profundo arraigo en la identidad catamarqueña.",
     mapSrc:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224679.84862245177!2d-65.944013521875!3d-28.370256435358243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94242fea64817755%3A0x12a068eda95f2dce!2sFiesta%20Nacional%20e%20Internacional%20Del%20Poncho!5e0!3m2!1ses-419!2sar!4v1725200736641!5m2!1ses-419!2sar",
     path: "https://maps.google.com/maps?ll=-28.448032,-65.756709&z=10&t=m&hl=es-419&gl=AR&mapclient=embed&cid=1342188058914532814",
