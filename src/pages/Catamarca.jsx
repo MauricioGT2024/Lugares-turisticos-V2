@@ -16,7 +16,14 @@ import {
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { locations } from "../data/catamarca";
-import { FaMapMarkedAlt, FaExternalLinkAlt, FaLandmark, FaTree, FaWater, FaMountain } from "react-icons/fa";
+import {
+  FaMapMarkedAlt,
+  FaExternalLinkAlt,
+  FaLandmark,
+  FaTree,
+  FaWater,
+  FaMountain,
+} from "react-icons/fa";
 
 const MotionBox = motion(Box);
 const MotionBadge = motion(Badge);
@@ -54,7 +61,7 @@ const LocationFilters = ({ selectedFilter, onFilterChange }) => {
 const LocationCard = ({ location, isExpanded, onToggle }) => {
   const bgColor = useColorModeValue("white", "gray.800");
   const IconComponent = getAreaIcon(location.area);
-  
+
   return (
     <MotionBox
       layout="position"
@@ -67,14 +74,14 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
       overflow="hidden"
       bg={bgColor}
       boxShadow={useColorModeValue(
-        '0 4px 6px rgba(160, 174, 192, 0.6)',
-        '0 4px 6px rgba(0, 0, 0, 0.4)'
+        "0 4px 6px rgba(160, 174, 192, 0.6)",
+        "0 4px 6px rgba(0, 0, 0, 0.4)"
       )}
       _hover={{
         transform: "translateY(-8px)",
         boxShadow: useColorModeValue(
-          '0 20px 25px -5px rgba(160, 174, 192, 0.4)',
-          '0 20px 25px -5px rgba(0, 0, 0, 0.3)'
+          "0 20px 25px -5px rgba(160, 174, 192, 0.4)",
+          "0 20px 25px -5px rgba(0, 0, 0, 0.3)"
         ),
       }}
       position="relative"
@@ -123,7 +130,11 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
           </Heading>
         </motion.div>
 
-        <Text color={useColorModeValue("gray.700", "gray.200")} fontSize="md" noOfLines={3}>
+        <Text
+          color={useColorModeValue("gray.700", "gray.200")}
+          fontSize="md"
+          noOfLines={!isExpanded ? 2 : undefined}
+        >
           {location.description}
         </Text>
 
@@ -182,30 +193,30 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
 // Funciones auxiliares para colores y gradientes
 const getAreaGradient = (area) => {
   const gradients = {
-    "Centro": "linear(to-r, yellow.400, green.500)", // Dorado y verde para arquitectura colonial y valle
-    "Noroeste": "linear(to-r, green.400, teal.500)", // Verdes para vegetación abundante
-    "Sureste": "linear(to-r, blue.400, green.400)", // Azul y verde para agua y vegetación
-    "Norte": "linear(to-r, orange.400, yellow.400, green.400)" // Naranja, amarillo y verde para montañas
+    Centro: "linear(to-r, yellow.400, green.500)", // Dorado y verde para arquitectura colonial y valle
+    Noroeste: "linear(to-r, green.400, teal.500)", // Verdes para vegetación abundante
+    Sureste: "linear(to-r, blue.400, green.400)", // Azul y verde para agua y vegetación
+    Norte: "linear(to-r, orange.400, yellow.400, green.400)", // Naranja, amarillo y verde para montañas
   };
   return gradients[area] || "linear(to-r, yellow.400, green.400)";
 };
 
 const getBadgeColor = (area) => {
   const colors = {
-    "Centro": "rgba(218, 165, 32, 0.9)", // Dorado semi-transparente
-    "Noroeste": "rgba(72, 187, 120, 0.9)", // Verde
-    "Sureste": "rgba(66, 153, 225, 0.9)", // Azul
-    "Norte": "rgba(237, 137, 54, 0.9)" // Naranja
+    Centro: "rgba(218, 165, 32, 0.9)", // Dorado semi-transparente
+    Noroeste: "rgba(72, 187, 120, 0.9)", // Verde
+    Sureste: "rgba(66, 153, 225, 0.9)", // Azul
+    Norte: "rgba(237, 137, 54, 0.9)", // Naranja
   };
   return colors[area] || "rgba(237, 137, 54, 0.9)";
 };
 
 const getAreaIcon = (area) => {
   const icons = {
-    "Centro": FaLandmark,
-    "Noroeste": FaTree,
-    "Sureste": FaWater,
-    "Norte": FaMountain
+    Centro: FaLandmark,
+    Noroeste: FaTree,
+    Sureste: FaWater,
+    Norte: FaMountain,
   };
   return icons[area] || FaMapMarkedAlt;
 };
@@ -217,15 +228,16 @@ const Catamarca = () => {
   const textColor = useColorModeValue("gray.600", "gray.300");
 
   const { filteredLocations, areas } = useMemo(() => {
-    const filtered = selectedArea === "Todos" 
-      ? locations 
-      : locations.filter(loc => loc.area === selectedArea);
-    const uniqueAreas = [...new Set(locations.map(loc => loc.area))];
+    const filtered =
+      selectedArea === "Todos"
+        ? locations
+        : locations.filter((loc) => loc.area === selectedArea);
+    const uniqueAreas = [...new Set(locations.map((loc) => loc.area))];
     return { filteredLocations: filtered, areas: uniqueAreas };
   }, [selectedArea]);
 
   const handleToggle = (id) => {
-    setExpandedId(currentId => currentId === id ? null : id);
+    setExpandedId((currentId) => (currentId === id ? null : id));
   };
 
   return (
@@ -234,10 +246,10 @@ const Catamarca = () => {
         <motion.div
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ 
+          transition={{
             duration: 0.8,
             type: "spring",
-            bounce: 0.4
+            bounce: 0.4,
           }}
         >
           <VStack spacing={4} textAlign="center" mb={8}>
@@ -270,12 +282,7 @@ const Catamarca = () => {
             >
               San Fernando del Valle
             </Heading>
-            <Text
-              fontSize="xl"
-              color={textColor}
-              maxW="3xl"
-              mx="auto"
-            >
+            <Text fontSize="xl" color={textColor} maxW="3xl" mx="auto">
               Descubre los tesoros escondidos de la capital catamarqueña
             </Text>
           </VStack>
@@ -286,11 +293,7 @@ const Catamarca = () => {
           onFilterChange={setSelectedArea}
         />
 
-        <SimpleGrid
-          columns={{ base: 1, md: 2, lg: 3 }}
-          spacing={8}
-          w="full"
-        >
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} w="full">
           <AnimatePresence mode="sync">
             {filteredLocations.map((location) => (
               <LocationCard
