@@ -1,121 +1,141 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Card,
-  Image,
-  Heading,
-  Text,
-  Link as ChakraLink,
-  CardBody,
   Box,
   Container,
+  SimpleGrid,
   VStack,
-  useColorModeValue,
-  Skeleton,
+  Heading,
+  Text,
+  Image,
   Badge,
+  useColorModeValue,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import { departamentos } from "../data/departamentos";
 import PropTypes from "prop-types";
-import { Link as ReactRouterLink } from "react-router-dom";
-import { SimpleGrid } from "@chakra-ui/react";
+
+const MotionBox = motion(Box);
 
 const DepartamentoCard = ({ loc }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const bgGradient = useColorModeValue(
-    "linear(to-br, teal.400, blue.500)",
-    "linear(to-br, teal.600, blue.700)"
-  );
+  const [isHovered, setIsHovered] = useState(false);
+  const bgColor = useColorModeValue("white", "gray.800");
+  
+  // Función para determinar el gradiente según el departamento
+  const getGradient = (name) => {
+    const gradients = {
+      "Antofagasta de la Sierra": {
+        gradient: "linear(to-r, orange.400, yellow.400, yellow.600)",
+        color: useColorModeValue("orange.600", "orange.300")
+      },
+      "Tinogasta": {
+        gradient: "linear(to-r, purple.400, red.400, orange.400)",
+        color: useColorModeValue("purple.600", "purple.300")
+      },
+      "Fiambalá": {
+        gradient: "linear(to-r, yellow.400, orange.400, red.500)",
+        color: useColorModeValue("yellow.600", "yellow.300")
+      },
+      "Catamarca Capital": {
+        gradient: "linear(to-r, green.400, yellow.400, green.500)",
+        color: useColorModeValue("green.600", "green.300")
+      },
+      default: {
+        gradient: "linear(to-r, teal.400, blue.500)",
+        color: useColorModeValue("teal.600", "teal.300")
+      }
+    };
+    return gradients[name] || gradients.default;
+  };
 
   return (
-    <motion.div
+    <MotionBox
+      layout="position"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      whileHover={{ y: -8 }}
       transition={{ duration: 0.3 }}
+      whileHover={{ y: -8 }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
     >
       <ChakraLink
-        as={ReactRouterLink}
+        as={RouterLink}
         to={loc.path}
-        textDecoration="none"
-        _hover={{ textDecoration: "none" }}
-        display="block"
+        _hover={{ textDecoration: 'none' }}
       >
-        <Card
-          maxW="sm"
+        <Box
+          borderRadius="xl"
           overflow="hidden"
-          borderRadius="2xl"
-          boxShadow="xl"
-          bg={useColorModeValue('white', 'gray.800')}
+          bg={bgColor}
+          boxShadow={useColorModeValue(
+            '0 4px 6px rgba(160, 174, 192, 0.6)',
+            '0 4px 6px rgba(0, 0, 0, 0.4)'
+          )}
           position="relative"
-          transition="all 0.3s"
+          height="400px"
           _hover={{
-            transform: 'scale(1.02)',
+            transform: 'translateY(-8px)',
             boxShadow: '2xl',
           }}
+          transition="all 0.3s ease"
         >
-          <Box position="relative" height="250px" overflow="hidden">
-            <Skeleton isLoaded={isLoaded} height="100%" fadeDuration={1}>
-              <Image
-                src={loc.image}
-                alt={loc.name}
-                objectFit="cover"
-                width="100%"
-                height="100%"
-                transition="transform 0.5s"
-                onLoad={() => setIsLoaded(true)}
-                loading="lazy"
-                _hover={{ transform: 'scale(1.1)' }}
-              />
-            </Skeleton>
-            <Box
-              position="absolute"
-              top="0"
-              left="0"
-              right="0"
-              bottom="0"
-              bgGradient={bgGradient}
-              opacity="0"
-              transition="opacity 0.3s"
-              _groupHover={{ opacity: 0.7 }}
+          <Box position="relative" height="220px" overflow="hidden">
+            <Image
+              src={loc.image}
+              alt={loc.name}
+              objectFit="cover"
+              w="full"
+              h="full"
+              transition="transform 0.3s ease"
+              transform={isHovered ? "scale(1.1)" : "scale(1)"}
             />
-            <Badge
-              position="absolute"
-              top="4"
-              right="4"
-              colorScheme=""
-              fontSize="sm"
-              borderRadius="full"
-              px="3"
-              py="1"
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 }}
             >
-              Explorar
-            </Badge>
+              <Badge
+                position="absolute"
+                top={4}
+                right={4}
+                px={3}
+                py={1}
+                borderRadius="full"
+                bg="rgba(49, 151, 149, 0.9)"
+                color="white"
+                backdropFilter="blur(8px)"
+              >
+                Explorar
+              </Badge>
+            </motion.div>
           </Box>
 
-          <CardBody p="6">
-            <VStack align="start" spacing="3">
-              <Heading 
-                size="lg" 
-                bgGradient={bgGradient}
-                bgClip="text"
-                transition="all 0.3s"
-                _groupHover={{ transform: 'scale(1.05)' }}
-              >
-                {loc.name}
-              </Heading>
-              <Text
-                fontSize="md"
-                color={useColorModeValue('gray.600', 'gray.300')}
-                noOfLines={3}
-              >
-                {loc.description}
-              </Text>
-            </VStack>
-          </CardBody>
-        </Card>
+          <VStack p={6} spacing={4} align="start" height="180px">
+            <Heading
+              size="lg"
+              color={getGradient(loc.name).color}
+              fontFamily="JetBrains Mono"
+              transition="color 0.2s ease"
+              _hover={{
+                bgGradient: getGradient(loc.name).gradient,
+                bgClip: "text"
+              }}
+            >
+              {loc.name}
+            </Heading>
+            <Text
+              fontSize="md"
+              color={useColorModeValue("gray.600", "gray.300")}
+              noOfLines={3}
+            >
+              {loc.description}
+            </Text>
+          </VStack>
+        </Box>
       </ChakraLink>
-    </motion.div>
+    </MotionBox>
   );
 };
 
@@ -130,44 +150,87 @@ DepartamentoCard.propTypes = {
 };
 
 const Provincia = () => {
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+  const textColor = useColorModeValue("gray.600", "gray.300");
+
   return (
-    <Container maxW="8xl" py="12">
-      <VStack spacing="8">
+    <Container maxW="7xl" py={12}>
+      <VStack spacing={8} align="stretch">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ 
+            duration: 0.8,
+            type: "spring",
+            bounce: 0.4
+          }}
         >
-          <Heading
-            as="h1"
-            size="2xl"
-            textAlign="center"
-            bgGradient="linear(to-r, teal.500, blue.500)"
-            bgClip="text"
-            mb="6"
-            fontFamily="JetBrains Mono"
-          >
-            Explora los Departamentos
-          </Heading>
-          <Text
-            fontSize="xl"
-            textAlign="center"
-            color={useColorModeValue('gray.600', 'gray.300')}
-            maxW="3xl"
-            mx="auto"
-            mb="8"
-          >
-            Descubre la diversidad y belleza de cada rincón de Catamarca
-          </Text>
+          <VStack spacing={4} textAlign="center" mb={8}>
+            <Badge
+              colorScheme="purple"
+              px={4}
+              py={1}
+              borderRadius="full"
+              fontSize="sm"
+              bg="purple.400"
+              color="white"
+            >
+              Descubre Catamarca
+            </Badge>
+            <Heading
+              as="h1"
+              size="2xl"
+              bgGradient="linear(to-r, green.400, yellow.500, purple.500)"
+              bgClip="text"
+              fontFamily="JetBrains Mono"
+              letterSpacing="tight"
+              mb={2}
+              position="relative"
+              sx={{
+                "&::after": {
+                  content: '""',
+                  position: "absolute",
+                  bottom: "-2px",
+                  left: "0",
+                  width: "100%",
+                  height: "2px",
+                  bgGradient: "linear(to-r, green.400, yellow.500, purple.500)",
+                  transform: "scaleX(0)",
+                  opacity: 0,
+                  transition: "transform 0.3s ease-in-out, opacity 0.3s ease-in-out",
+                  transformOrigin: "left"
+                },
+                "&:hover::after": {
+                  transform: "scaleX(1)",
+                  opacity: 1
+                }
+              }}
+            >
+              Explora los Departamentos
+            </Heading>
+            <Text
+              fontSize="xl"
+              color={textColor}
+              maxW="3xl"
+              mx="auto"
+              fontStyle="italic"
+              as={motion.p}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Descubre la diversidad y belleza de cada rincón de esta hermosa provincia
+            </Text>
+          </VStack>
         </motion.div>
 
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
-          spacing="8"
-          w="full"
+          spacing={8}
+          alignItems="start"
         >
-          <AnimatePresence>
-            {departamentos.map((loc, index) => (
+          <AnimatePresence mode="sync">
+            {departamentos.map((loc) => (
               <DepartamentoCard key={loc.id} loc={loc} />
             ))}
           </AnimatePresence>

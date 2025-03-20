@@ -1,357 +1,296 @@
 import { useState, useMemo } from "react";
-import PropTypes from "prop-types";
 import {
   Box,
-  Button,
   Container,
-  Flex,
-  Heading,
-  Image,
-  Text,
-  VStack,
   SimpleGrid,
-  useColorModeValue,
+  VStack,
+  Heading,
+  Text,
+  Button,
   Badge,
-  Icon,
-  Tooltip,
-  Link,
-  Select,
-  Skeleton,
+  useColorModeValue,
+  Image,
+  HStack,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { FaMapMarkedAlt, FaCompass, FaMountain, FaExternalLinkAlt } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import { FaMountain, FaMapMarkedAlt, FaExternalLinkAlt } from "react-icons/fa";
 import { location } from "../data/antofagasta";
 
 const MotionBox = motion(Box);
-const MotionFlex = motion(Flex);
+const MotionBadge = motion(Badge);
 
-// Componente de Hero animado
-const Hero = () => {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 300], [0, 100]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-  const [imageError, setImageError] = useState(false);
+const FilterButton = ({ category, isSelected, onClick }) => (
+  <Button
+    size="sm"
+    colorScheme={isSelected ? "teal" : "gray"}
+    variant={isSelected ? "solid" : "outline"}
+    onClick={onClick}
+    _hover={{ transform: "translateY(-2px)" }}
+    transition="all 0.2s"
+  >
+    {category}
+  </Button>
+);
 
-  const heroImage = imageError 
-    ? "https://images.unsplash.com/photo-1682686580391-615b1e32be5c" // imagen de respaldo
-    : "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba"; // imagen principal
+const LocationFilters = ({ selectedFilter, onFilterChange }) => {
+  const categories = ["Todos", "Volcan", "Laguna", "Campo", "Salar", "Capital"];
+  
+  return (
+    <Wrap spacing={2} mb={6}>
+      {categories.map((category) => (
+        <WrapItem key={category}>
+          <FilterButton
+            category={category}
+            isSelected={selectedFilter === category}
+            onClick={() => onFilterChange(category)}
+          />
+        </WrapItem>
+      ))}
+    </Wrap>
+  );
+};
 
+const LocationCard = ({ location, isSelected, onToggle }) => {
+  const bgColor = useColorModeValue("white", "gray.800");
+  
   return (
     <MotionBox
-      style={{ y, opacity }}
-      position="relative"
-      h="60vh"
-      mb={16}
+      layout="position"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3, layout: { duration: 0.3 } }}
+      borderWidth="1px"
+      borderRadius="lg"
       overflow="hidden"
+      bg={bgColor}
+      boxShadow={useColorModeValue(
+        '0 4px 6px rgba(160, 174, 192, 0.6)',
+        '0 4px 6px rgba(0, 0, 0, 0.4)'
+      )}
+      _hover={{
+        transform: "translateY(-8px)",
+        boxShadow: useColorModeValue(
+          '0 20px 25px -5px rgba(160, 174, 192, 0.4)',
+          '0 20px 25px -5px rgba(0, 0, 0, 0.3)'
+        ),
+      }}
+      position="relative"
+      height={isSelected ? "auto" : "450px"}
     >
-      <Image
-        src={heroImage}
-        alt="Antofagasta de la Sierra"
-        objectFit="cover"
-        w="full"
-        h="full"
-        filter="brightness(0.7)"
-        onError={() => setImageError(true)}
-        fallback={
-          <Skeleton
-            height="100%"
-            startColor="gray.500"
-            endColor="gray.700"
-          />
-        }
-      />
-      <VStack
-        position="absolute"
-        top="50%"
-        left="50%"
-        transform="translate(-50%, -50%)"
-        spacing={6}
-        align="center"
-        color="white"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
+      <Box position="relative">
+        <Image
+          src={location.imgSrc}
+          alt={location.title}
+          objectFit="cover"
+          h="200px"
+          w="full"
+          transition="transform 0.3s ease"
+          _hover={{ transform: "scale(1.05)" }}
+        />
+        <MotionBadge
+          position="absolute"
+          top={2}
+          right={2}
+          px={2}
+          py={1}
+          borderRadius="full"
+          bg="rgba(237, 137, 54, 0.9)"
+          color="white"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          backdropFilter="blur(8px)"
         >
+          <Box as={FaMountain} display="inline" mr={1} />
+          {location.categoria}
+        </MotionBadge>
+      </Box>
+
+      <VStack p={6} spacing={4} align="start">
+        <motion.div layout="position" style={{ width: "100%" }}>
           <Heading
-            size="3xl"
-            textAlign="center"
-            fontWeight="bold"
-            bgGradient="linear(to-r, teal.200, blue.200)"
-            bgClip="text"
-            textShadow="2xl"
+            size="md"
+            color={useColorModeValue("orange.600", "orange.300")}
+            fontFamily="JetBrains Mono"
+            _hover={{ color: useColorModeValue("orange.500", "orange.200") }}
+            transition="color 0.2s ease"
           >
-            Antofagasta de la Sierra
+            {location.title}
           </Heading>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
+        
+        <motion.div layout="position" style={{ width: "100%" }}>
           <Text
-            fontSize="xl"
-            textAlign="center"
-            maxW="2xl"
-            textShadow="lg"
+            fontSize="sm"
+            color={useColorModeValue("gray.600", "gray.300")}
+            noOfLines={!isSelected ? 3 : undefined}
+            transition="all 0.3s ease"
+            onClick={() => onToggle(location.id)}
+            cursor="pointer"
+            _hover={{ color: "orange.400" }}
           >
-            Descubre la magia de los paisajes más impresionantes de Catamarca
+            {location.description}
           </Text>
         </motion.div>
+
+        <motion.div layout="position" style={{ width: "100%" }}>
+          <Button
+            leftIcon={<FaMapMarkedAlt />}
+            colorScheme="orange"
+            variant="outline"
+            onClick={() => onToggle(location.id)}
+            w="full"
+            _hover={{
+              transform: "translateY(-2px)",
+              bg: "orange.50",
+              borderColor: "orange.400"
+            }}
+          >
+            {isSelected ? "Ver menos" : "Ver más"}
+          </Button>
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          {isSelected && (
+            <MotionBox
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              w="full"
+              overflow="hidden"
+            >
+              <iframe
+                title={location.title}
+                src={location.mapSrc}
+                width="100%"
+                height="300"
+                style={{ border: 0, borderRadius: "8px" }}
+                allowFullScreen
+                loading="lazy"
+              />
+              
+              <Button
+                as="a"
+                href={location.path}
+                target="_blank"
+                rightIcon={<FaExternalLinkAlt />}
+                colorScheme="blue"
+                variant="ghost"
+                mt={4}
+                w="full"
+              >
+                Más información
+              </Button>
+            </MotionBox>
+          )}
+        </AnimatePresence>
       </VStack>
     </MotionBox>
   );
 };
 
-// Componente de tarjeta de ubicación mejorado
-const LocationCard = ({ location, isOpen, onToggle }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
-  const bgColor = useColorModeValue("white", "gray.800");
-  
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.5 }
-    },
-    hover: { 
-      y: -10,
-      transition: { duration: 0.2 }
-    }
-  };
-
-  return (
-    <MotionBox
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      whileHover="hover"
-      layout
-    >
-      <Box
-        bg={bgColor}
-        borderRadius="2xl"
-        overflow="hidden"
-        boxShadow="xl"
-        position="relative"
-        minH="450px"
-        transition="all 0.3s"
-      >
-        <Box position="relative" height="300px" overflow="hidden"> {/* Aumentado de 250px a 300px */}
-          <Skeleton isLoaded={imageLoaded} height="100%">
-            <Image
-              src={location.imgSrc}
-              alt={location.title}
-              objectFit="cover"
-              w="100%"
-              h="100%"
-              style={{ height: '100%' }}
-              transition="transform 0.5s"
-              _hover={{ transform: "scale(1.1)" }}
-              onLoad={() => setImageLoaded(true)}
-              fallback={
-                <Skeleton
-                  height="100%"
-                  startColor="gray.500"
-                  endColor="gray.700"
-                />
-              }
-            />
-          </Skeleton>
-          <Badge
-            position="absolute"
-            top={4}
-            right={4}
-            colorScheme="teal"
-            px={3}
-            py={1}
-            borderRadius="full"
-            display="flex"
-            alignItems="center"
-            gap={2}
-            backdropFilter="blur(8px)"
-            bg="rgba(49, 151, 149, 0.9)"
-          >
-            <Icon as={FaMountain} />
-            {location.categoria}
-          </Badge>
-        </Box>
-
-        <VStack p={6} spacing={4} align="start">
-          <Heading
-            size="md"
-            bgGradient="linear(to-r, teal.400, blue.500)"
-            bgClip="text"
-            transition="all 0.3s"
-          >
-            {location.title}
-          </Heading>
-          
-          <Text 
-            fontSize="sm" 
-            color={useColorModeValue("gray.600", "gray.300")}
-            noOfLines={isOpen ? undefined : 2}
-          >
-            {location.description}
-          </Text>
-
-          <MotionFlex gap={4} w="full" layout>
-            <Button
-              leftIcon={<FaMapMarkedAlt />}
-              colorScheme="teal"
-              variant="outline"
-              onClick={() => onToggle(location.id)}
-              flex={1}
-              _hover={{
-                transform: "translateY(-2px)",
-                shadow: "xl",
-              }}
-            >
-              {isOpen ? "Ocultar Mapa" : "Ver Ubicación"}
-            </Button>
-
-            <Link
-              href={location.path}
-              isExternal
-              _hover={{ textDecoration: "none" }}
-              flex={1}
-            >
-              <Button
-                colorScheme="blue"
-                w="full"
-                rightIcon={<FaExternalLinkAlt />}
-                _hover={{
-                  transform: "translateY(-2px)",
-                  shadow: "xl",
-                }}
-              >
-                Más Info
-              </Button>
-            </Link>
-          </MotionFlex>
-
-          <AnimatePresence>
-            {isOpen && (
-              <MotionBox
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ 
-                  opacity: 1, 
-                  height: "auto",
-                  transition: { duration: 0.3 }
-                }}
-                exit={{ 
-                  opacity: 0, 
-                  height: 0,
-                  transition: { duration: 0.2 }
-                }}
-                w="full"
-                overflow="hidden"
-              >
-                <Box
-                  mt={4}
-                  borderRadius="xl"
-                  overflow="hidden"
-                  boxShadow="inner"
-                >
-                  <iframe
-                    src={location.mapSrc}
-                    title={`Mapa de ${location.title}`}
-                    width="100%"
-                    height="300px"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                    allowFullScreen
-                  />
-                </Box>
-              </MotionBox>
-            )}
-          </AnimatePresence>
-        </VStack>
-      </Box>
-    </MotionBox>
-  );
-};
-
-LocationCard.propTypes = {
-  location: PropTypes.object.isRequired,
-  isOpen: PropTypes.bool.isRequired,
-  onToggle: PropTypes.func.isRequired,
-};
-
-// Componente principal
 const Antofagasta = () => {
-  const [openLocationId, setOpenLocationId] = useState(null);
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [selectedId, setSelectedId] = useState(null);
+  const [filter, setFilter] = useState("Todos");
+  const bgColor = useColorModeValue("gray.50", "gray.900");
+  const textColor = useColorModeValue("gray.600", "gray.300");
 
   const handleToggle = (id) => {
-    setOpenLocationId(openLocationId === id ? null : id);
+    setSelectedId(selectedId === id ? null : id);
   };
 
-  const filteredLocations = useMemo(() => 
-    categoryFilter
-      ? location.filter(loc => loc.categoria === categoryFilter)
-      : location,
-    [categoryFilter]
-  );
-
-  const categories = [...new Set(location.map(loc => loc.categoria))];
+  const filteredLocations = useMemo(() => {
+    return filter === "Todos"
+      ? location
+      : location.filter((loc) => loc.categoria === filter);
+  }, [filter]);
 
   return (
-    <Box>
-      <Hero />
-      
-      <Container maxW="8xl" py={12}>
-        <VStack spacing={8} mb={12}>
-          <Select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            placeholder="Filtrar por categoría"
-            size="lg"
-            maxW="xs"
-            icon={<FaCompass />}
-            borderRadius="full"
-            boxShadow="md"
-            _hover={{ borderColor: "teal.300" }}
-          >
-            {categories.map(category => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </Select>
-        </VStack>
+    <Container maxW="7xl" py={12}>
+      <VStack spacing={8} align="stretch">
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.8,
+            type: "spring",
+            bounce: 0.4
+          }}
+        >
+          <VStack spacing={4} textAlign="center" mb={8}>
+            <Badge
+              colorScheme="orange"
+              px={4}
+              py={1}
+              borderRadius="full"
+              fontSize="sm"
+              bg="orange.400"
+              color="white"
+            >
+              Explora la Puna
+            </Badge>
+            <Heading
+              as="h1"
+              size="2xl"
+              bgGradient="linear(to-r, orange.400, yellow.400, yellow.600)"
+              bgClip="text"
+              fontFamily="JetBrains Mono"
+              letterSpacing="tight"
+              textAlign="center"
+              fontWeight="bold"
+              lineHeight="shorter"
+              mb={2}
+              _hover={{
+                bgGradient: "linear(to-r, yellow.400, orange.400, yellow.600)",
+              }}
+              transition="all 0.3s ease"
+            >
+              Antofagasta de la Sierra
+            </Heading>
+            <Text
+              fontSize="xl"
+              color={textColor}
+              maxW="3xl"
+              mx="auto"
+              fontStyle="italic"
+              as={motion.p}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              Donde el desierto de altura se encuentra con volcanes milenarios y salares brillantes, 
+              creando paisajes únicos en la Puna catamarqueña.
+            </Text>
+          </VStack>
+        </motion.div>
 
+        <LocationFilters
+          selectedFilter={filter}
+          onFilterChange={setFilter}
+        />
+        
         <SimpleGrid
           columns={{ base: 1, md: 2, lg: 3 }}
           spacing={8}
-          as={motion.div}
-          layout
+          alignItems="start"
         >
-          <AnimatePresence mode="wait">
-            {filteredLocations.map((loc, index) => (
-              <motion.div
+          <AnimatePresence mode="sync">
+            {filteredLocations.map((loc) => (
+              <LocationCard
                 key={loc.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ 
-                  duration: 0.5,
-                  delay: index * 0.1 
-                }}
-              >
-                <LocationCard
-                  location={loc}
-                  isOpen={openLocationId === loc.id}
-                  onToggle={handleToggle}
-                />
-              </motion.div>
+                location={loc}
+                isSelected={selectedId === loc.id}
+                onToggle={handleToggle}
+              />
             ))}
           </AnimatePresence>
         </SimpleGrid>
-      </Container>
-    </Box>
+      </VStack>
+    </Container>
   );
 };
 
