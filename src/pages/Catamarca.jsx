@@ -1,253 +1,223 @@
 import { useState, useMemo } from "react";
 import {
   Box,
-  Button,
   Container,
-  Flex,
   SimpleGrid,
-  Heading,
-  Image,
-  Select,
-  Text,
-  useColorModeValue,
-  Link,
   VStack,
+  Heading,
+  Text,
+  Button,
   Badge,
-  Icon,
+  useColorModeValue,
+  Image,
   HStack,
-  Tooltip,
-  Grid,
-  GridItem,
-  IconButton,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { locations } from "../data/catamarca";
-import { FaMapMarkedAlt, FaInfoCircle, FaFilter, FaLandmark, FaTree, FaWater, FaChurch, FaMountain } from "react-icons/fa";
+import { FaMapMarkedAlt, FaExternalLinkAlt, FaLandmark, FaTree, FaWater, FaMountain } from "react-icons/fa";
 
 const MotionBox = motion(Box);
+const MotionBadge = motion(Badge);
 
-// Configuración moderna de estilos por área
-const AREA_CONFIG = {
-  "Centro": {
-    gradient: "linear(to-br, yellow.400, green.400)",
-    color: "yellow.600",
-    darkColor: "yellow.300",
-    icon: FaLandmark,
-    description: "Centro histórico y cultural",
-    shadow: "0 4px 20px -8px rgba(236, 201, 75, 0.5)"
-  },
-  "Noroeste": {
-    gradient: "linear(to-br, green.400, teal.400)",
-    color: "green.600",
-    darkColor: "green.300",
-    icon: FaTree,
-    description: "Zona de vegetación abundante",
-    shadow: "0 4px 20px -8px rgba(72, 187, 120, 0.5)"
-  },
-  "Sureste": {
-    gradient: "linear(to-r, blue.400, green.400, blue.500)",
-    color: "blue.600",
-    darkColor: "blue.300",
-    icon: FaWater,
-    description: "Región de lagos y naturaleza"
-  },
-  "Norte": {
-    gradient: "linear(to-r, orange.400, yellow.400, green.500)",
-    color: "orange.600",
-    darkColor: "orange.300",
-    icon: FaMountain,
-    description: "Área montañosa"
-  }
-};
+const FilterButton = ({ area, isSelected, onClick }) => (
+  <Button
+    size="sm"
+    colorScheme={isSelected ? "yellow" : "gray"}
+    variant={isSelected ? "solid" : "outline"}
+    onClick={onClick}
+    _hover={{ transform: "translateY(-2px)" }}
+    transition="all 0.2s"
+  >
+    {area}
+  </Button>
+);
 
-// Animaciones
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
-  transition: { duration: 0.5 }
+const LocationFilters = ({ selectedFilter, onFilterChange }) => {
+  const areas = ["Todos", "Centro", "Noroeste", "Sureste", "Norte"];
+  return (
+    <Wrap spacing={2} mb={6}>
+      {areas.map((area) => (
+        <WrapItem key={area}>
+          <FilterButton
+            area={area}
+            isSelected={selectedFilter === area}
+            onClick={() => onFilterChange(area)}
+          />
+        </WrapItem>
+      ))}
+    </Wrap>
+  );
 };
 
 const LocationCard = ({ location, isExpanded, onToggle }) => {
   const bgColor = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.700", "gray.200");
-  const config = AREA_CONFIG[location.area] || {
-    gradient: "linear(to-br, teal.400, blue.400)",
-    color: "teal.600",
-    darkColor: "teal.300",
-    icon: FaMapMarkedAlt,
-    description: "Área general",
-    shadow: "0 4px 20px -8px rgba(129, 230, 217, 0.5)"
-  };
-  const IconComponent = config.icon;
-
+  const IconComponent = getAreaIcon(location.area);
+  
   return (
     <MotionBox
+      layout="position"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      layout
+      transition={{ duration: 0.3, layout: { duration: 0.3 } }}
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      bg={bgColor}
+      boxShadow={useColorModeValue(
+        '0 4px 6px rgba(160, 174, 192, 0.6)',
+        '0 4px 6px rgba(0, 0, 0, 0.4)'
+      )}
+      _hover={{
+        transform: "translateY(-8px)",
+        boxShadow: useColorModeValue(
+          '0 20px 25px -5px rgba(160, 174, 192, 0.4)',
+          '0 20px 25px -5px rgba(0, 0, 0, 0.3)'
+        ),
+      }}
+      position="relative"
+      height={isExpanded ? "auto" : "450px"}
     >
-      <Box
-        borderRadius="2xl"
-        overflow="hidden"
-        bg={bgColor}
-        position="relative"
-        height={isExpanded ? "auto" : "450px"}
-        transition="all 0.4s cubic-bezier(0.4, 0, 0.2, 1)"
-        _hover={{ 
-          transform: "translateY(-8px)",
-          boxShadow: config.shadow
-        }}
-        backdropFilter="blur(8px)"
-        borderWidth="1px"
-        borderColor={useColorModeValue("gray.100", "gray.700")}
-      >
-        <Box position="relative" height="250px" overflow="hidden">
-          <Image
-            src={location.imgSrc}
-            alt={location.title}
-            objectFit="cover"
-            w="100%"
-            h="100%"
-            transition="transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)"
-            _hover={{ transform: "scale(1.08)" }}
-          />
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <HStack
-              position="absolute"
-              top="4"
-              right="4"
-              spacing="2"
-              bgGradient={config.gradient}
-              color="white"
-              borderRadius="full"
-              px="4"
-              py="2"
-              backdropFilter="blur(12px)"
-              boxShadow="lg"
-            >
-              <IconComponent />
-              <Text fontSize="sm" fontWeight="bold">
-                {location.area}
-              </Text>
-            </HStack>
-          </motion.div>
-        </Box>
+      <Box position="relative">
+        <Image
+          src={location.imgSrc}
+          alt={location.title}
+          objectFit="cover"
+          h="200px"
+          w="full"
+          transition="transform 0.3s ease"
+          _hover={{ transform: "scale(1.05)" }}
+        />
+        <MotionBadge
+          position="absolute"
+          top={2}
+          right={2}
+          px={2}
+          py={1}
+          borderRadius="full"
+          bg={getBadgeColor(location.area)}
+          color="white"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          backdropFilter="blur(8px)"
+        >
+          <Box as={IconComponent} display="inline" mr={1} />
+          {location.area}
+        </MotionBadge>
+      </Box>
 
-        <VStack p={6} spacing={2} align="stretch">
+      <VStack p={6} spacing={4} align="start">
+        <motion.div layout="position" style={{ width: "100%" }}>
           <Heading
-            size="xs"
-            bgGradient={config.gradient}
+            size="md"
+            bgGradient={getAreaGradient(location.area)}
             bgClip="text"
             fontFamily="JetBrains Mono"
             _hover={{ transform: "translateY(-2px)" }}
-            transition="all 0.3s ease"
+            transition="color 0.2s ease"
           >
             {location.title}
           </Heading>
+        </motion.div>
 
-          <Text 
-            color={textColor}
-            noOfLines={!isExpanded ? 2 : undefined}
-            transition="all 0.3s ease"
+        <Text color={useColorModeValue("gray.700", "gray.200")} fontSize="md" noOfLines={3}>
+          {location.description}
+        </Text>
+
+        <HStack justify="space-between" w="full">
+          <Button
+            size="sm"
+            colorScheme="teal"
+            variant="ghost"
             onClick={() => onToggle(location.id)}
-            cursor="pointer"
-            _hover={{ color: config.darkColor }}
+            _hover={{ transform: "scale(1.1)" }}
+            transition="all 0.2s"
           >
-            {location.description}
-          </Text>
+            {isExpanded ? "Ocultar mapa" : "Ver ubicación"}
+          </Button>
+        </HStack>
 
-          <Flex gap="4" justify="space-between">
-            <Tooltip label={isExpanded ? "Ocultar mapa" : "Ver ubicación"}>
-              <IconButton
-                icon={<FaMapMarkedAlt />}
-                colorScheme="teal"
-                variant="ghost"
-                onClick={() => onToggle(location.id)}
-                aria-label="Toggle map"
-                size="lg"
-                isRound
-                _hover={{ 
-                  transform: "scale(1.1)",
-                  bgGradient: config.gradient,
-                  color: "white"
-                }}
+        <AnimatePresence>
+          {isExpanded && (
+            <MotionBox
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              w="full"
+              overflow="hidden"
+            >
+              <iframe
+                title={location.title}
+                src={location.mapSrc}
+                width="100%"
+                height="300"
+                style={{ border: 0, borderRadius: "8px" }}
+                allowFullScreen
+                loading="lazy"
               />
-            </Tooltip>
-          </Flex>
-
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.4 }}
+              <Button
+                as="a"
+                href={location.path}
+                target="_blank"
+                rightIcon={<FaExternalLinkAlt />}
+                colorScheme="blue"
+                variant="ghost"
+                mt={4}
+                w="full"
               >
-                <Box
-                  mt="4"
-                  borderRadius="xl"
-                  overflow="hidden"
-                  height="300px"
-                  boxShadow="inner"
-                >
-                  <iframe
-                    src={location.mapSrc}
-                    title={`Mapa de ${location.title}`}
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                  />
-                </Box>
-
-                <Link
-                  href={location.wiki}
-                  isExternal
-                  style={{ textDecoration: "none" }}
-                  display="block"
-                  mt={4}
-                >
-                  <Button
-                    leftIcon={<FaInfoCircle />}
-                    width="full"
-                    size="lg"
-                    bgGradient={config.gradient}
-                    color="white"
-                    _hover={{
-                      transform: "translateY(-2px)",
-                      boxShadow: config.shadow
-                    }}
-                    transition="all 0.3s ease"
-                  >
-                    Más información
-                  </Button>
-                </Link>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </VStack>
-      </Box>
+                Más información
+              </Button>
+            </MotionBox>
+          )}
+        </AnimatePresence>
+      </VStack>
     </MotionBox>
   );
 };
 
+// Funciones auxiliares para colores y gradientes
+const getAreaGradient = (area) => {
+  const gradients = {
+    "Centro": "linear(to-r, yellow.400, green.500)", // Dorado y verde para arquitectura colonial y valle
+    "Noroeste": "linear(to-r, green.400, teal.500)", // Verdes para vegetación abundante
+    "Sureste": "linear(to-r, blue.400, green.400)", // Azul y verde para agua y vegetación
+    "Norte": "linear(to-r, orange.400, yellow.400, green.400)" // Naranja, amarillo y verde para montañas
+  };
+  return gradients[area] || "linear(to-r, yellow.400, green.400)";
+};
+
+const getBadgeColor = (area) => {
+  const colors = {
+    "Centro": "rgba(218, 165, 32, 0.9)", // Dorado semi-transparente
+    "Noroeste": "rgba(72, 187, 120, 0.9)", // Verde
+    "Sureste": "rgba(66, 153, 225, 0.9)", // Azul
+    "Norte": "rgba(237, 137, 54, 0.9)" // Naranja
+  };
+  return colors[area] || "rgba(237, 137, 54, 0.9)";
+};
+
+const getAreaIcon = (area) => {
+  const icons = {
+    "Centro": FaLandmark,
+    "Noroeste": FaTree,
+    "Sureste": FaWater,
+    "Norte": FaMountain
+  };
+  return icons[area] || FaMapMarkedAlt;
+};
+
 const Catamarca = () => {
   const [expandedId, setExpandedId] = useState(null);
-  const [selectedArea, setSelectedArea] = useState("all");
+  const [selectedArea, setSelectedArea] = useState("Todos");
   const bgColor = useColorModeValue("gray.50", "gray.900");
-  const cardBg = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.800", "gray.100");
+  const textColor = useColorModeValue("gray.600", "gray.300");
 
   const { filteredLocations, areas } = useMemo(() => {
-    const filtered = selectedArea === "all" 
+    const filtered = selectedArea === "Todos" 
       ? locations 
       : locations.filter(loc => loc.area === selectedArea);
     const uniqueAreas = [...new Set(locations.map(loc => loc.area))];
@@ -259,101 +229,81 @@ const Catamarca = () => {
   };
 
   return (
-    <Box bg={bgColor} minH="100vh" py={12}>
-      <Container maxW="8xl" px={{ base: 4, md: 8 }}>
-        <Grid templateColumns={{ base: "1fr", lg: "250px 1fr" }} gap={8}>
-          {/* Sidebar con filtros */}
-          <GridItem>
-            <Box
-              position="sticky"
-              top="20"
-              bg={cardBg}
-              p={6}
-              borderRadius="xl"
-              boxShadow="lg"
-              border="1px"
-              borderColor={useColorModeValue("gray.200", "gray.700")}
+    <Container maxW="7xl" py={12}>
+      <VStack spacing={8} align="stretch">
+        <motion.div
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.8,
+            type: "spring",
+            bounce: 0.4
+          }}
+        >
+          <VStack spacing={4} textAlign="center" mb={8}>
+            <Badge
+              colorScheme="yellow"
+              px={4}
+              py={1}
+              borderRadius="full"
+              fontSize="sm"
+              bg="yellow.400"
+              color="white"
             >
-              <VStack spacing={4}>
-                <Heading size="md" color={textColor}>
-                  Filtrar por área
-                </Heading>
-                <Select
-                  value={selectedArea}
-                  onChange={(e) => setSelectedArea(e.target.value)}
-                  bg={cardBg}
-                  icon={<FaFilter />}
-                  size="lg"
-                >
-                  <option value="all">Todas las áreas</option>
-                  {areas.map(area => (
-                    <option key={area} value={area}>{area}</option>
-                  ))}
-                </Select>
-              </VStack>
-            </Box>
-          </GridItem>
+              Capital Provincial
+            </Badge>
+            <Heading
+              as="h1"
+              size="2xl"
+              bgGradient="linear(to-r, yellow.400, green.500, yellow.400)"
+              bgClip="text"
+              fontFamily="JetBrains Mono"
+              letterSpacing="tight"
+              textAlign="center"
+              fontWeight="bold"
+              lineHeight="shorter"
+              mb={2}
+              _hover={{
+                bgGradient: "linear(to-r, green.500, yellow.400, green.500)",
+              }}
+              transition="all 0.3s ease"
+            >
+              San Fernando del Valle
+            </Heading>
+            <Text
+              fontSize="xl"
+              color={textColor}
+              maxW="3xl"
+              mx="auto"
+            >
+              Descubre los tesoros escondidos de la capital catamarqueña
+            </Text>
+          </VStack>
+        </motion.div>
 
-          {/* Contenido principal */}
-          <GridItem>
-            <VStack spacing={8} align="stretch">
-              <motion.div {...fadeInUp}>
-                <VStack spacing={4} textAlign="center" mb={8}>
-                  <Badge
-                    colorScheme="yellow"
-                    px={4}
-                    py={1}
-                    borderRadius="full"
-                    fontSize="sm"
-                  >
-                    Explora
-                  </Badge>
-                  <Heading
-                    size="2xl"
-                    bgGradient="linear(to-r, yellow.400, green.400, yellow.400)"
-                    bgClip="text"
-                    fontFamily="JetBrains Mono"
-                    letterSpacing="tight"
-                    mb={2}
-                    _hover={{
-                      bgGradient: "linear(to-r, green.400, yellow.400, green.400)"
-                    }}
-                    transition="all 0.3s ease"
-                  >
-                    Catamarca Capital
-                  </Heading>
-                  <Text
-                    fontSize="xl"
-                    color={textColor}
-                    maxW="3xl"
-                    mx="auto"
-                  >
-                    Descubre los tesoros escondidos de la capital catamarqueña
-                  </Text>
-                </VStack>
-              </motion.div>
+        <LocationFilters
+          selectedFilter={selectedArea}
+          onFilterChange={setSelectedArea}
+        />
 
-              <SimpleGrid
-                columns={{ base: 1, md: 2, lg: 3 }}
-                spacing={8}
-                w="full"
-              >
-                <AnimatePresence mode="sync">
-                  {filteredLocations.map((location) => (
-                    <LocationCard
-                      key={location.id}
-                      location={location}
-                      isExpanded={expandedId === location.id}
-                      onToggle={handleToggle}
-                    />
-                  ))}
-                </AnimatePresence>
-              </SimpleGrid>
-            </VStack>
-          </GridItem>
-        </Grid>
-      </Container>
-    </Box>
+        <SimpleGrid
+          columns={{ base: 1, md: 2, lg: 3 }}
+          spacing={8}
+          w="full"
+        >
+          <AnimatePresence mode="sync">
+            {filteredLocations.map((location) => (
+              <LocationCard
+                key={location.id}
+                location={location}
+                isExpanded={expandedId === location.id}
+                onToggle={handleToggle}
+              />
+            ))}
+          </AnimatePresence>
+        </SimpleGrid>
+      </VStack>
+    </Container>
   );
 };
 
