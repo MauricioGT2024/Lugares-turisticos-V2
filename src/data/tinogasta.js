@@ -103,4 +103,5 @@ export const locations = [
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3512.296711670159!2d-67.54920942452206!3d-28.077315419614475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94271b7c19ca1de7%3A0x7f8fd268be6b3944!2sMirador%20Cuesta%20de%20Zapata!5e0!3m2!1ses-419!2sar!4v1698857613513!5m2!1ses-419!2sar",
     path: "https://www.elancasti.com.ar/revista-express/un-camino-historico-n550397",
   },
+  
 ];

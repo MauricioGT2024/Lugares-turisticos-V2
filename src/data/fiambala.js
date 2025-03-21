@@ -35,9 +35,9 @@ export const locations = [
   {
     id: 4,
     imgSrc: "img/Fiambala/Dunas De Fiambala.webp",
-    title: "Duna La Ballena",
+    title: "Duna Mágica de Saujil",
     description:
-      "es una gran formación de arena con forma similar a una ballena, ideal para el sandboard y con vistas panorámicas del desierto.",
+      "El desierto de Fiambalá es un imperdible. La Duna Mágica de Saujil (con una elevación de 90 metros y una pendiente de 45º) y las Dunas de Tatón, que supo albergar varias ediciones del Dakar, son ideales para la práctica del sandboard.",
     category: "Desierto",
     mapSrc:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3532.967032422148!2d-67.6017762!3d-27.6874138!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x969e317980d7154f%3A0x8ea240f0ce20b7f1!2sDunitas!5e0!3m2!1ses-419!2sar!4v1740411368880!5m2!1ses-419!2sar",
@@ -48,11 +48,11 @@ export const locations = [
     imgSrc: "img/Fiambala/Balcon del Pissis.webp",
     title: "Balcon del Pissis",
     description:
-      "Mirador natural con vista panorámica al Nevado de Pissis, el segundo volcán más alto del mundo.",
+      "Las lagunas celeste, negra y verde adquieren esas tonalidades cuando están en movimiento. Es que, bien temprano, la quietud absoluta las convierte en espejos de agua que reflejan al Pissis, uno de los gigantes de la zona de Los Seismiles, que reúne volcanes y cumbres con más de 6.000 msnm.",
     category: "Mirador",
     mapSrc:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3536.2509952699174!2d-68.54288952453689!3d-27.585746976252526!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x969f22110dee33e5%3A0x6b5046ad0af5df89!2sBalcon%20del%20Pissis!5e0!3m2!1ses-419!2sar!4v1740411875195!5m2!1ses-419!2sar",
-    path: "https://www.turismofiambala.com.ar/qu%C3%A9-visitar/balcon-del-pissis",
+    path: "https://www.visitcatamarca.com/imperdibles/balc%C3%B3n-del-pissis",
   },
   {
     id: 6,
@@ -64,5 +64,16 @@ export const locations = [
     mapSrc:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d56498.95374376925!2d-67.62239257832026!3d-27.742451399999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x969e2523d2348297%3A0xeba404dd89c8abae!2sTermas%20de%20Fiambala!5e0!3m2!1ses-419!2sar!4v1725208627514!5m2!1ses-419!2sar",
     path: "https://www.visitcatamarca.com/imperdibles/termas-de-fiambal%C3%A1",
+  },
+  {
+    id: 7,
+    imgSrc: "img/Fiambala/Dunas_de_Taton._Catamarca.jpg",
+    title: "Duna de Taton",
+    description:
+      "La duna de Tatón es la más alta de Sudamérica, posee 1.230 metros, su base está a 1.615 metros sobre el nivel de mar y su cima a 2.845 metros. La totalidad de esta formación geológica es impresionante, tanto, que sus dunas fueron calificadas por el geólogo Alfred Stelzner como “glaciares de arena”.",
+    category: "Desierto",
+    mapSrc:
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3543.69453017174!2d-67.58430852454515!3d-27.354016976386827!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x969fcf98601b2217%3A0xd6376323625b3a0a!2sDunas%20de%20Tat%C3%B3n!5e0!3m2!1ses-419!2sar!4v1742519038826!5m2!1ses-419!2sar",
+    path: "https://www.visitcatamarca.com/imperdibles/dunas",
   },
 ];

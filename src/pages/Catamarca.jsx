@@ -15,43 +15,95 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { locations } from "../data/catamarca";
 import {
   FaMapMarkedAlt,
-  FaExternalLinkAlt,
   FaLandmark,
   FaTree,
   FaWater,
+  FaChurch,
   FaMountain,
+  FaExternalLinkAlt,
+  FaMap,
 } from "react-icons/fa";
+import { locations } from "../data/catamarca";
 
 const MotionBox = motion(Box);
 const MotionBadge = motion(Badge);
 
-const FilterButton = ({ area, isSelected, onClick }) => (
-  <Button
-    size="sm"
-    colorScheme={isSelected ? "yellow" : "gray"}
-    variant={isSelected ? "solid" : "outline"}
-    onClick={onClick}
-    _hover={{ transform: "translateY(-2px)" }}
-    transition="all 0.2s"
-  >
-    {area}
-  </Button>
-);
+// Configuración de colores por área
+const AREA_COLORS = {
+  Centro: {
+    gradient: "linear(to-r, yellow.400, green.400)", // Dorado colonial y verde valle
+    text: "linear(to-r, yellow.500, green.500)",
+    badge: "rgba(250, 240, 137, 0.9)", // Dorado con transparencia
+    hover: "yellow.400",
+    button: "yellow",
+  },
+  Noroeste: {
+    gradient: "linear(to-r, green.400, teal.400)", // Verdes de vegetación
+    text: "linear(to-r, green.500, teal.500)",
+    badge: "rgba(104, 211, 145, 0.9)",
+    hover: "green.400",
+    button: "green",
+  },
+  Sureste: {
+    gradient: "linear(to-r, blue.400, green.400)", // Agua y vegetación
+    text: "linear(to-r, blue.500, green.500)",
+    badge: "rgba(144, 205, 244, 0.9)",
+    hover: "blue.400",
+    button: "blue",
+  },
+  Norte: {
+    gradient: "linear(to-r, orange.400, yellow.400)", // Montañas y sol
+    text: "linear(to-r, orange.500, yellow.500)",
+    badge: "rgba(251, 211, 141, 0.9)",
+    hover: "orange.400",
+    button: "orange",
+  },
+};
 
-const LocationFilters = ({ selectedFilter, onFilterChange }) => {
-  const areas = ["Todos", "Centro", "Noroeste", "Sureste", "Norte"];
+const getAreaIcon = (area) => {
+  switch (area) {
+    case "Centro":
+      return FaLandmark;
+    case "Noroeste":
+      return FaTree;
+    case "Sureste":
+      return FaWater;
+    case "Norte":
+      return FaMountain;
+    default:
+      return FaChurch; // Icono por defecto
+  }
+};
+
+const AreaFilters = ({ selectedArea, onAreaChange }) => {
   return (
     <Wrap spacing={2} mb={6}>
-      {areas.map((area) => (
+      <WrapItem>
+        <Button
+          size="sm"
+          colorScheme={selectedArea === "all" ? "teal" : "gray"}
+          variant={selectedArea === "all" ? "solid" : "outline"}
+          onClick={() => onAreaChange("all")}
+          _hover={{ transform: "translateY(-2px)" }}
+          transition="all 0.2s"
+        >
+          Todas las áreas
+        </Button>
+      </WrapItem>
+      {Object.keys(AREA_COLORS).map((area) => (
         <WrapItem key={area}>
-          <FilterButton
-            area={area}
-            isSelected={selectedFilter === area}
-            onClick={() => onFilterChange(area)}
-          />
+          <Button
+            size="sm"
+            colorScheme={selectedArea === area ? "teal" : "gray"}
+            variant={selectedArea === area ? "solid" : "outline"}
+            onClick={() => onAreaChange(area)}
+            _hover={{ transform: "translateY(-2px)" }}
+            transition="all 0.2s"
+          >
+            {area}
+          </Button>
         </WrapItem>
       ))}
     </Wrap>
@@ -60,6 +112,7 @@ const LocationFilters = ({ selectedFilter, onFilterChange }) => {
 
 const LocationCard = ({ location, isExpanded, onToggle }) => {
   const bgColor = useColorModeValue("white", "gray.800");
+  const colors = AREA_COLORS[location.area] || AREA_COLORS["Centro"];
   const IconComponent = getAreaIcon(location.area);
 
   return (
@@ -104,7 +157,7 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
           px={2}
           py={1}
           borderRadius="full"
-          bg={getBadgeColor(location.area)}
+          bg={colors.badge}
           color="white"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -120,10 +173,10 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
         <motion.div layout="position" style={{ width: "100%" }}>
           <Heading
             size="md"
-            bgGradient={getAreaGradient(location.area)}
+            bgGradient={colors.text}
             bgClip="text"
             fontFamily="JetBrains Mono"
-            _hover={{ transform: "translateY(-2px)" }}
+            _hover={{ color: colors.hover }}
             transition="color 0.2s ease"
           >
             {location.title}
@@ -133,25 +186,34 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
         <Text
           color={useColorModeValue("gray.700", "gray.200")}
           fontSize="md"
-          noOfLines={!isExpanded ? 2 : undefined}
+          noOfLines={isExpanded ? 0 : 2}
+          cursor="pointer"
+          onClick={() => onToggle(location.id)}
+          _hover={{
+            bgGradient: colors.text,
+            bgClip: "text",
+            transform: "translateX(4px)",
+          }}
+          transition="all 0.3s ease"
         >
           {location.description}
         </Text>
 
-        <HStack justify="space-between" w="full">
+        <motion.div layout="position" style={{ width: "100%" }}>
           <Button
-            size="sm"
-            colorScheme="teal"
+            leftIcon={<FaMap />}
+            colorScheme={colors.button}
             variant="ghost"
             onClick={() => onToggle(location.id)}
-            _hover={{ transform: "scale(1.1)" }}
-            transition="all 0.2s"
-          >
-            {isExpanded ? "Ocultar mapa" : "Ver ubicación"}
-          </Button>
-        </HStack>
+            w="full"
+            mt={4}
 
-        <AnimatePresence>
+          >
+            {isExpanded ? "Ver menos" : "Ver más"}
+          </Button>
+        </motion.div>
+
+        <AnimatePresence mode="wait">
           {isExpanded && (
             <MotionBox
               initial={{ opacity: 0, height: 0 }}
@@ -161,6 +223,24 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
               w="full"
               overflow="hidden"
             >
+               <Button
+                as="a"
+                href={location.path}
+                target="_blank"
+                leftIcon={<FaMapMarkedAlt />}
+                colorScheme="red"
+                variant="ghost"
+                mt={4}
+                w="full"
+                gap={2}
+                fontSize="sm"
+                fontWeight="bold"
+                mb={4}
+               
+                transition="all 0.3s ease"
+              >
+                Ver en Google Maps
+              </Button>
               <iframe
                 title={location.title}
                 src={location.mapSrc}
@@ -170,9 +250,9 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
                 allowFullScreen
                 loading="lazy"
               />
-              <Button
+               <Button
                 as="a"
-                href={location.path}
+                href={location.wiki}
                 target="_blank"
                 rightIcon={<FaExternalLinkAlt />}
                 colorScheme="blue"
@@ -182,6 +262,7 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
               >
                 Más información
               </Button>
+             
             </MotionBox>
           )}
         </AnimatePresence>
@@ -190,46 +271,16 @@ const LocationCard = ({ location, isExpanded, onToggle }) => {
   );
 };
 
-// Funciones auxiliares para colores y gradientes
-const getAreaGradient = (area) => {
-  const gradients = {
-    Centro: "linear(to-r, yellow.400, green.500)", // Dorado y verde para arquitectura colonial y valle
-    Noroeste: "linear(to-r, green.400, teal.500)", // Verdes para vegetación abundante
-    Sureste: "linear(to-r, blue.400, green.400)", // Azul y verde para agua y vegetación
-    Norte: "linear(to-r, orange.400, yellow.400, green.400)", // Naranja, amarillo y verde para montañas
-  };
-  return gradients[area] || "linear(to-r, yellow.400, green.400)";
-};
-
-const getBadgeColor = (area) => {
-  const colors = {
-    Centro: "rgba(218, 165, 32, 0.9)", // Dorado semi-transparente
-    Noroeste: "rgba(72, 187, 120, 0.9)", // Verde
-    Sureste: "rgba(66, 153, 225, 0.9)", // Azul
-    Norte: "rgba(237, 137, 54, 0.9)", // Naranja
-  };
-  return colors[area] || "rgba(237, 137, 54, 0.9)";
-};
-
-const getAreaIcon = (area) => {
-  const icons = {
-    Centro: FaLandmark,
-    Noroeste: FaTree,
-    Sureste: FaWater,
-    Norte: FaMountain,
-  };
-  return icons[area] || FaMapMarkedAlt;
-};
-
 const Catamarca = () => {
   const [expandedId, setExpandedId] = useState(null);
-  const [selectedArea, setSelectedArea] = useState("Todos");
+  const [selectedArea, setSelectedArea] = useState("all");
   const bgColor = useColorModeValue("gray.50", "gray.900");
-  const textColor = useColorModeValue("gray.600", "gray.300");
+  const cardBg = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.800", "gray.100");
 
   const { filteredLocations, areas } = useMemo(() => {
     const filtered =
-      selectedArea === "Todos"
+      selectedArea === "all"
         ? locations
         : locations.filter((loc) => loc.area === selectedArea);
     const uniqueAreas = [...new Set(locations.map((loc) => loc.area))];
@@ -262,12 +313,12 @@ const Catamarca = () => {
               bg="yellow.400"
               color="white"
             >
-              Capital Provincial
+              Capital Histórica
             </Badge>
             <Heading
               as="h1"
               size="2xl"
-              bgGradient="linear(to-r, yellow.400, green.500, yellow.400)"
+              bgGradient="linear(to-r, yellow.400, green.400, yellow.400)"
               bgClip="text"
               fontFamily="JetBrains Mono"
               letterSpacing="tight"
@@ -276,7 +327,7 @@ const Catamarca = () => {
               lineHeight="shorter"
               mb={2}
               _hover={{
-                bgGradient: "linear(to-r, green.500, yellow.400, green.500)",
+                bgGradient: "linear(to-r, green.400, yellow.400, green.400)",
               }}
               transition="all 0.3s ease"
             >
@@ -288,9 +339,9 @@ const Catamarca = () => {
           </VStack>
         </motion.div>
 
-        <LocationFilters
-          selectedFilter={selectedArea}
-          onFilterChange={setSelectedArea}
+        <AreaFilters
+          selectedArea={selectedArea}
+          onAreaChange={setSelectedArea}
         />
 
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} w="full">
