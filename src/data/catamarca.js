@@ -82,14 +82,13 @@ export const locations = [
   },
   {
     id: 7,
-    imgSrc:
-      "img/San Fernando Del Valle De Catamarca/Cuesta El Portezuelo.webp",
+    imgSrc: "img/San Fernando Del Valle De Catamarca/Cuesta El Portezuelo.webp",
     title: "Cuesta El Portezuelo",
     description:
       "La Cuesta de El Portezuelo es un magnífico y sinuoso camino de cornisa que asciende por la montaña a través de bellos paisajes y postales.",
     mapSrc:
-      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224679.84862245177!2d-65.944013521875!3d-28.370256435358243!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94242fea64817755%3A0x12a068eda95f2dce!2sFiesta%20Nacional%20e%20Internacional%20Del%20Poncho!5e0!3m2!1ses-419!2sar!4v1725200736641!5m2!1ses-419!2sar",
-    path: "https://maps.google.com/maps?ll=-28.448032,-65.756709&z=10&t=m&hl=es-419&gl=AR&mapclient=embed&cid=1342188058914532814",
+      "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224544.2214956805!2d-65.92734958374947!3d-28.43423591203331!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x942431a7504a7405%3A0x2ccbf8c1fa467ee1!2sMirador%20de%20la%20Cuesta%20del%20Portezuelo!5e0!3m2!1ses-419!2sar!4v1742570666128!5m2!1ses-419!2sar",
+    path: "https://maps.app.goo.gl/z7JSRPnqaymi9EPV8",
     lugar: "Catamarca",
     area: "Noroeste",
     wiki: "https://www.visitcatamarca.com/imperdibles/cuesta-el-portezuelo",
