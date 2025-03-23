@@ -31,6 +31,8 @@ import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import ColorModeSwitcher from "./ColorModeSwitcher";
 import { FaHome, FaMapMarkedAlt, FaBed, FaInfoCircle } from "react-icons/fa";
 import Hamburger from "./Hamburger";
+import { useEffect } from 'react';
+
 const navItems = [
   { path: "/", label: "Inicio", icon: FaHome },
   {
@@ -160,6 +162,21 @@ const Navbar = () => {
 
   const MotionGrid = motion.create(Grid);
 
+  const location = useLocation();
+
+  // Añadir este useEffect para cerrar el menú cuando cambia la ruta
+  useEffect(() => {
+    if (isOpen) {
+      onClose();
+    }
+  }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleNavLinkClick = () => {
+    if (isOpen) {
+      onClose();
+    }
+  };
+
   return (
     <Box
       position="sticky"
@@ -227,7 +244,7 @@ const Navbar = () => {
             <Box display={{ base: "block", lg: "none" }}>
               <Hamburger
                 isOpen={isOpen}
-                toggle={onOpen}
+                toggle={() => isOpen ? onClose() : onOpen()}
                 color={useColorModeValue("gray.800", "white")}
               />
             </Box>
@@ -278,7 +295,7 @@ const Navbar = () => {
                     delay: index * 0.05 // Reducido el delay
                   }}
                 >
-                  <NavLink item={item} isMobile onClose={onClose} />
+                  <NavLink item={item} isMobile onClose={handleNavLinkClick} />
                 </motion.div>
               ))}
               <Divider my={4} />
