@@ -1,6 +1,7 @@
 import { Box, Spinner, Text, useColorModeValue,  } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { keyframes } from "@emotion/react";
+import React from "react";
 
 const pulseKeyframe = keyframes`
   0% { transform: scale(1); opacity: 0.7; }

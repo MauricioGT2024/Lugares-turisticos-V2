@@ -31,7 +31,7 @@ import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import ColorModeSwitcher from "./ColorModeSwitcher";
 import { FaHome, FaMapMarkedAlt, FaBed, FaInfoCircle } from "react-icons/fa";
 import Hamburger from "./Hamburger";
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const navItems = [
   { path: "/", label: "Inicio", icon: FaHome },
