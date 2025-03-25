@@ -24,7 +24,7 @@ const Tinogasta = () => {
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.800", "gray.100");
-  
+
   const categories = Object.keys(CATEGORY_CONFIG);
 
   const handleToggle = (id) => {
@@ -32,9 +32,10 @@ const Tinogasta = () => {
   };
 
   const filteredLocations = useMemo(
-    () => categoryFilter
-      ? locations.filter((loc) => loc.category === categoryFilter)
-      : locations,
+    () =>
+      categoryFilter
+        ? locations.filter((loc) => loc.category === categoryFilter)
+        : locations,
     [categoryFilter]
   );
 
@@ -98,20 +99,17 @@ const Tinogasta = () => {
                     letterSpacing="tight"
                     mb={2}
                     _hover={{
-                      bgGradient: "linear(to-r, red.400, orange.400, purple.400)"
+                      bgGradient:
+                        "linear(to-r, red.400, orange.400, purple.400)",
                     }}
                     transition="all 0.3s ease"
                   >
                     Tinogasta
                   </Heading>
-                  <Text
-                    fontSize="xl"
-                    color={textColor}
-                    maxW="3xl"
-                    mx="auto"
-                  >
-                    Descubre Tinogasta, una joya en el oeste de Catamarca, donde la tradición 
-                    vitivinícola se une con paisajes impresionantes y una rica historia cultural.
+                  <Text fontSize="xl" color={textColor} maxW="3xl" mx="auto">
+                    Descubre Tinogasta, una joya en el oeste de Catamarca, donde
+                    la tradición vitivinícola se une con paisajes impresionantes
+                    y una rica historia cultural.
                   </Text>
                 </VStack>
               </motion.div>
