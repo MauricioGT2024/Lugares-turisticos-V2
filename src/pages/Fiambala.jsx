@@ -22,7 +22,7 @@ const Fiambala = () => {
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const cardBg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.300");
-  
+
   const categories = Object.keys(CATEGORY_CONFIG);
 
   const handleToggle = (id) => {
@@ -30,9 +30,10 @@ const Fiambala = () => {
   };
 
   const filteredLocations = useMemo(
-    () => categoryFilter
-      ? locations.filter((loc) => loc.category === categoryFilter)
-      : locations,
+    () =>
+      categoryFilter
+        ? locations.filter((loc) => loc.category === categoryFilter)
+        : locations,
     [categoryFilter]
   );
 
@@ -41,7 +42,7 @@ const Fiambala = () => {
       <Container maxW="8xl" px={{ base: 4, md: 8 }}>
         <Grid templateColumns={{ base: "1fr", lg: "250px 1fr" }} gap={8}>
           <GridItem>
-            <CategoryFilter 
+            <CategoryFilter
               categoryFilter={categoryFilter}
               setCategoryFilter={setCategoryFilter}
               categories={categories}
@@ -54,10 +55,10 @@ const Fiambala = () => {
               <motion.div
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ 
+                transition={{
                   duration: 0.8,
                   type: "spring",
-                  bounce: 0.4
+                  bounce: 0.4,
                 }}
               >
                 <VStack spacing={4} textAlign="center" mb={8}>
@@ -89,16 +90,18 @@ const Fiambala = () => {
                         left: "0",
                         width: "100%",
                         height: "2px",
-                        bgGradient: "linear(to-r, yellow.400, orange.400, red.500)",
+                        bgGradient:
+                          "linear(to-r, yellow.400, orange.400, red.500)",
                         transform: "scaleX(0)",
                         opacity: 0,
-                        transition: "transform 0.3s ease-in-out, opacity 0.3s ease-in-out",
-                        transformOrigin: "left"
+                        transition:
+                          "transform 0.3s ease-in-out, opacity 0.3s ease-in-out",
+                        transformOrigin: "left",
                       },
                       "&:hover::after": {
                         transform: "scaleX(1)",
-                        opacity: 1
-                      }
+                        opacity: 1,
+                      },
                     }}
                   >
                     Fiambalá
@@ -114,8 +117,8 @@ const Fiambala = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                   >
-                    Donde el desierto se encuentra con las termas, creando un oasis de aventura y relax
-                    en el corazón de Catamarca
+                    Donde el desierto se encuentra con las termas, creando un
+                    oasis de aventura y relax en el corazón de Catamarca
                   </Text>
                 </VStack>
               </motion.div>

@@ -6,30 +6,40 @@ import {
   Text,
   Button,
   Collapse,
-  useColorMode,
   Select,
   useColorModeValue,
   Container,
-  SimpleGrid,
   Alert,
   AlertIcon,
   Icon,
-  Tooltip,
   Badge,
   VStack,
   HStack,
-  Flex,
   Grid,
   GridItem,
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { hospedajes } from "../data/hospedajes";
 import PropTypes from "prop-types";
-import { FaMapMarkedAlt, FaHotel, FaLocationArrow, FaSearch } from "react-icons/fa";
+import {
+  FaMapMarkedAlt,
+  FaHotel,
+  FaLocationArrow,
+  FaSearch,
+} from "react-icons/fa";
 
 const MotionBox = motion(Box);
 
-const AnimatedCard = ({ image, title, description, iframe, id, location, isExpanded, onToggle }) => {
+const AnimatedCard = ({
+  image,
+  title,
+  description,
+  iframe,
+  id,
+  location,
+  isExpanded,
+  onToggle,
+}) => {
   const cardBg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.800", "whiteAlpha.900");
   const badgeBg = useColorModeValue("teal.50", "teal.900");
@@ -98,12 +108,7 @@ const AnimatedCard = ({ image, title, description, iframe, id, location, isExpan
           </Heading>
         </HStack>
 
-        <Text
-          color={textColor}
-          fontSize="md"
-          noOfLines={2}
-          opacity={0.9}
-        >
+        <Text color={textColor} fontSize="md" noOfLines={2} opacity={0.9}>
           {description}
         </Text>
 
@@ -170,9 +175,10 @@ const Hospedaje = () => {
   );
 
   const departments = [...new Set(hospedajes.map((h) => h.location))];
-  const filteredHospedajes = selectedDepartment === "all"
-    ? hospedajes
-    : hospedajes.filter((h) => h.location === selectedDepartment);
+  const filteredHospedajes =
+    selectedDepartment === "all"
+      ? hospedajes
+      : hospedajes.filter((h) => h.location === selectedDepartment);
 
   const handleToggle = (id) => setExpandedId(expandedId === id ? null : id);
 
