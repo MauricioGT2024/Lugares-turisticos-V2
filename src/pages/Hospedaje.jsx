@@ -24,9 +24,10 @@ const Hospedaje = () => {
   );
 
   const departments = [...new Set(hospedajes.map((h) => h.location))];
-  const filteredHospedajes = selectedDepartment === "all"
-    ? hospedajes
-    : hospedajes.filter((h) => h.location === selectedDepartment);
+  const filteredHospedajes =
+    selectedDepartment === "all"
+      ? hospedajes
+      : hospedajes.filter((h) => h.location === selectedDepartment);
 
   const handleToggle = (id) => setExpandedId(expandedId === id ? null : id);
 

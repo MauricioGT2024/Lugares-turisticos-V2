@@ -1,5 +1,10 @@
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { AnimatePresence, motion } from "framer-motion";
 import { Suspense, lazy } from "react";
@@ -10,12 +15,12 @@ import About from "./pages/About";
 import React from "react";
 
 const pageTransition = {
-  initial: { 
+  initial: {
     opacity: 0,
     y: 15,
-    filter: "blur(5px)"
+    filter: "blur(5px)",
   },
-  animate: { 
+  animate: {
     opacity: 1,
     y: 0,
     filter: "blur(0px)",
@@ -25,18 +30,18 @@ const pageTransition = {
       damping: 15,
       stiffness: 80,
       when: "beforeChildren",
-      staggerChildren: 0.2
-    }
+      staggerChildren: 0.2,
+    },
   },
-  exit: { 
+  exit: {
     opacity: 0,
     y: -15,
     filter: "blur(5px)",
     transition: {
       duration: 0.15,
-      ease: "easeOut"
-    }
-  }
+      ease: "easeOut",
+    },
+  },
 };
 
 function AppContent() {
