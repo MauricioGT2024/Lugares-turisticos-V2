@@ -12,21 +12,4 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-* {
-  transition: background-color 0.3s ease-in-out, 
-              color 0.3s ease-in-out, 
-              border-color 0.3s ease-in-out;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
+/* Global transition and prefers-color-scheme block removed as they are handled by Chakra UI */

@@ -26,12 +26,12 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { HamburgerIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { motion } from "framer-motion";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import ColorModeSwitcher from "./ColorModeSwitcher";
 import { FaHome, FaMapMarkedAlt, FaBed, FaInfoCircle } from "react-icons/fa";
 import Hamburger from "./Hamburger";
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 
 const navItems = [
   { path: "/", label: "Inicio", icon: FaHome },
@@ -169,7 +169,7 @@ const Navbar = () => {
     if (isOpen) {
       onClose();
     }
-  }, [location.pathname]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [location.pathname, isOpen, onClose]); 
 
   const handleNavLinkClick = () => {
     if (isOpen) {

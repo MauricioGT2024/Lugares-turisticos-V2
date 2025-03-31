@@ -4,7 +4,7 @@ import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 import App from "./App";
 import { extendTheme } from "@chakra-ui/react";
 import { createRoot } from "react-dom/client";
-import React from "react";
+
 const theme = extendTheme({
   config: {
     initialColorMode: "dark", // Puedes iniciar en 'light' o 'dark'
@@ -14,10 +14,8 @@ const theme = extendTheme({
     global: {
       'body': {
         transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out'
-      },
-      '*': {
-        transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out, border-color 0.3s ease-in-out'
       }
+      /* Global '*' transition removed */
     }
   }
 });

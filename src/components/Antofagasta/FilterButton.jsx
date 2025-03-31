@@ -1,8 +1,9 @@
 import { Button } from "@chakra-ui/react";
 import React from "react";
+import PropTypes from 'prop-types'; // Añadir PropTypes
 
 // Componente FilterButton memoizado
-export const FilterButton = React.memo(({ category, isSelected, onClick }) => (
+const FilterButtonComponent = ({ category, isSelected, onClick }) => (
   <Button
     size="sm"
     colorScheme={isSelected ? "teal" : "gray"}
@@ -14,4 +15,13 @@ export const FilterButton = React.memo(({ category, isSelected, onClick }) => (
   >
     {category}
   </Button>
-));
+);
+
+// Definición de PropTypes
+FilterButtonComponent.propTypes = {
+  category: PropTypes.string.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
+
+export const FilterButton = React.memo(FilterButtonComponent);

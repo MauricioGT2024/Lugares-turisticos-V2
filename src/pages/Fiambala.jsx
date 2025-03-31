@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react"; // Añadir useCallback
 import {
   Box,
   Container,
@@ -10,24 +10,56 @@ import {
   Text,
   useColorModeValue,
   Badge,
+  Modal, // Añadir Modal
+  ModalOverlay, // Añadir ModalOverlay
+  ModalContent, // Añadir ModalContent
+  ModalHeader, // Añadir ModalHeader
+  ModalFooter, // Añadir ModalFooter
+  ModalBody, // Añadir ModalBody
+  ModalCloseButton, // Añadir ModalCloseButton
+  useDisclosure, // Añadir useDisclosure
+  Button, // Añadir Button
+  Link, // Añadir Link
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
+import { FaInfoCircle } from "react-icons/fa"; // Icono para botón Más Info
 import { locations } from "../data/fiambala";
 import LocationCard from "../components/Fiambala/LocationCard";
 import { CATEGORY_CONFIG } from "../components/Fiambala/CategoryConfig";
 import CategoryFilter from "../components/Fiambala/CategoryFilter";
+
 const Fiambala = () => {
-  const [selectedId, setSelectedId] = useState(null);
+  // const [selectedId, setSelectedId] = useState(null); // Eliminado
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [selectedLocationData, setSelectedLocationData] = useState(null); // Estado para modal
+  const { isOpen, onOpen, onClose } = useDisclosure(); // Hook para modal
   const bgColor = useColorModeValue("gray.50", "gray.900");
-  const cardBg = useColorModeValue("white", "gray.800");
+  // const cardBg = useColorModeValue("white", "gray.800"); // No usado directamente aquí
   const textColor = useColorModeValue("gray.600", "gray.300");
+  const modalBgColor = useColorModeValue("white", "gray.800"); // Hook para modal bg
+  const modalTextColor = useColorModeValue("gray.700", "gray.200"); // Hook para modal text
 
   const categories = Object.keys(CATEGORY_CONFIG);
 
-  const handleToggle = (id) => {
-    setSelectedId(selectedId === id ? null : id);
-  };
+  // const handleToggle = (id) => { // Eliminado
+  //   setSelectedId(selectedId === id ? null : id);
+  // };
+
+   // Función para abrir modal
+  const handleShowDetails = useCallback((id) => {
+    const foundLocation = locations.find(loc => loc.id === id);
+    if (foundLocation) {
+      setSelectedLocationData(foundLocation);
+      onOpen();
+    }
+  }, [onOpen]); // locations es estable
+
+  // Función para cerrar modal
+  const handleCloseModal = () => {
+    onClose();
+    setTimeout(() => setSelectedLocationData(null), 300); // Delay para animación
+  }
+
 
   const filteredLocations = useMemo(
     () =>
@@ -134,8 +166,8 @@ const Fiambala = () => {
                     <LocationCard
                       key={loc.id}
                       location={loc}
-                      isSelected={selectedId === loc.id}
-                      onToggle={handleToggle}
+                      // isSelected ya no se pasa
+                      onShowDetails={handleShowDetails} // Pasar nueva prop
                     />
                   ))}
                 </AnimatePresence>
@@ -144,6 +176,75 @@ const Fiambala = () => {
           </GridItem>
         </Grid>
       </Container>
+
+      {/* Modal para mostrar detalles */}
+      <Modal isOpen={isOpen} onClose={handleCloseModal} size="xl" isCentered motionPreset="slideInBottom">
+        <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(5px)" />
+        <ModalContent bg={modalBgColor} borderRadius="xl">
+          <ModalHeader
+            borderTopRadius="xl"
+            bgGradient={
+              selectedLocationData
+                ? (CATEGORY_CONFIG[selectedLocationData.category] || {}).gradient
+                : 'linear(to-r, gray.400, gray.600)'
+            }
+            color="white"
+            py={4}
+            fontFamily="JetBrains Mono" // Mantener fuente si se desea
+          >
+            {selectedLocationData?.title || "Detalles"}
+          </ModalHeader>
+          <ModalCloseButton
+            color="white"
+            _focus={{ boxShadow: "none" }}
+            _hover={{ bg: "whiteAlpha.300" }}
+          />
+          <ModalBody py={6}>
+            {selectedLocationData && (
+              <VStack spacing={4} align="stretch">
+                <Box borderRadius="lg" overflow="hidden" h="300px">
+                  <iframe
+                    title={selectedLocationData.title}
+                    src={selectedLocationData.mapSrc} // URL para iframe
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                  />
+                </Box>
+                <Text fontSize="md" color={modalTextColor}>
+                  {selectedLocationData.description}
+                </Text>
+              </VStack>
+            )}
+          </ModalBody>
+          <ModalFooter borderBottomRadius="xl" justifyContent="space-between">
+             {/* Contenedor para botones de acción */}
+            <Box>
+              {/* No hay mapUrl en datos de Fiambalá, omitimos botón "Ver en Mapa" */}
+              {selectedLocationData?.path && ( // Botón Más Info (usa path)
+                 <Button
+                  as={Link}
+                  href={selectedLocationData.path}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  leftIcon={<FaInfoCircle />}
+                  colorScheme="teal" // Color diferente a Antofagasta/Catamarca
+                  variant="outline"
+                  mr={3}
+                  size="sm"
+                >
+                  Más Info
+                </Button>
+              )}
+            </Box>
+             {/* Botón Cerrar */}
+            <Button colorScheme="gray" onClick={handleCloseModal} size="sm">
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };
