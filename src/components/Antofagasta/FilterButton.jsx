@@ -1,27 +1,50 @@
-import { Button } from "@chakra-ui/react";
-import React from "react";
-import PropTypes from 'prop-types'; // Añadir PropTypes
+import { Button, useColorModeValue } from "@chakra-ui/react";
+import { memo } from "react";
+import PropTypes from 'prop-types';
 
-// Componente FilterButton memoizado
-const FilterButtonComponent = ({ category, isSelected, onClick }) => (
-  <Button
-    size="sm"
-    colorScheme={isSelected ? "teal" : "gray"}
-    variant={isSelected ? "solid" : "outline"}
-    onClick={onClick}
-    _hover={{ transform: "translateY(-2px)" }}
-    transition="all 0.2s"
-    aria-label={`Filtrar por ${category}`}
-  >
-    {category}
-  </Button>
-);
+const FilterButtonComponent = ({ category, isSelected, onClick, bgColor, textColor, hoverBgColor }) => {
+  return (
+    <Button
+      size="sm"
+      bg={isSelected ? hoverBgColor : bgColor}
+      color={textColor}
+      variant="solid"
+      onClick={onClick}
+      _hover={{
+        bg: isSelected ? hoverBgColor : bgColor,
+        transform: "translateY(-1px)",
+        boxShadow: "sm",
+      }}
+      transition="all 0.15s ease-in-out"
+      aria-label={`Filtrar por ${category}`}
+    >
+      {category}
+    </Button>
+  );
+};
 
-// Definición de PropTypes
 FilterButtonComponent.propTypes = {
   category: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
+  bgColor: PropTypes.string.isRequired,
+  textColor: PropTypes.string.isRequired,
+  hoverBgColor: PropTypes.string.isRequired,
 };
 
-export const FilterButton = React.memo(FilterButtonComponent);
+const FilterButtonWithTheme = (props) => {
+  const bgColor = useColorModeValue("gray.100", "gray.700");
+  const textColor = useColorModeValue("gray.700", "gray.100");
+  const hoverBgColor = useColorModeValue("gray.200", "gray.600");
+
+  return (
+    <FilterButtonComponent
+      {...props}
+      bgColor={bgColor}
+      textColor={textColor}
+      hoverBgColor={hoverBgColor}
+    />
+  );
+};
+
+export const FilterButton = memo(FilterButtonWithTheme);

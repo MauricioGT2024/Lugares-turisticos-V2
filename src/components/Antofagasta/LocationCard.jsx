@@ -42,22 +42,21 @@ const LocationCardComponent = ({ location, onShowDetails }) => { // Eliminado is
       exit="hidden"
       borderWidth="1px"
       borderColor={borderColor}
-      borderRadius="xl"
+      borderRadius="lg"
       overflow="hidden"
       bg={bgColor}
-      boxShadow="lg"
+      boxShadow="md"
       _hover={{
-        transform: "translateY(-8px)",
-        boxShadow: "2xl",
+        transform: "translateY(-4px)",
+        boxShadow: "xl",
       }}
-      transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-      // Altura fija para consistencia antes de la interacción
-      height="420px"
+      transition="all 0.2s ease-in-out"
+      height="400px"
       display="flex"
-      flexDirection="column" // Asegura que el VStack ocupe el espacio
+      flexDirection="column"
     >
       {/* Contenedor de Imagen con Skeleton */}
-      <Box position="relative" height="200px" flexShrink={0} overflow="hidden" bg={useColorModeValue("gray.100", "gray.700")}>
+      <Box position="relative" height="180px" flexShrink={0} overflow="hidden" bg={useColorModeValue("gray.100", "gray.700")}>
         <Skeleton isLoaded={imageLoaded} height="100%">
           <Image
             src={location.imgSrc}
@@ -65,8 +64,8 @@ const LocationCardComponent = ({ location, onShowDetails }) => { // Eliminado is
             objectFit="cover"
             w="full"
             h="full"
-            transition="transform 0.5s ease-out"
-            _hover={{ transform: "scale(1.05)" }}
+            transition="transform 0.3s ease-out"
+            _hover={{ transform: "scale(1.02)" }}
             loading="lazy"
             onLoad={handleImageLoad}
           />
@@ -74,60 +73,59 @@ const LocationCardComponent = ({ location, onShowDetails }) => { // Eliminado is
         {/* Badge de Categoría */}
         <MotionBadge
           position="absolute"
-          top={4}
-          right={4}
-          px={3}
+          top={2}
+          right={2}
+          px={2}
           py={1}
-          borderRadius="full"
+          borderRadius="md"
           bgGradient={config.gradient}
           color="white"
           display="flex"
           alignItems="center"
-          gap={2}
-          boxShadow="md"
-          backdropFilter="blur(8px)"
-          initial={{ opacity: 0, y: -10 }}
+          gap={1}
+          boxShadow="sm"
+          backdropFilter="blur(5px)"
+          initial={{ opacity: 0, y: -5 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.1 }}
         >
-          <Icon as={config.icon} aria-label={location.categoria} />
+          <Icon as={config.icon} aria-label={location.categoria} size="sm" />
           {location.categoria}
         </MotionBadge>
       </Box>
 
       {/* Contenido de la tarjeta */}
-      {/* Usamos flexGrow para que ocupe el espacio restante y mt="auto" en el botón */}
-      <VStack p={6} align="start" spacing={3} flexGrow={1} display="flex" flexDirection="column">
+      <VStack p={4} align="start" spacing={2} flexGrow={1} display="flex" flexDirection="column">
         <Heading
-          size="md"
+          size="sm"
           color={useColorModeValue(config.color, `${config.color.split('.')[0]}.300`)}
-          _hover={{ transform: "translateX(4px)" }}
-          transition="transform 0.2s"
-          noOfLines={2} // Permitir dos líneas para títulos largos
+          _hover={{ transform: "translateX(2px)" }}
+          transition="transform 0.15s"
+          noOfLines={2}
         >
           {location.title}
         </Heading>
 
         <Text
-          fontSize="sm"
+          fontSize="xs"
           color={useColorModeValue("gray.600", "gray.300")}
-          noOfLines={4} // Limita líneas de descripción en la tarjeta
+          noOfLines={3}
         >
           {location.description}
         </Text>
 
         {/* Botón para mostrar detalles (en Modal) */}
         <Button
-          leftIcon={<FaEye />} // Icono cambiado
-          onClick={handleShowDetailsClick} // Llama a la nueva función
+          leftIcon={<FaEye/>}
+          onClick={handleShowDetailsClick}
           colorScheme={config.color.split(".")[0]}
-          variant="outline"
-          size="sm"
+          variant="ghost"
+          size="xs"
           w="full"
-          mt="auto" // Empuja el botón al final del VStack
+          mt="auto"
           _hover={{
-            transform: "translateY(-2px)",
-            boxShadow: "md",
+            transform: "translateY(-1px)",
+            boxShadow: "sm",
           }}
           aria-label={`Ver detalles de ${location.title}`}
         >
