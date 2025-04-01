@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Box,
@@ -9,12 +8,10 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import { FaFilter } from "react-icons/fa";
-import { useLocationFilter } from "./useLocationFilter";
-const CategoryFilter = ({ categoryFilter, setCategoryFilter, categories, locations }) => {
+const CategoryFilter = ({ categoryFilter, setCategoryFilter, categories }) => {
   const cardBg = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("gray.600", "gray.300");
   
-  const filteredLocations = useLocationFilter(locations, categoryFilter);
 
   return (
     <Box

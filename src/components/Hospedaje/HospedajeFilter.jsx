@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   VStack,
   Box,
@@ -6,9 +5,10 @@ import {
   Select,
   useColorModeValue,
   Icon,
-  chakra,
+  HStack, // Añadido HStack
+  // chakra eliminado
 } from "@chakra-ui/react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { FaSearch, FaMapMarkedAlt, FaHotel } from "react-icons/fa";
 import PropTypes from "prop-types";
 
@@ -16,10 +16,10 @@ const MotionVStack = motion(VStack);
 const MotionBox = motion(Box);
 
 const HospedajeFilter = ({ selectedDepartment, setSelectedDepartment, departments }) => {
-  const bgGradient = useColorModeValue(
-    "linear(to-b, whiteAlpha.900, whiteAlpha.800)",
-    "linear(to-b, blackAlpha.700, blackAlpha.800)"
-  );
+  const bgColor = useColorModeValue("white", "gray.800"); // Color sólido
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const selectBg = useColorModeValue("gray.100", "gray.700");
+  const selectHoverBg = useColorModeValue("gray.200", "gray.600");
 
   return (
     <MotionVStack
@@ -31,67 +31,54 @@ const HospedajeFilter = ({ selectedDepartment, setSelectedDepartment, department
       transition={{ duration: 0.5 }}
     >
       <MotionBox
-        p={6}
-        borderRadius="2xl"
-        bgGradient={bgGradient}
-        backdropFilter="blur(10px)"
-        border="1px solid"
-        borderColor={useColorModeValue("gray.200", "whiteAlpha.100")}
-        boxShadow="lg"
-        _hover={{ transform: "translateY(-2px)" }}
+        p={5} // Padding ajustado
+        borderRadius="xl" // Menos redondeado
+        bg={bgColor}
+        // backdropFilter eliminado para fondo sólido
+        borderWidth="1px"
+        borderColor={borderColor}
+        boxShadow="md" // Sombra ajustada
+        // _hover eliminado para elemento sticky
         transition="0.3s ease"
       >
-        <VStack spacing={4} align="stretch">
-          <Box position="relative">
-            <Icon
-              as={FaHotel}
-              position="absolute"
-              right="0"
-              top="-10px"
-              w={6}
-              h={6}
-              color="teal.400"
-            />
-            <Text
-              fontSize="lg"
-              fontWeight="bold"
-              bgGradient="linear(to-r, teal.400, blue.500)"
-              bgClip="text"
-            >
-              Filtrar Hospedajes
+        <VStack spacing={5} align="stretch"> {/* Espaciado ajustado */}
+          <HStack spacing={3}> {/* HStack para icono y texto */}
+            <Icon as={FaHotel} w={5} h={5} color="teal.500" />
+            <Text fontSize="md" fontWeight="semibold" color={useColorModeValue("gray.700", "gray.200")}>
+              Filtrar por Ubicación
             </Text>
-          </Box>
+          </HStack>
 
-          <Box position="relative">
+          <Box position="relative" pt={1}> {/* Padding top añadido */}
             <Icon
               as={FaSearch}
               position="absolute"
               left={3}
               top="50%"
               transform="translateY(-50%)"
-              color="teal.500"
-              zIndex={2}
+              color={useColorModeValue("gray.500", "gray.400")} // Icono más sutil
+              zIndex={1} // zIndex ajustado
             />
             <Select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
               pl={10}
-              variant="filled"
-              bg={useColorModeValue("white", "gray.700")}
-              _hover={{ bg: useColorModeValue("gray.50", "gray.600") }}
-              _focus={{ bg: useColorModeValue("white", "gray.700") }}
-              icon={<FaMapMarkedAlt />}
-              borderRadius="xl"
-              transition="all 0.3s"
+              variant="outline" // Variante outline
+              bg={selectBg}
+              borderColor={borderColor} // Borde igual al contenedor
+              _hover={{ bg: selectHoverBg, borderColor: useColorModeValue("gray.300", "gray.600") }}
+              _focus={{ bg: selectBg, borderColor: "teal.500", boxShadow: `0 0 0 1px var(--chakra-colors-teal-500)` }} // Focus estilo Chakra
+              icon={<Icon as={FaMapMarkedAlt} color="gray.500" />} // Icono del select
+              borderRadius="lg" // Menos redondeado
+              transition="all 0.2s" // Transición más rápida
+              size="md" // Tamaño ajustado
             >
-              <chakra.option value="all">Todos los lugares</chakra.option>
-              <AnimatePresence>
-                {departments.map((dept) => (
-                  <chakra.option key={dept} value={dept}>
-                    {dept}
-                  </chakra.option>
-                ))}
-              </AnimatePresence>
+              <option value="all">Todos los lugares</option> {/* Usar option nativo */}
+              {departments.map((dept) => (
+                <option key={dept} value={dept}> {/* Usar option nativo */}
+                  {dept}
+                </option>
+              ))}
             </Select>
           </Box>
         </VStack>

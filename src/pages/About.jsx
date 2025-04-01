@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Heading,
@@ -17,25 +16,23 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { 
-  FaMapMarkedAlt, 
-  FaBook, 
-  FaHiking, 
-  FaHotel, 
-  FaCalendarAlt, 
+import {
+  FaMapMarkedAlt,
+  FaBook,
+  FaHiking,
+  FaHotel,
+  FaCalendarAlt,
   FaInfoCircle,
-  FaExternalLinkAlt 
+  FaExternalLinkAlt,
 } from "react-icons/fa";
+import PropTypes from "prop-types";
 
 const FeatureCard = ({ icon, title, description }) => {
   const cardBg = useColorModeValue("white", "gray.800");
   const iconBg = useColorModeValue("teal.100", "teal.900");
 
   return (
-    <motion.div
-      whileHover={{ y: -5 }}
-      whileTap={{ scale: 0.95 }}
-    >
+    <motion.div whileHover={{ y: -5 }} whileTap={{ scale: 0.95 }}>
       <Box
         bg={cardBg}
         p={6}
@@ -66,21 +63,19 @@ const FeatureCard = ({ icon, title, description }) => {
     </motion.div>
   );
 };
+// Corregido: propTypes en minúscula y tipo de 'icon'
+FeatureCard.propTypes = {
+  icon: PropTypes.elementType.isRequired,
+  description: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+};
 
 const ImageCard = ({ image, title, description }) => {
   const cardBg = useColorModeValue("white", "gray.800");
-  
+
   return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.2 }}
-    >
-      <Box
-        bg={cardBg}
-        borderRadius="2xl"
-        overflow="hidden"
-        boxShadow="lg"
-      >
+    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
+      <Box bg={cardBg} borderRadius="2xl" overflow="hidden" boxShadow="lg">
         <Box position="relative" height="250px">
           <Image
             src={image}
@@ -117,15 +112,23 @@ const ImageCard = ({ image, title, description }) => {
   );
 };
 
+// Corregido: propTypes en minúscula y 'image' en lugar de 'icon'
+ImageCard.propTypes = {
+  image: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+};
+
 const About = () => {
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const textColor = useColorModeValue("gray.600", "gray.300");
-  
+
   const features = [
     {
       icon: FaBook,
       title: "Guías Completas",
-      description: "Información detallada y actualizada sobre destinos turísticos.",
+      description:
+        "Información detallada y actualizada sobre destinos turísticos.",
     },
     {
       icon: FaMapMarkedAlt,
@@ -175,7 +178,8 @@ const About = () => {
               </Heading>
               <Text fontSize="xl" color={textColor} maxW="2xl">
                 Tu guía definitiva para explorar las maravillas de Catamarca.
-                Descubre paisajes impresionantes, rica cultura y experiencias únicas.
+                Descubre paisajes impresionantes, rica cultura y experiencias
+                únicas.
               </Text>
             </VStack>
           </motion.div>

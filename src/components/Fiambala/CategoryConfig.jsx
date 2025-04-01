@@ -1,40 +1,46 @@
-import { FaMountain, FaMapMarkedAlt, FaUmbrellaBeach, FaLandmark, FaArchway, FaSun } from "react-icons/fa";
+import {
+  FaMountain,
+  FaUmbrellaBeach,
+  FaLandmark,
+  FaArchway,
+  FaSun,
+} from "react-icons/fa";
 
 export const CATEGORY_CONFIG = {
-  "Desierto": {
+  Desierto: {
     gradient: "linear(to-r, yellow.400, orange.400)",
     color: "yellow.600",
     darkColor: "yellow.300",
-    icon: FaSun
+    icon: FaSun,
   },
-  "Cultura": {
+  Cultura: {
     gradient: "linear(to-r, purple.400, pink.400)",
     color: "purple.600",
     darkColor: "purple.300",
-    icon: FaArchway
+    icon: FaArchway,
   },
-  "Termas": {
-    gradient: "linear(to-r, blue.400, cyan.400)", 
+  Termas: {
+    gradient: "linear(to-r, blue.400, cyan.400)",
     color: "blue.600",
     darkColor: "blue.300",
-    icon: FaUmbrellaBeach
+    icon: FaUmbrellaBeach,
   },
-  "Mirador": {
+  Mirador: {
     gradient: "linear(to-r, green.400, teal.400)",
     color: "green.600",
-    darkColor: "green.300", 
-    icon: FaMountain
+    darkColor: "green.300",
+    icon: FaMountain,
   },
-  "Montañas": {
+  Montañas: {
     gradient: "linear(to-r, gray.600, blue.400)",
     color: "gray.600",
     darkColor: "gray.300",
-    icon: FaMountain
+    icon: FaMountain,
   },
-  "Centro": {
+  Centro: {
     gradient: "linear(to-r, yellow.400, red.400)",
     color: "yellow.600",
     darkColor: "yellow.300",
-    icon: FaLandmark
-  }
+    icon: FaLandmark,
+  },
 };

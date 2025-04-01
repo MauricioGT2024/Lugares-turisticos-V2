@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react"; // React no es necesario directamente
 import {
   Box,
   Container,
@@ -14,10 +14,19 @@ import AnimatedCard from "../components/Hospedaje/AnimatedCard";
 import HospedajeFilter from "../components/Hospedaje/HospedajeFilter";
 import HospedajeHeader from "../components/Hospedaje/HospedajeHeader";
 
+// Mapeo de locaciones a esquemas de color de Chakra UI
+const locationColorSchemes = {
+  "Catamarca": "blue",
+  "Tinogasta": "orange",
+  "Fiambalá": "purple",
+  "Antofagasta de la Sierra": "green",
+  // Puedes añadir más o un color por defecto si es necesario
+};
+
 const Hospedaje = () => {
-  const [expandedId, setExpandedId] = useState(null);
+  // expandedId ya no se usa porque cambiamos a Modal
   const [selectedDepartment, setSelectedDepartment] = useState("all");
-  const [error, setError] = useState(null);
+  const [error, ] = useState(null); // setError eliminado si no se usa para mostrar errores
   const bgGradient = useColorModeValue(
     "linear(to-b, gray.50, white)",
     "linear(to-b, gray.900, gray.800)"
@@ -29,10 +38,10 @@ const Hospedaje = () => {
       ? hospedajes
       : hospedajes.filter((h) => h.location === selectedDepartment);
 
-  const handleToggle = (id) => setExpandedId(expandedId === id ? null : id);
+  // handleToggle ya no es necesario
 
   return (
-    <Box bgGradient={bgGradient} minH="100vh" py="12">
+    <Box bgGradient={bgGradient} minH="100vh" py={{ base: 8, md: 12 }}> {/* Ajuste de padding */}
       <Container maxW="8xl" px={{ base: 4, md: 8 }}>
         <Grid templateColumns={{ base: "1fr", lg: "250px 1fr" }} gap={8}>
           <GridItem>
@@ -69,12 +78,13 @@ const Hospedaje = () => {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.4 }}
+                      transition={{ duration: 0.3 }} // Transición más rápida
                     >
                       <AnimatedCard
                         {...hospedaje}
-                        isExpanded={expandedId === hospedaje.id}
-                        onToggle={handleToggle}
+                        // Pasar el colorScheme basado en la ubicación
+                        colorScheme={locationColorSchemes[hospedaje.location] || "teal"} // Usa teal como fallback
+                        // isExpanded y onToggle ya no son necesarios
                       />
                     </motion.div>
                   </GridItem>

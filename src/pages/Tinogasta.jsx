@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   Box,
   Container,
@@ -17,7 +17,7 @@ import { FaFilter } from "react-icons/fa";
 import { locations } from "../data/tinogasta";
 import { CATEGORY_CONFIG } from "../components/Tinogasta/CategoryConfig";
 import LocationCard from "../components/Tinogasta/LocationCard";
-import { fadeInUp } from "../components/Tinogasta/animations";
+import { cardAnimation } from "../components/Tinogasta/animations";
 const Tinogasta = () => {
   const [openLocationId, setOpenLocationId] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState("");
@@ -79,7 +79,7 @@ const Tinogasta = () => {
 
           <GridItem>
             <VStack spacing={8} align="stretch">
-              <motion.div {...fadeInUp}>
+              <motion.div {...cardAnimation}>
                 <VStack spacing={4} textAlign="center" mb={8}>
                   <Badge
                     colorScheme="purple"

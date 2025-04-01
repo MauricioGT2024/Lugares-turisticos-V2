@@ -1,15 +1,33 @@
 import React from "react";
 import {
-  Box, VStack, Heading, Text, IconButton, Image, 
-  HStack, Tooltip, useColorModeValue, Icon
+  Box,
+  Image,
+  Heading,
+  Text,
+  Button,
+  useColorModeValue,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  IconButton,
+  HStack,
+  VStack,
+  Tooltip,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { FaMapMarkerAlt, FaInfoCircle, FaExpand, FaCompress } from "react-icons/fa";
-import { getIconByCategory } from './icons';
+import { FaMapMarkerAlt, FaWikipediaW } from "react-icons/fa";
+import PropTypes from "prop-types";
 
-const LocationCard = ({ location, isOpen, onToggle }) => {
-  const bgColor = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.600", "gray.300");
+const LocationCard = ({ location }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cardBgColor = useColorModeValue("white", "gray.700");
+  const modalBgColor = useColorModeValue("gray.50", "gray.800");
+  const textColor = useColorModeValue("gray.700", "gray.100");
 
   return (
     <motion.div
@@ -20,83 +38,88 @@ const LocationCard = ({ location, isOpen, onToggle }) => {
       transition={{ duration: 0.3 }}
     >
       <Box
-        bg={bgColor}
-        rounded="xl"
-        shadow="lg"
+        bg={cardBgColor}
+        borderRadius="md"
         overflow="hidden"
-        _hover={{ transform: "translateY(-4px)", shadow: "xl" }}
-        transition="all 0.3s"
+        boxShadow="md"
       >
-        <Box position="relative">
-          <Image
-            src={location.imgSrc}
-            alt={location.name}
-            h="200px"
-            w="full"
-            objectFit="cover"
-          />
-          <Box
-            position="absolute"
-            top={4}
-            right={4}
-            bg="rgba(0,0,0,0.6)"
-            color="white"
-            px={3}
-            py={1}
-            borderRadius="full"
-            display="flex"
-            alignItems="center"
-            gap={2}
-          >
-            <Icon as={getIconByCategory(location.category)} />
-            {location.category}
-          </Box>
-        </Box>
-
-        <VStack p={6} align="stretch" spacing={4}>
-          <Heading size="md">{location.name}</Heading>
-          
-          <Text color={textColor} noOfLines={isOpen ? undefined : 2}>
+        <Image src={location.imgSrc} alt={location.name} h="200px" w="100%" objectFit="cover" />
+        <VStack p={4} align="start">
+          <Heading size="sm" fontWeight="bold" color={textColor}>
+            {location.name}
+          </Heading>
+          <Text color={textColor} fontSize="sm" noOfLines={3}>
             {location.description}
           </Text>
-
-          {isOpen && (
-            <Box borderRadius="md" overflow="hidden" h="300px">
-              <iframe
-                title={location.name}
-                src={location.mapUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-              />
-            </Box>
-          )}
-
-          <HStack justify="space-between">
-            <Tooltip label="Ver en mapa">
-              <IconButton
-                as="a"
-                href={location.path}
-                target="_blank"
-                icon={<FaMapMarkerAlt />}
-                colorScheme="purple"
-                variant="ghost"
-              />
-            </Tooltip>
-
-            <IconButton
-              icon={isOpen ? <FaCompress /> : <FaExpand />}
-              onClick={() => onToggle(location.id)}
-              variant="ghost"
-              colorScheme="purple"
-              aria-label={isOpen ? "Contraer" : "Expandir"}
-            />
-          </HStack>
+          <Button size="xs" onClick={onOpen} colorScheme="purple">
+            Ver más
+          </Button>
         </VStack>
       </Box>
+
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+        <ModalOverlay />
+        <ModalContent bg={modalBgColor} color={textColor}>
+          <ModalHeader>{location.name}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Image src={location.imgSrc} alt={location.name} borderRadius="md" mb={2} />
+            <Text mb={4}>{location.description}</Text>
+            <Box borderRadius="md" overflow="hidden">
+              <iframe
+                src={location.iframe}
+                width="100%"
+                height="300px"
+                style={{ border: 0 }}
+                allowFullScreen
+                title={location.name}
+              />
+            </Box>
+          </ModalBody>
+          <ModalFooter>
+            <HStack spacing={4}>
+              <Tooltip label="Ver en Wikipedia">
+                <IconButton
+                  as="a"
+                  href={location.wiki}
+                  isExternal
+                  icon={<FaWikipediaW />}
+                  aria-label="Wikipedia"
+                  colorScheme="gray"
+                />
+              </Tooltip>
+              <Tooltip label="Ver en Google Maps">
+                <IconButton
+                  as="a"
+                  href={location.mapUrl}
+                  isExternal
+                  icon={<FaMapMarkerAlt />}
+                  aria-label="Google Maps"
+                  colorScheme="blue"
+                />
+              </Tooltip>
+              <Button colorScheme="red" onClick={onClose}>
+                Cerrar
+              </Button>
+            </HStack>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </motion.div>
   );
+};
+
+LocationCard.propTypes = {
+  location: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    imgSrc: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    wiki: PropTypes.string.isRequired,
+    iframe: PropTypes.string.isRequired,
+    mapUrl: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default React.memo(LocationCard);
