@@ -68,6 +68,7 @@ const LocationCardComponent = ({ location, onShowDetails }) => { // Eliminado is
             _hover={{ transform: "scale(1.02)" }}
             loading="lazy"
             onLoad={handleImageLoad}
+            aria-label={location.title}
           />
         </Skeleton>
         {/* Badge de Categoría */}

@@ -59,6 +59,8 @@ const LocationCardComponent = ({ location, onShowDetails }) => {
               onLoad={handleImageLoad}
               w="full"
               h="full"
+              transition="0.3s ease-in-out"
+              aria-label={location.title}
             />
           </AspectRatio>
         </Skeleton>
@@ -81,6 +83,8 @@ const LocationCardComponent = ({ location, onShowDetails }) => {
           size="xs"
           w="full"
           mt="auto"
+          _hover={{ bg: `${colorScheme}.500`, color: "white" }}
+          transition="0.2s"
         >
           Ver Detalles
         </Button>

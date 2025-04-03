@@ -1,36 +1,57 @@
-import React from 'react';
-import { Button, useColorModeValue } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import PropTypes from 'prop-types';
+import {
+  Box,
+  Button,
+  useColorModeValue,
+  Wrap,
+  WrapItem,
+} from "@chakra-ui/react";
+import { memo } from "react";
+import PropTypes from "prop-types";
 
-const AreaFilter = ({ category, isSelected, onClick }) => {
-  const bgColor = useColorModeValue("gray.100", "gray.700");
-  const textColor = useColorModeValue("gray.700", "gray.100");
+const AreaFilter = memo(({ categories, areaFilter, setAreaFilter }) => {
+  const bgColor = useColorModeValue("gray.50", "gray.700");
+  const textColor = useColorModeValue("gray.700", "gray.200");
+  const selectedBgColor = useColorModeValue("purple.500", "purple.200");
+  const selectedTextColor = useColorModeValue("white", "gray.800");
 
   return (
-    <motion.div
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
+    <Box
+      bg={bgColor}
+      p={4}
+      borderRadius="md"
+      boxShadow="sm"
     >
-      <Button
-        bg={isSelected ? "purple.500" : bgColor}
-        color={isSelected ? "white" : textColor}
-        onClick={onClick}
-        size="sm"
-        fontWeight="bold"
-        _hover={{ bg: "purple.300" }}
-        _active={{ bg: "purple.500" }}
-      >
-        {category}
-      </Button>
-    </motion.div>
+      <Wrap spacing={2}>
+        {categories.map((category) => (
+          <WrapItem key={category}>
+            <Button
+              size="sm"
+              borderRadius="full"
+              px={4}
+              fontSize="sm"
+              fontWeight="medium"
+              color={areaFilter === category ? selectedTextColor : textColor}
+              bg={areaFilter === category ? selectedBgColor : bgColor}
+              _hover={{ bg: areaFilter === category ? selectedBgColor : "gray.200" }}
+              _focus={{ boxShadow: "none" }}
+              onClick={() => setAreaFilter(category)}
+              aria-label={`Filtrar por ${category}`}
+            >
+              {category}
+            </Button>
+          </WrapItem>
+        ))}
+      </Wrap>
+    </Box>
   );
-};
+});
 
 AreaFilter.propTypes = {
-  category: PropTypes.string.isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
+  categories: PropTypes.arrayOf(PropTypes.string).isRequired,
+  areaFilter: PropTypes.string.isRequired,
+  setAreaFilter: PropTypes.func.isRequired,
 };
 
-export default React.memo(AreaFilter);
+AreaFilter.displayName = "AreaFilter";
+
+export default AreaFilter;

@@ -17,6 +17,7 @@ const FilterButtonComponent = ({ category, isSelected, onClick, bgColor, textCol
       }}
       transition="all 0.15s ease-in-out"
       aria-label={`Filtrar por ${category}`}
+      _active={{ transform: "scale(0.95)" }}
     >
       {category}
     </Button>

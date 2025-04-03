@@ -12,8 +12,6 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import Error404 from "./pages/Error404";
 import Footer from "./pages/Footer";
 import About from "./pages/About";
-import React from "react";
-
 const pageTransition = {
   initial: {
     opacity: 0,

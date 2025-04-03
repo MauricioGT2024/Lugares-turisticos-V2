@@ -85,6 +85,7 @@ const LocationCardComponent = ({ location, onShowDetails }) => {
               onLoad={handleImageLoad}
               w="full"
               h="full"
+              aria-label={location.title}
             />
           </AspectRatio>
         </Skeleton>

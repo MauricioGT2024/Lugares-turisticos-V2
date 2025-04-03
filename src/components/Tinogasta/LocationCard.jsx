@@ -43,7 +43,7 @@ const LocationCard = ({ location }) => {
         overflow="hidden"
         boxShadow="md"
       >
-        <Image src={location.imgSrc} alt={location.name} h="200px" w="100%" objectFit="cover" />
+        <Image src={location.imgSrc} alt={location.name} h="200px" w="100%" objectFit="cover" aria-label={location.name} transition="0.3s ease-in-out" />
         <VStack p={4} align="start">
           <Heading size="sm" fontWeight="bold" color={textColor}>
             {location.name}
@@ -63,7 +63,7 @@ const LocationCard = ({ location }) => {
           <ModalHeader>{location.name}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Image src={location.imgSrc} alt={location.name} borderRadius="md" mb={2} />
+            <Image src={location.imgSrc} alt={location.name} borderRadius="md" mb={2} aria-label={location.name} transition="0.3s ease-in-out" />
             <Text mb={4}>{location.description}</Text>
             <Box borderRadius="md" overflow="hidden">
               <iframe
