@@ -39,7 +39,20 @@ const LocationCardComponent = ({ location, onShowDetails, config }) => {
 
   const cardVariants = {
     hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.2 } },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.3,
+        ease: "easeOut"
+      } 
+    },
+    hover: {
+      scale: 1.02,
+      transition: {
+        duration: 0.2
+      }
+    }
   };
 
   return (
@@ -51,17 +64,34 @@ const LocationCardComponent = ({ location, onShowDetails, config }) => {
       bg={bgColor}
       borderWidth="1px"
       borderColor={borderColor}
-      borderRadius="md"
+      borderRadius="xl"
       overflow="hidden"
-      height="420px" // Ajustar la altura para mejor visualización
+      height="420px"
       display="flex"
       flexDirection="column"
       boxShadow="lg"
-      _hover={{
-        transform: "translateY(-3px)",
-        boxShadow: "xl",
+      position="relative"
+      _before={{
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        borderRadius: 'xl',
+        border: '1px solid',
+        borderColor: 'transparent',
+        transition: '0.3s ease-out',
+        pointerEvents: 'none'
       }}
-      transition="0.2s"
+      whileHover="hover"
+      _hover={{
+        boxShadow: "xl",
+        _before: {
+          borderColor: useColorModeValue('blackAlpha.200', 'whiteAlpha.200')
+        }
+      }}
+      transition="all 0.3s ease-out"
     >
       <Box position="relative" height="200px" flexShrink={0}>
         <Skeleton isLoaded={imageLoaded} height="100%">
@@ -74,7 +104,10 @@ const LocationCardComponent = ({ location, onShowDetails, config }) => {
               w="full"
               h="full"
               transition="0.4s ease-in-out"
-              _hover={{ transform: "scale(1.05)" }}
+              _hover={{ 
+                transform: "scale(1.05)",
+                filter: "brightness(1.1)"
+              }}
               aria-label={location.title}
             />
           </AspectRatio>
@@ -96,7 +129,7 @@ const LocationCardComponent = ({ location, onShowDetails, config }) => {
             backdropFilter="blur(5px)"
             fontSize="sm"
           >
-            <Icon as={config.icon} aria-label={location.category} size="sm" />
+            <Icon as={config.icon} aria-label={location.category} boxSize="16px" />
             {location.category}
           </Badge>
         )}
@@ -111,13 +144,22 @@ const LocationCardComponent = ({ location, onShowDetails, config }) => {
       >
         <HStack spacing={2}>
           {config.icon && (
-            <Box as={config.icon} color={config.color} boxSize={5} />
+          <Box as={config.icon} color={config.color} boxSize="20px" />
           )}
           <Heading size="md" noOfLines={2} color={headingColor}>
             {location.title}
           </Heading>
         </HStack>
-        <Text fontSize="sm" color={textColor} noOfLines={3} lineHeight="1.6">
+        <Text 
+          fontSize="sm" 
+          color={textColor} 
+          noOfLines={3} 
+          lineHeight="1.6"
+          transition="0.3s ease-out"
+          _hover={{
+            color: useColorModeValue('gray.800', 'whiteAlpha.900')
+          }}
+        >
           {location.description}
         </Text>
         <Button

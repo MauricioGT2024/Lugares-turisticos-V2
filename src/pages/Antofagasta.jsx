@@ -9,8 +9,6 @@ import {
   Text,
   Badge,
   useColorModeValue,
-  Wrap,
-  WrapItem,
   useBreakpointValue,
   Modal,
   ModalOverlay,
@@ -24,17 +22,20 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaMapMarkedAlt, FaInfoCircle } from "react-icons/fa"; // Iconos para modal
+import { FaMapMarkedAlt, FaInfoCircle } from "react-icons/fa";
 import { location } from "../data/antofagasta";
 import { animations } from "../components/Antofagasta/animations";
 import { categoryConfig } from "../components/Antofagasta/categoryConfig";
-import { FilterButton } from "../components/Antofagasta/FilterButton";
 import LocationCard from "../components/Antofagasta/LocationCard";
+import FilterSystem from "../components/FilterSystem/FilterSystem";
 
-const MotionBox = motion.create(Box);
+const MotionBox = motion(Box);
 
 const Antofagasta = () => {
-  const [filter, setFilter] = useState("Todos");
+  const [filters, setFilters] = useState({
+    category: "Todos",
+    search: ""
+  });
   const [selectedLocationData, setSelectedLocationData] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -56,13 +57,19 @@ const Antofagasta = () => {
     []
   );
 
-  const filteredLocations = useMemo(
-    () =>
-      filter === "Todos"
-        ? location
-        : location.filter((loc) => loc.categoria === filter),
-    [filter]
-  );
+  const filteredLocations = useMemo(() => {
+    return location.filter((loc) => {
+      const matchesCategory = 
+        filters.category === "Todos" || 
+        loc.categoria === filters.category;
+      const matchesSearch = 
+        !filters.search ||
+        loc.title.toLowerCase().includes(filters.search.toLowerCase()) ||
+        (loc.description && 
+         loc.description.toLowerCase().includes(filters.search.toLowerCase()));
+      return matchesCategory && matchesSearch;
+    });
+  }, [filters]);
 
   // Función para manejar la apertura del modal
   const handleShowDetails = useCallback(
@@ -122,17 +129,30 @@ const Antofagasta = () => {
           </MotionBox>
 
           {/* Filters */}
-          <Wrap spacing={2} justify="center">
-            {categories.map((category) => (
-              <WrapItem key={category}>
-                <FilterButton
-                  category={category}
-                  isSelected={filter === category}
-                  onClick={() => setFilter(category)}
-                />
-              </WrapItem>
-            ))}
-          </Wrap>
+          <FilterSystem
+            filters={[{
+              id: "category",
+              label: "Categoría",
+              options: categories.map(cat => ({
+                value: cat,
+                label: cat
+              }))
+            }]}
+            activeFilters={{category: filters.category}}
+            onFilterChange={(id, value) => {
+              setFilters(prev => ({ ...prev, [id]: value }));
+            }}
+            searchQuery={filters.search}
+            onSearchChange={(query) => {
+              setFilters(prev => ({ ...prev, search: query }));
+            }}
+            onClearAll={() => {
+              setFilters({
+                category: "Todos",
+                search: ""
+              });
+            }}
+          />
 
           {/* Location cards grid */}
           <SimpleGrid
