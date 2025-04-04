@@ -29,7 +29,7 @@ import { location } from "../data/antofagasta";
 import { animations } from "../components/Antofagasta/animations";
 import { categoryConfig } from "../components/Antofagasta/categoryConfig";
 import { FilterButton } from "../components/Antofagasta/FilterButton";
-import { LocationCard } from "../components/Antofagasta/LocationCard";
+import LocationCard from "../components/Antofagasta/LocationCard";
 
 const MotionBox = motion.create(Box);
 
@@ -157,7 +157,13 @@ const Antofagasta = () => {
       </Container>
 
       {/* Modal para mostrar detalles */}
-      <Modal isOpen={isOpen} onClose={handleCloseModal} size="xl" isCentered motionPreset="slideInBottom">
+      <Modal
+        isOpen={isOpen}
+        onClose={handleCloseModal}
+        size="xl"
+        isCentered
+        motionPreset="slideInBottom"
+      >
         <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(5px)" />
         <ModalContent bg={modalBgColor} borderRadius="xl">
           <ModalHeader
@@ -200,7 +206,7 @@ const Antofagasta = () => {
             )}
           </ModalBody>
           <ModalFooter borderBottomRadius="xl" justifyContent="space-between">
-             {/* Contenedor para botones de acción */}
+            {/* Contenedor para botones de acción */}
             <Box>
               {selectedLocationData?.mapUrl && ( // Botón Ver en Mapa (usa mapUrl)
                 <Button
@@ -218,7 +224,7 @@ const Antofagasta = () => {
                 </Button>
               )}
               {selectedLocationData?.path && ( // Botón Más Info (usa path)
-                 <Button
+                <Button
                   as={Link}
                   href={selectedLocationData.path}
                   target="_blank"
@@ -233,7 +239,7 @@ const Antofagasta = () => {
                 </Button>
               )}
             </Box>
-             {/* Botón Cerrar */}
+            {/* Botón Cerrar */}
             <Button colorScheme="gray" onClick={handleCloseModal} size="sm">
               Cerrar
             </Button>

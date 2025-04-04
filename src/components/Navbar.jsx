@@ -31,7 +31,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import ColorModeSwitcher from "./ColorModeSwitcher";
 import { FaHome, FaMapMarkedAlt, FaBed, FaInfoCircle } from "react-icons/fa";
 import Hamburger from "./Hamburger";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const navItems = [
   { path: "/", label: "Inicio", icon: FaHome },
@@ -110,8 +110,8 @@ const NavLink = ({ item, isMobile, onClose }) => {
       placement={isMobile ? "left" : "bottom"}
       hasArrow
     >
-      <MotionBox 
-        whileHover={{ y: -2 }} 
+      <MotionBox
+        whileHover={{ y: -2 }}
         whileTap={{ scale: 0.95 }}
         initial={false} // Evita animación inicial
       >
@@ -121,7 +121,8 @@ const NavLink = ({ item, isMobile, onClose }) => {
             bg={isActive ? activeBg : "transparent"}
             color={isActive ? activeColor : linkColor}
             leftIcon={<item.icon />}
-            width={isMobile ? "full" : "auto"}
+            
+            width={isMobile ? "auto" : "auto"}
             justifyContent={isMobile ? "flex-end" : "center"}
             _hover={{
               bg: hoverBg,
@@ -155,7 +156,7 @@ NavLink.propTypes = {
 };
 
 const Navbar = () => {
-  const  { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
   const menuBgColor = useColorModeValue("white", "gray.800");
@@ -166,10 +167,11 @@ const Navbar = () => {
 
   // Añadir este useEffect para cerrar el menú cuando cambia la ruta
   useEffect(() => {
+    console.log("pathname changed", location.pathname, isOpen);
     if (isOpen) {
       onClose();
     }
-  }, [location.pathname, isOpen, onClose]); 
+  }, [location]);
 
   const handleNavLinkClick = () => {
     if (isOpen) {
@@ -202,8 +204,8 @@ const Navbar = () => {
         >
           {/* Logo - Extremo izquierdo */}
           <Link to="/">
-            <motion.div 
-              whileHover={{ scale: 1.05 }} 
+            <motion.div
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               initial={false} // Evita animación inicial
             >
@@ -244,7 +246,7 @@ const Navbar = () => {
             <Box display={{ base: "block", lg: "none" }}>
               <Hamburger
                 isOpen={isOpen}
-                toggle={() => isOpen ? onClose() : onOpen()}
+                toggle={isOpen ? onClose : onOpen}
                 color={useColorModeValue("gray.800", "white")}
               />
             </Box>
@@ -268,7 +270,7 @@ const Navbar = () => {
                 bgGradient="linear(to-r, teal.400, blue.500)"
                 bgClip="text"
               >
-                Menú Principal
+                <Image src="/logo.png" h={10} />
               </Text>
               <DrawerCloseButton
                 position="relative"
@@ -287,12 +289,12 @@ const Navbar = () => {
               {navItems.map((item, index) => (
                 <motion.div
                   key={item.label}
-                  style={{ textAlign: 'right' }}
+                  style={{ textAlign: "right" }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{
                     duration: 0.2,
-                    delay: index * 0.05 // Reducido el delay
+                    delay: index * 0.05, // Reducido el delay
                   }}
                 >
                   <NavLink item={item} isMobile onClose={handleNavLinkClick} />

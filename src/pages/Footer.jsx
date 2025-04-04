@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import { memo } from "react";
 import { motion } from "framer-motion";
 import {
   Box,
@@ -9,7 +9,6 @@ import {
   Image,
   useColorModeValue,
   Icon,
-  Flex,
   VStack,
   Button,
   Divider,
@@ -31,6 +30,7 @@ import {
 } from "react-icons/fa";
 import { Link as RouterLink } from "react-router-dom";
 import { DiGithubBadge } from "react-icons/di";
+import PropTypes from "prop-types";
 import { FaDiscord } from "react-icons/fa6";
 
 // Componentes Motion optimizados
@@ -89,6 +89,14 @@ const SocialLink = memo(({ icon, href, label }) => {
     </Tooltip>
   );
 });
+SocialLink.displayName = "SocialLink";
+
+SocialLink.propTypes = {
+  icon: PropTypes.elementType.isRequired,
+  href: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+};
+
 // Componente DeveloperLink memoizado
 const DeveloperLink = memo(({ icon, href, label }) => {
   const iconColor = useColorModeValue("gray.600", "gray.400");
@@ -121,6 +129,15 @@ const DeveloperLink = memo(({ icon, href, label }) => {
     </Tooltip>
   );
 });
+
+DeveloperLink.displayName = "DeveloperLink";
+
+DeveloperLink.propTypes = {
+  icon: PropTypes.elementType.isRequired,
+  href: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+};
+
 // Componente NavLink optimizado
  const NavLink = memo(({ icon, label, to }) => {
   const textColor = useColorModeValue("gray.600", "gray.400");
@@ -148,6 +165,13 @@ const DeveloperLink = memo(({ icon, href, label }) => {
     </MotionBox>
   );
 });
+NavLink.displayName = "NavLink";
+
+NavLink.propTypes = {
+  icon: PropTypes.elementType.isRequired,
+  label: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
+};
 
 // Componente Footer principal
 const Footer = memo(() => {
@@ -243,7 +267,7 @@ const Footer = memo(() => {
               ))}
             </HStack>
             <Link
-              href="https://turismo.catamarca.gob.ar/"
+              href="https://www.visitcatamarca.com/"
               isExternal
               color={textColor}
               _hover={{ color: "teal.500" }}

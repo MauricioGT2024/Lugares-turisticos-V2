@@ -1,4 +1,3 @@
-import React from "react";
 import { motion } from "framer-motion";
 import { Box, useColorModeValue } from "@chakra-ui/react";
 import PropTypes from "prop-types";
@@ -15,16 +14,16 @@ const Path = ({ color, ...props }) => (
 );
 
 Path.propTypes = {
-  color: PropTypes.string.isRequired
+  color: PropTypes.string.isRequired,
 };
 
 const pathVariants = {
   closed: {
-    transition: { duration: 0.2, ease: "easeInOut" }
+    transition: { duration: 0.2, ease: "easeInOut" },
   },
   open: {
-    transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] }
-  }
+    transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+  },
 };
 
 const Hamburger = ({ isOpen, toggle, color }) => (
@@ -39,9 +38,9 @@ const Hamburger = ({ isOpen, toggle, color }) => (
     alignItems="center"
     justifyContent="center"
     borderRadius="md"
-    _hover={{ 
+    _hover={{
       bg: useColorModeValue("gray.100", "whiteAlpha.200"),
-      transform: "scale(1.05)" 
+      transform: "scale(1.05)",
     }}
     _active={{ transform: "scale(0.95)" }}
     transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
@@ -50,17 +49,17 @@ const Hamburger = ({ isOpen, toggle, color }) => (
     whileTap={{ scale: 0.95 }}
     whileHover={{ scale: 1.05 }}
   >
-    <svg 
-      width="20" 
-      height="20" 
+    <svg
+      width="20"
+      height="20"
       viewBox="0 0 20 20"
-      style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0)' }}
+      style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0)" }}
     >
       <Path
         color={color}
         variants={{
           closed: { d: "M 2 4 L 18 4", opacity: 1 },
-          open: { d: "M 4 16 L 16 4", opacity: 1 }
+          open: { d: "M 4 16 L 16 4", opacity: 1 },
         }}
         initial="closed"
         animate={isOpen ? "open" : "closed"}
@@ -70,7 +69,7 @@ const Hamburger = ({ isOpen, toggle, color }) => (
         color={color}
         variants={{
           closed: { d: "M 2 10 L 18 10", opacity: 1 },
-          open: { d: "M 2 10 L 18 10", opacity: 0 }
+          open: { d: "M 2 10 L 18 10", opacity: 0 },
         }}
         initial="closed"
         animate={isOpen ? "open" : "closed"}
@@ -80,7 +79,7 @@ const Hamburger = ({ isOpen, toggle, color }) => (
         color={color}
         variants={{
           closed: { d: "M 2 16 L 18 16", opacity: 1 },
-          open: { d: "M 4 4 L 16 16", opacity: 1 }
+          open: { d: "M 4 4 L 16 16", opacity: 1 },
         }}
         initial="closed"
         animate={isOpen ? "open" : "closed"}
@@ -93,11 +92,11 @@ const Hamburger = ({ isOpen, toggle, color }) => (
 Hamburger.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,
-  color: PropTypes.string
+  color: PropTypes.string,
 };
 
 Hamburger.defaultProps = {
-  color: "currentColor"
+  color: "currentColor",
 };
 
 export default Hamburger;

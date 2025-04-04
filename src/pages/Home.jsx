@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from "react";
+import { memo, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -24,13 +24,12 @@ import {
   FaMapMarkedAlt, 
   FaArrowRight, 
   FaCompass,
-  FaInfoCircle 
 } from "react-icons/fa";
 
 // Componentes con Motion
-const MotionCard = motion(Card);
-const MotionBox = motion(Box);
-const MotionFlex = motion(Flex);
+const MotionCard = motion.create(Card);
+const MotionBox = motion.create(Box);
+const MotionFlex = motion.create(Flex);
 
 // Variantes de animación
 const animations = {
@@ -72,7 +71,7 @@ const animations = {
   }
 };
 
-// Componente de tarjeta optimizado
+{/* Componente de tarjeta optimizado */}
 const PlaceCard = memo(({ place }) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardBg = useColorModeValue("white", "gray.800");
