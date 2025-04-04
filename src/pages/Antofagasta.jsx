@@ -29,7 +29,7 @@ import { categoryConfig } from "../components/Antofagasta/categoryConfig";
 import LocationCard from "../components/Antofagasta/LocationCard";
 import FilterSystem from "../components/FilterSystem/FilterSystem";
 
-const MotionBox = motion(Box);
+const MotionBox = motion.create(Box);
 
 const Antofagasta = () => {
   const [filters, setFilters] = useState({
@@ -163,7 +163,7 @@ const Antofagasta = () => {
             initial="hidden"
             animate="show"
           >
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="sync">
               {filteredLocations.map((loc) => (
                 <LocationCard
                   key={loc.id}
