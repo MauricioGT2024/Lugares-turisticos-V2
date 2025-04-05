@@ -11,7 +11,7 @@ import {
   FaUtensils
 } from "react-icons/fa";
 
-export const areaIcons = {
+const AREA_ICONS = {
   "Montaña": FaMountain,
   "Playa": FaUmbrellaBeach,
   "Religioso": FaChurch,
@@ -25,5 +25,13 @@ export const areaIcons = {
 };
 
 export const getIconByArea = (area) => {
-  return areaIcons[area] || areaIcons.default;
+  return AREA_ICONS[area] || AREA_ICONS.default;
 };
+
+export const ICON_OPTIONS = Object.keys(AREA_ICONS)
+  .filter(key => key !== "default")
+  .map(key => ({
+    value: key,
+    label: key,
+    icon: AREA_ICONS[key]
+  }));

@@ -1,9 +1,9 @@
-import React from 'react';
+import { memo } from 'react';
 import { Image, AspectRatio } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import PropTypes from 'prop-types';
 
-const LocationImage = React.memo(({ src, alt }) => (
+const LocationImage = memo(({ src, alt }) => (
   <AspectRatio ratio={16 / 9}>
     <Image
       as={motion.img}

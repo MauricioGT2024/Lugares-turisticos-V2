@@ -1,21 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
-import LocationCard from "../LocationCard";
-import { AREA_CONFIG } from "./AreaConfig";
-import { getIconByArea } from "./icons";
+import LocationCard from "../../Locations/LocationCard";
+import { getAreaTheme, getIconByArea } from "../";
 
 const CatamarcaLocationCard = ({ location, onShowDetails }) => {
-  const { colorScheme } = AREA_CONFIG[location.area] || { colorScheme: "gray" };
+  const { colorScheme } = getAreaTheme(location.area);
   const icon = getIconByArea(location.area);
+
+  const handleClick = () => {
+    onShowDetails(location.id);
+  };
 
   return (
     <LocationCard
       location={location}
-      onShowDetails={onShowDetails}
+      onClick={handleClick}
       config={{
-        colorScheme: colorScheme,
+        colorScheme,
         color: `${colorScheme}.500`,
-        icon: icon,
+        icon,
       }}
     />
   );
