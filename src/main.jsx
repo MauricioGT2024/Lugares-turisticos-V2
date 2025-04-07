@@ -7,16 +7,17 @@ import { createRoot } from "react-dom/client";
 
 const theme = extendTheme({
   config: {
-    initialColorMode: "dark", // Puedes iniciar en 'light' o 'dark'
-    useSystemColorMode: false, // Si quieres que dependa del sistema, ponlo en `true`
+    initialColorMode: 'system', // Cambiado a system
+    useSystemColorMode: true,
   },
   styles: {
-    global: {
-      'body': {
-        transition: 'background-color 0.3s ease-in-out, color 0.3s ease-in-out'
+    global: (props) => ({
+      body: {
+        bg: props.colorMode === 'dark' ? 'gray.900' : 'gray.50',
+        color: props.colorMode === 'dark' ? 'whiteAlpha.900' : 'gray.800',
+        transition: 'background-color 0.2s ease-in-out, color 0.2s ease-in-out'
       }
-      /* Global '*' transition removed */
-    }
+    })
   }
 });
 

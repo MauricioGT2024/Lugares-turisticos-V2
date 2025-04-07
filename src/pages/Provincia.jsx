@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useMemo, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Box,
@@ -18,36 +18,54 @@ import PropTypes from "prop-types";
 
 const MotionBox = motion(Box);
 
-const DepartamentoCard = ({ loc }) => {
+// Mover la configuración de gradientes fuera del componente
+const gradientConfigs = {
+  "Antofagasta de la Sierra": {
+    lightGradient: "linear(to-r, orange.400, yellow.400, yellow.600)",
+    darkGradient: "linear(to-r, orange.400, yellow.400, yellow.600)",
+    lightColor: "orange.600",
+    darkColor: "orange.300"
+  },
+  "Tinogasta": {
+    lightGradient: "linear(to-r, purple.400, red.400, orange.400)",
+    darkGradient: "linear(to-r, purple.400, red.400, orange.400)", 
+    lightColor: "purple.600",
+    darkColor: "purple.300"
+  },
+  "Fiambalá": {
+    lightGradient: "linear(to-r, yellow.400, orange.400, red.500)",
+    darkGradient: "linear(to-r, yellow.400, orange.400, red.500)",
+    lightColor: "yellow.600",
+    darkColor: "yellow.300"
+  },
+  "Catamarca Capital": {
+    lightGradient: "linear(to-r, green.400, yellow.400, green.500)",
+    darkGradient: "linear(to-r, green.400, yellow.400, green.500)",
+    lightColor: "green.600",
+    darkColor: "green.300"
+  },
+  default: {
+    lightGradient: "linear(to-r, teal.400, blue.500)",
+    darkGradient: "linear(to-r, teal.400, blue.500)",
+    lightColor: "teal.600",
+    darkColor: "teal.300"
+  }
+};
+
+const DepartamentoCard = memo(({ loc }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const bgColor = useColorModeValue("white", "gray.800");
-  
-  // Función para determinar el gradiente según el departamento
-  const getGradient = (name) => {
-    const gradients = {
-      "Antofagasta de la Sierra": {
-        gradient: "linear(to-r, orange.400, yellow.400, yellow.600)",
-        color: useColorModeValue("orange.600", "orange.300")
-      },
-      "Tinogasta": {
-        gradient: "linear(to-r, purple.400, red.400, orange.400)",
-        color: useColorModeValue("purple.600", "purple.300")
-      },
-      "Fiambalá": {
-        gradient: "linear(to-r, yellow.400, orange.400, red.500)",
-        color: useColorModeValue("yellow.600", "yellow.300")
-      },
-      "Catamarca Capital": {
-        gradient: "linear(to-r, green.400, yellow.400, green.500)",
-        color: useColorModeValue("green.600", "green.300")
-      },
-      default: {
-        gradient: "linear(to-r, teal.400, blue.500)",
-        color: useColorModeValue("teal.600", "teal.300")
-      }
+  const cardBgColor = useColorModeValue("white", "gray.800");
+  const isDark = useColorModeValue(false, true);
+
+  const getGradientConfig = (name) => {
+    const config = gradientConfigs[name] || gradientConfigs.default;
+    return {
+      gradient: isDark ? config.darkGradient : config.lightGradient,
+      color: isDark ? config.darkColor : config.lightColor
     };
-    return gradients[name] || gradients.default;
   };
+
+  const gradientConfig = useMemo(() => getGradientConfig(loc.name), [loc.name, isDark]);
 
   return (
     <MotionBox
@@ -55,7 +73,12 @@ const DepartamentoCard = ({ loc }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.3 }}
+      transition={{ 
+        duration: 0.3,
+        type: "spring",
+        stiffness: 260,
+        damping: 20 
+      }}
       whileHover={{ y: -8 }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
@@ -64,11 +87,13 @@ const DepartamentoCard = ({ loc }) => {
         as={RouterLink}
         to={loc.path}
         _hover={{ textDecoration: 'none' }}
+        role="article"
+        aria-label={`Explorar ${loc.name}`}
       >
         <Box
           borderRadius="xl"
           overflow="hidden"
-          bg={bgColor}
+          bg={cardBgColor}
           boxShadow={useColorModeValue(
             '0 4px 6px rgba(160, 174, 192, 0.6)',
             '0 4px 6px rgba(0, 0, 0, 0.4)'
@@ -79,7 +104,7 @@ const DepartamentoCard = ({ loc }) => {
             transform: 'translateY(-8px)',
             boxShadow: '2xl',
           }}
-          transition="all 0.3s ease"
+          transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
         >
           <Box position="relative" height="220px" overflow="hidden">
             <Image
@@ -88,13 +113,18 @@ const DepartamentoCard = ({ loc }) => {
               objectFit="cover"
               w="full"
               h="full"
-              transition="transform 0.3s ease"
+              transition="transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
               transform={isHovered ? "scale(1.1)" : "scale(1)"}
+              loading="lazy"
             />
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
+              transition={{ 
+                type: "spring",
+                stiffness: 260,
+                damping: 20 
+              }}
             >
               <Badge
                 position="absolute"
@@ -103,24 +133,31 @@ const DepartamentoCard = ({ loc }) => {
                 px={3}
                 py={1}
                 borderRadius="full"
-                bg="rgba(49, 151, 149, 0.9)"
+                bg={`${gradientConfig.color}AA`}
                 color="white"
                 backdropFilter="blur(8px)"
+                boxShadow="lg"
               >
                 Explorar
               </Badge>
             </motion.div>
           </Box>
 
-          <VStack p={6} spacing={4} align="start" height="180px">
+          <VStack 
+            p={6} 
+            spacing={4} 
+            align="start" 
+            height="180px"
+          >
             <Heading
               size="lg"
-              color={getGradient(loc.name).color}
+              color={gradientConfig.color}
               fontFamily="JetBrains Mono"
-              transition="color 0.2s ease"
+              transition="all 0.3s ease"
               _hover={{
-                bgGradient: getGradient(loc.name).gradient,
-                bgClip: "text"
+                bgGradient: gradientConfig.gradient,
+                bgClip: "text",
+                transform: "translateX(4px)"
               }}
             >
               {loc.name}
@@ -129,6 +166,7 @@ const DepartamentoCard = ({ loc }) => {
               fontSize="md"
               color={useColorModeValue("gray.600", "gray.300")}
               noOfLines={3}
+              lineHeight="tall"
             >
               {loc.description}
             </Text>
@@ -137,7 +175,9 @@ const DepartamentoCard = ({ loc }) => {
       </ChakraLink>
     </MotionBox>
   );
-};
+});
+
+DepartamentoCard.displayName = "DepartamentoCard";
 
 DepartamentoCard.propTypes = {
   loc: PropTypes.shape({
@@ -149,12 +189,12 @@ DepartamentoCard.propTypes = {
   }).isRequired,
 };
 
-const Provincia = () => {
+const Provincia = memo(() => {
   const bgColor = useColorModeValue("gray.50", "gray.900");
   const textColor = useColorModeValue("gray.600", "gray.300");
 
   return (
-    <Container maxW="7xl" py={12}>
+    <Container maxW="7xl" py={12} bg={bgColor}>
       <VStack spacing={8} align="stretch">
         <motion.div
           initial={{ opacity: 0, y: -50 }}
@@ -238,6 +278,8 @@ const Provincia = () => {
       </VStack>
     </Container>
   );
-};
+});
+
+Provincia.displayName = "Provincia";
 
 export default Provincia;

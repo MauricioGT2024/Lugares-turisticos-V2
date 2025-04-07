@@ -6,17 +6,10 @@ import {
   Button,
   useColorModeValue,
   Icon,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
   Badge,
   VStack,
   HStack,
+  Spinner,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import {
@@ -26,6 +19,9 @@ import {
   FaStar,
 } from "react-icons/fa";
 import PropTypes from "prop-types";
+import CustomModal from "../UI/CustomModal";
+import { useDisclosure } from "@chakra-ui/react";
+import { useState } from "react";
 
 const MotionBox = motion(Box);
 
@@ -40,6 +36,7 @@ const AnimatedCard = ({
   colorScheme = "teal",
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Colores derivados del colorScheme
   const badgeBg = useColorModeValue(`${colorScheme}.50`, `${colorScheme}.800`);
@@ -57,6 +54,29 @@ const AnimatedCard = ({
   );
   const modalButtonColorScheme = colorScheme; // Usar el mismo colorScheme para el botón del modal
 
+  const modalFooter = (
+    <>
+      <Button
+        as="a"
+        href={mapUrl}
+        isExternal
+        variant="solid"
+        colorScheme={modalButtonColorScheme}
+        leftIcon={<FaMapMarkedAlt />}
+      >
+        Ver Mapa de {title}
+      </Button>
+      <Button
+        variant="ghost"
+        colorScheme={modalButtonColorScheme}
+        onClick={onClose}
+        ml={3}
+      >
+        Cerrar Mapa
+      </Button>
+    </>
+  );
+
   return (
     <MotionBox
       maxW="full"
@@ -69,9 +89,10 @@ const AnimatedCard = ({
       position="relative"
       initial={{ opacity: 0, scale: 0.95 }} // Animación inicial sutil
       animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.03 }} // Animación hover de escalado
-      transition={{ duration: 0.2 }}
-      // Se eliminó el _before para un borde más simple
+      whileHover={{ scale: 1.02 }} // Reducir la escala para una animación más sutil
+      transition={{ duration: 0.15 }} // Reducir duración para mejor performance
+      role="article" // Añadir rol para accesibilidad
+      aria-label={`Hospedaje ${title}`} // Añadir aria-label
     >
       <Box position="relative" height="200px">
         {" "}
@@ -82,9 +103,25 @@ const AnimatedCard = ({
           objectFit="cover"
           width="100%"
           height="100%"
-          transition="0.3s ease"
-          _groupHover={{ transform: "scale(1.05)" }}
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
+          opacity={imageLoaded ? 1 : 0}
+          transition="opacity 0.3s ease"
         />
+        {!imageLoaded && (
+          <Box
+            position="absolute"
+            top={0}
+            left={0}
+            right={0}
+            bottom={0}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Spinner size="sm" color={`${colorScheme}.500`} />
+          </Box>
+        )}
         <Box
           position="absolute"
           top="0"
@@ -143,67 +180,26 @@ const AnimatedCard = ({
         </Button>
       </VStack>
 
-      {/* Modal rediseñado */}
-      <Modal
+      <CustomModal
         isOpen={isOpen}
         onClose={onClose}
+        title={`Ubicación: ${title}`}
+        headerGradient={`linear(to-r, ${colorScheme}.400, ${colorScheme}.600)`}
         size="2xl"
-        isCentered
-        motionPreset="slideInBottom"
+        footer={modalFooter}
       >
-        <ModalOverlay bg="blackAlpha.600" backdropFilter="blur(3px)" />
-        <ModalContent
-          borderRadius="xl"
-          bg={useColorModeValue("white", "gray.800")}
-        >
-          <ModalHeader
-            borderBottomWidth="1px"
-            borderColor={useColorModeValue("gray.100", "gray.700")}
-          >
-            Ubicación: {title}
-          </ModalHeader>
-          <ModalCloseButton _focus={{ boxShadow: "none" }} />
-          <ModalBody p={0}>
-            <Box height={{ base: "300px", md: "450px" }} width="100%">
-              {" "}
-              {/* Altura responsiva */}
-              <iframe
-                src={iframe}
-                title={`Mapa de ${title}`}
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                loading="lazy"
-                allowFullScreen
-              />
-            </Box>
-          </ModalBody>
-          <ModalFooter
-            borderTopWidth="1px"
-            borderColor={useColorModeValue("gray.100", "gray.700")}
-          >
-            {/* Botón del modal también usa el colorScheme */}
-            <Button
-              as="a"
-              href={mapUrl}
-              isExternal
-              variant="solid"
-              colorScheme={modalButtonColorScheme}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Ver Mapa de {title}
-            </Button>
-            <Button
-              variant="ghost"
-              colorScheme={modalButtonColorScheme}
-              onClick={onClose}
-            >
-              Cerrar Mapa
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        <Box height={{ base: "300px", md: "450px" }} width="100%">
+          <iframe
+            src={iframe}
+            title={`Mapa de ${title}`}
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            loading="lazy"
+            allowFullScreen
+          />
+        </Box>
+      </CustomModal>
     </MotionBox>
   );
 };

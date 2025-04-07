@@ -31,7 +31,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import ColorModeSwitcher from "./ColorModeSwitcher";
 import { FaHome, FaMapMarkedAlt, FaBed, FaInfoCircle } from "react-icons/fa";
 import Hamburger from "./Hamburger";
-import { useEffect } from "react";
+import { useEffect, memo, useCallback } from "react";
 
 const navItems = [
   { path: "/", label: "Inicio", icon: FaHome },
@@ -46,7 +46,8 @@ const navItems = [
 
 const MotionBox = motion.create(Box);
 
-const NavLink = ({ item, isMobile, onClose }) => {
+// Memoizar NavLink para evitar re-renders innecesarios
+const NavLink = memo(({ item, isMobile, onClose }) => {
   const location = useLocation();
   const isActive = location.pathname === item.path;
   const linkColor = useColorModeValue("gray.700", "white");
@@ -54,15 +55,17 @@ const NavLink = ({ item, isMobile, onClose }) => {
   const activeBg = useColorModeValue("teal.500", "teal.200");
   const activeColor = useColorModeValue("white", "gray.800");
 
-  const handleClick = () => {
+  // Optimizar el handleClick con useCallback
+  const handleClick = useCallback(() => {
     if (isMobile && onClose) {
       onClose();
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  };
+  }, [isMobile, onClose]);
 
   if (item.children) {
     return (
-      <Menu isLazy>
+      <Menu isLazy placement="bottom">
         <Flex align="center">
           <Link to={item.path} onClick={handleClick}>
             <Button
@@ -109,11 +112,18 @@ const NavLink = ({ item, isMobile, onClose }) => {
       label={`Ir a ${item.label}`}
       placement={isMobile ? "left" : "bottom"}
       hasArrow
+      openDelay={300}
+      closeDelay={100}
     >
       <MotionBox
         whileHover={{ y: -2 }}
         whileTap={{ scale: 0.95 }}
-        initial={false} // Evita animación inicial
+        initial={false}
+        transition={{
+          type: "spring",
+          stiffness: 400,
+          damping: 17,
+        }}
       >
         <Link to={item.path} onClick={handleClick}>
           <Button
@@ -121,7 +131,6 @@ const NavLink = ({ item, isMobile, onClose }) => {
             bg={isActive ? activeBg : "transparent"}
             color={isActive ? activeColor : linkColor}
             leftIcon={<item.icon />}
-            
             width={isMobile ? "auto" : "auto"}
             justifyContent={isMobile ? "flex-end" : "center"}
             _hover={{
@@ -129,7 +138,12 @@ const NavLink = ({ item, isMobile, onClose }) => {
               transform: "translateY(-2px)",
               shadow: "md",
             }}
-            transition="all 0.2s"
+            _active={{
+              transform: "scale(0.95)",
+            }}
+            transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
+            role="menuitem"
+            aria-current={isActive ? "page" : undefined}
           >
             {item.label}
           </Button>
@@ -137,7 +151,9 @@ const NavLink = ({ item, isMobile, onClose }) => {
       </MotionBox>
     </Tooltip>
   );
-};
+});
+
+NavLink.displayName = "NavLink";
 
 NavLink.propTypes = {
   item: PropTypes.shape({
@@ -155,7 +171,8 @@ NavLink.propTypes = {
   onClose: PropTypes.func,
 };
 
-const Navbar = () => {
+// Memoizar el componente principal
+const Navbar = memo(() => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const bgColor = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -173,14 +190,17 @@ const Navbar = () => {
     }
   }, [location]);
 
-  const handleNavLinkClick = () => {
+  const handleNavLinkClick = useCallback(() => {
     if (isOpen) {
       onClose();
     }
-  };
+  }, [isOpen, onClose]);
 
   return (
     <Box
+      as="nav"
+      role="navigation"
+      aria-label="Navegación principal"
       position="sticky"
       top="0"
       zIndex="1000"
@@ -190,9 +210,10 @@ const Navbar = () => {
       borderColor={borderColor}
       backdropFilter="blur(8px)"
       backgroundColor={useColorModeValue(
-        "rgba(255, 255, 255, 0.8)",
-        "rgba(26, 32, 44, 0.8)"
+        "rgba(255, 255, 255, 0.9)",
+        "rgba(26, 32, 44, 0.9)"
       )}
+      transition="all 0.3s ease-in-out"
     >
       <Container maxW="8xl" px={{ base: 2, md: 8 }}>
         <MotionGrid
@@ -293,7 +314,6 @@ const Navbar = () => {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  
                   transition={{
                     duration: 0.2,
                     delay: index * 0.05, // Reducido el delay
@@ -319,6 +339,7 @@ const Navbar = () => {
       </Drawer>
     </Box>
   );
-};
+});
 
+Navbar.displayName = "Navbar";
 export default Navbar;

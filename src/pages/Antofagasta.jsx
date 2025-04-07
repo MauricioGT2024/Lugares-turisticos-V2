@@ -10,24 +10,19 @@ import {
   Badge,
   useColorModeValue,
   useBreakpointValue,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
   Button,
   Link,
 } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaMapMarkedAlt, FaInfoCircle } from "react-icons/fa";
 import { location } from "../data/antofagasta";
-import { animations } from "../components/Antofagasta/animations";
 import { categoryConfig } from "../components/Antofagasta/categoryConfig";
 import LocationCard from "../components/Antofagasta/LocationCard";
-import FilterSystem from "../components/FilterSystem/FilterSystem";
+import CustomModal from "../components/UI/CustomModal";
+import { useDisclosure } from "@chakra-ui/react";
+import FilterGroup from "../components/FilterSystem/FilterGroup";
+import { ANTOFAGASTA_ANIMATIONS } from "../components/Antofagasta/config/animations";
+import { filterAnimations } from "../components/Antofagasta/config/animations";
 
 const MotionBox = motion.create(Box);
 
@@ -41,7 +36,6 @@ const Antofagasta = () => {
 
   // Hooks de ColorMode llamados en el nivel superior
   const bgColor = useColorModeValue("gray.50", "gray.900");
-  const modalBgColor = useColorModeValue("white", "gray.800");
   const modalTextColor = useColorModeValue("gray.700", "gray.200");
   const headerTextColor = useColorModeValue("gray.600", "gray.300"); // Para el texto del header
 
@@ -90,23 +84,68 @@ const Antofagasta = () => {
     setTimeout(() => setSelectedLocationData(null), 300);
   };
 
+  const modalFooter = selectedLocationData && (
+    <Box>
+      {selectedLocationData?.mapUrl && (
+        <Button
+          as={Link}
+          href={selectedLocationData.mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          leftIcon={<FaMapMarkedAlt />}
+          colorScheme="blue"
+          variant="outline"
+          mr={3}
+          size="sm"
+        >
+          Ver en Mapa
+        </Button>
+      )}
+      {selectedLocationData?.path && (
+        <Button
+          as={Link}
+          href={selectedLocationData.path}
+          target="_blank"
+          rel="noopener noreferrer"
+          leftIcon={<FaInfoCircle />}
+          colorScheme="teal"
+          variant="outline"
+          mr={3}
+          size="sm"
+        >
+          Más Info
+        </Button>
+      )}
+      <Button colorScheme="gray" onClick={handleCloseModal} size="sm">
+        Cerrar
+      </Button>
+    </Box>
+  );
+
   return (
-    <Box bg={bgColor} minH="100vh" py={12}>
+    <Box
+      as={motion.div}
+      variants={ANTOFAGASTA_ANIMATIONS.pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      bg={bgColor}
+      minH="100vh"
+      py={12}
+    >
       <Container maxW="7xl">
         <VStack spacing={8} align="stretch">
-          {/* Header section */}
-          <MotionBox
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <VStack spacing={4} textAlign="center" mb={8}>
+          <MotionBox variants={ANTOFAGASTA_ANIMATIONS.headerVariants}>
+            <VStack spacing={6} textAlign="center" mb={8}>
               <Badge
                 colorScheme="orange"
-                px={4}
-                py={1}
+                px={6}
+                py={2}
                 borderRadius="full"
                 fontSize="md"
+                textTransform="uppercase"
+                letterSpacing="wide"
+                boxShadow="lg"
               >
                 Explora la Puna
               </Badge>
@@ -128,144 +167,78 @@ const Antofagasta = () => {
             </VStack>
           </MotionBox>
 
-          {/* Filters */}
-          <FilterSystem
-            filters={[{
-              id: "category",
-              label: "Categoría",
-              options: categories.map(cat => ({
-                value: cat,
-                label: cat
-              }))
-            }]}
-            activeFilters={{category: filters.category}}
-            onFilterChange={(id, value) => {
-              setFilters(prev => ({ ...prev, [id]: value }));
-            }}
-            searchQuery={filters.search}
-            onSearchChange={(query) => {
-              setFilters(prev => ({ ...prev, search: query }));
-            }}
-            onClearAll={() => {
-              setFilters({
-                category: "Todos",
-                search: ""
-              });
-            }}
-          />
+          <VStack spacing={8}>
+            <FilterGroup
+              title="Categorías"
+              items={categories.filter(cat => cat !== "Todos")}
+              selected={filters.category}
+              onSelect={(value) => setFilters(prev => ({ 
+                ...prev, 
+                category: value || "Todos"
+              }))}
+              colorScheme="orange"
+            />
 
-          {/* Location cards grid */}
-          <SimpleGrid
-            columns={columns}
-            spacing={8}
-            as={motion.div}
-            variants={animations.container}
-            initial="hidden"
-            animate="show"
-          >
-            <AnimatePresence mode="sync">
-              {filteredLocations.map((loc) => (
-                <LocationCard
-                  key={loc.id}
-                  location={loc}
-                  onShowDetails={handleShowDetails}
-                />
-              ))}
-            </AnimatePresence>
-          </SimpleGrid>
+            <SimpleGrid
+              columns={columns}
+              spacing={8}
+              as={motion.div}
+              layout
+            >
+              <AnimatePresence mode="popLayout" initial={false}>
+                {filteredLocations.map((loc) => (
+                  <motion.div
+                    key={loc.id}
+                    variants={filterAnimations}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layout
+                  >
+                    <LocationCard
+                      location={loc}
+                      onShowDetails={handleShowDetails}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </SimpleGrid>
+          </VStack>
         </VStack>
       </Container>
 
-      {/* Modal para mostrar detalles */}
-      <Modal
+      <CustomModal
         isOpen={isOpen}
         onClose={handleCloseModal}
-        size="xl"
-        isCentered
+        title={selectedLocationData?.title || "Detalles"}
+        headerGradient={
+          selectedLocationData
+            ? (categoryConfig[selectedLocationData.categoria] || categoryConfig.Campo)
+                .gradient
+            : "linear(to-r, gray.400, gray.600)"
+        }
+        footer={modalFooter}
         motionPreset="slideInBottom"
+        scrollBehavior="inside"
       >
-        <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(5px)" />
-        <ModalContent bg={modalBgColor} borderRadius="xl">
-          <ModalHeader
-            borderTopRadius="xl"
-            bgGradient={
-              selectedLocationData
-                ? (
-                    categoryConfig[selectedLocationData.categoria] ||
-                    categoryConfig.Campo
-                  ).gradient
-                : "linear(to-r, gray.400, gray.600)"
-            }
-            color="white"
-            py={4}
-          >
-            {selectedLocationData?.title || "Detalles"}
-          </ModalHeader>
-          <ModalCloseButton
-            color="white"
-            _focus={{ boxShadow: "none" }}
-            _hover={{ bg: "whiteAlpha.300" }}
-          />
-          <ModalBody py={6}>
-            {selectedLocationData && (
-              <VStack spacing={4} align="stretch">
-                <Box borderRadius="lg" overflow="hidden" h="300px">
-                  <iframe
-                    title={selectedLocationData.title}
-                    src={selectedLocationData.mapSrc} // URL para iframe
-                    width="100%"
-                    height="100%"
-                    style={{ border: 0 }}
-                    loading="lazy"
-                  />
-                </Box>
-                <Text fontSize="md" color={modalTextColor}>
-                  {selectedLocationData.description}
-                </Text>
-              </VStack>
-            )}
-          </ModalBody>
-          <ModalFooter borderBottomRadius="xl" justifyContent="space-between">
-            {/* Contenedor para botones de acción */}
-            <Box>
-              {selectedLocationData?.mapUrl && ( // Botón Ver en Mapa (usa mapUrl)
-                <Button
-                  as={Link}
-                  href={selectedLocationData.mapUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  leftIcon={<FaMapMarkedAlt />}
-                  colorScheme="blue"
-                  variant="outline"
-                  mr={3}
-                  size="sm"
-                >
-                  Ver en Mapa
-                </Button>
-              )}
-              {selectedLocationData?.path && ( // Botón Más Info (usa path)
-                <Button
-                  as={Link}
-                  href={selectedLocationData.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  leftIcon={<FaInfoCircle />}
-                  colorScheme="teal"
-                  variant="outline"
-                  mr={3}
-                  size="sm"
-                >
-                  Más Info
-                </Button>
-              )}
+        {selectedLocationData && (
+          <VStack spacing={4} align="stretch">
+            <Box borderRadius="lg" overflow="hidden" h="300px">
+              <iframe
+                title={selectedLocationData.title}
+                src={selectedLocationData.mapSrc}
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                loading="lazy"
+              />
             </Box>
-            {/* Botón Cerrar */}
-            <Button colorScheme="gray" onClick={handleCloseModal} size="sm">
-              Cerrar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+            <Text fontSize="md" color={modalTextColor}>
+              {selectedLocationData.description}
+            </Text>
+          </VStack>
+        )}
+      </CustomModal>
     </Box>
   );
 };
