@@ -1,89 +1,62 @@
-import {
-  VStack,
-  Box,
-  Text,
-  Select,
-  useColorModeValue,
-  Icon,
-  HStack, // Añadido HStack
-  // chakra eliminado
-} from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FaSearch, FaMapMarkedAlt, FaHotel } from "react-icons/fa";
 import PropTypes from "prop-types";
 
-const MotionVStack = motion(VStack);
-const MotionBox = motion(Box);
-
 const HospedajeFilter = ({ selectedDepartment, setSelectedDepartment, departments }) => {
-  const bgColor = useColorModeValue("white", "gray.800"); // Color sólido
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const selectBg = useColorModeValue("gray.100", "gray.700");
-  const selectHoverBg = useColorModeValue("gray.200", "gray.600");
+  const { colorMode } = useColorMode();
 
   return (
-    <MotionVStack
-      position="sticky"
-      top="20"
-      spacing={6}
+    <motion.div
+      className="sticky top-20 space-y-6"
       initial={{ opacity: 0, x: -30 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <MotionBox
-        p={5} // Padding ajustado
-        borderRadius="xl" // Menos redondeado
-        bg={bgColor}
-        // backdropFilter eliminado para fondo sólido
-        borderWidth="1px"
-        borderColor={borderColor}
-        boxShadow="md" // Sombra ajustada
-        // _hover eliminado para elemento sticky
-        transition="0.3s ease"
+      <motion.div
+        className={`p-5 rounded-xl border shadow-md transition-all duration-300 ${
+          colorMode === "dark"
+            ? "bg-gray-800 border-gray-700"
+            : "bg-white border-gray-200"
+        }`}
       >
-        <VStack spacing={5} align="stretch"> {/* Espaciado ajustado */}
-          <HStack spacing={3}> {/* HStack para icono y texto */}
-            <Icon as={FaHotel} w={5} h={5} color="teal.500" />
-            <Text fontSize="md" fontWeight="semibold" color={useColorModeValue("gray.700", "gray.200")}>
+        <div className="space-y-5">
+          <div className="flex items-center space-x-3">
+            <FaHotel className="w-5 h-5 text-teal-500" />
+            <span className={`font-semibold ${
+              colorMode === "dark" ? "text-gray-200" : "text-gray-700"
+            }`}>
               Filtrar por Ubicación
-            </Text>
-          </HStack>
+            </span>
+          </div>
 
-          <Box position="relative" pt={1}> {/* Padding top añadido */}
-            <Icon
-              as={FaSearch}
-              position="absolute"
-              left={3}
-              top="50%"
-              transform="translateY(-50%)"
-              color={useColorModeValue("gray.500", "gray.400")} // Icono más sutil
-              zIndex={1} // zIndex ajustado
-            />
-            <Select
+          <div className="relative pt-1">
+            <FaSearch className={`absolute left-3 top-1/2 transform -translate-y-1/2 z-10 ${
+              colorMode === "dark" ? "text-gray-400" : "text-gray-500"
+            }`} />
+            <select
               value={selectedDepartment}
               onChange={(e) => setSelectedDepartment(e.target.value)}
-              pl={10}
-              variant="outline" // Variante outline
-              bg={selectBg}
-              borderColor={borderColor} // Borde igual al contenedor
-              _hover={{ bg: selectHoverBg, borderColor: useColorModeValue("gray.300", "gray.600") }}
-              _focus={{ bg: selectBg, borderColor: "teal.500", boxShadow: `0 0 0 1px var(--chakra-colors-teal-500)` }} // Focus estilo Chakra
-              icon={<Icon as={FaMapMarkedAlt} color="gray.500" />} // Icono del select
-              borderRadius="lg" // Menos redondeado
-              transition="all 0.2s" // Transición más rápida
-              size="md" // Tamaño ajustado
+              className={`w-full pl-10 pr-4 py-2 rounded-lg appearance-none transition-all duration-200 ${
+                colorMode === "dark"
+                  ? "bg-gray-700 text-gray-200 border-gray-600 focus:border-teal-500"
+                  : "bg-gray-100 text-gray-800 border-gray-200 focus:border-teal-500"
+              } focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50`}
             >
-              <option value="all">Todos los lugares</option> {/* Usar option nativo */}
+              <option value="all">Todos los lugares</option>
               {departments.map((dept) => (
-                <option key={dept} value={dept}> {/* Usar option nativo */}
+                <option key={dept} value={dept}>
                   {dept}
                 </option>
               ))}
-            </Select>
-          </Box>
-        </VStack>
-      </MotionBox>
-    </MotionVStack>
+            </select>
+            <FaMapMarkedAlt className={`absolute right-3 top-1/2 transform -translate-y-1/2 ${
+              colorMode === "dark" ? "text-gray-400" : "text-gray-500"
+            }`} />
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

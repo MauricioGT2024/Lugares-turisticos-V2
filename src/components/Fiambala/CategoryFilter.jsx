@@ -1,107 +1,77 @@
-import {
-  Box,
-  useColorModeValue,
-  Button,
-  Wrap,
-  WrapItem
-} from "@chakra-ui/react";
 import { memo } from "react";
+import { motion } from "framer-motion";
+import { useColorMode } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
+import { CATEGORY_CONFIG } from "./CategoryConfig";
 
-const CategoryButtonComponent = ({ category, isSelected, onClick, bgColor, textColor, hoverBgColor }) => {
+const CategoryButton = memo(({ category, isSelected, onClick }) => {
+  const { colorMode } = useColorMode();
+  const config = CATEGORY_CONFIG[category] || {};
+  const Icon = config.icon;
+  
   return (
-    <Button
-      size="sm"
-      bg={isSelected ? hoverBgColor : bgColor}
-      color={textColor}
-      variant="solid"
+    <motion.button
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.97 }}
       onClick={onClick}
-      _hover={{
-        bg: isSelected ? hoverBgColor : bgColor,
-        transform: "translateY(-1px)",
-        boxShadow: "sm",
-      }}
-      transition="all 0.15s ease-in-out"
-      aria-label={`Filtrar por ${category}`}
-      _active={{ transform: "scale(0.95)" }}
-      borderRadius="full"
-      px={4}
+      className={`
+        inline-flex items-center gap-2 px-4 py-2 rounded-full
+        text-sm font-medium transition-all duration-200
+        focus:outline-none focus:ring-2 focus:ring-offset-2
+        ${isSelected 
+          ? `${config.bgClass} text-white` 
+          : colorMode === 'dark'
+            ? 'bg-gray-800 text-gray-200 hover:bg-gray-700 border-gray-700'
+            : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-200'
+        }
+        ${!isSelected ? 'border' : ''}
+      `}
     >
+      {Icon && <Icon className="w-4 h-4" />}
       {category}
-    </Button>
+    </motion.button>
   );
-};
+});
 
-CategoryButtonComponent.propTypes = {
+CategoryButton.displayName = "CategoryButton";
+
+CategoryButton.propTypes = {
   category: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
-  bgColor: PropTypes.string.isRequired,
-  textColor: PropTypes.string.isRequired,
-  hoverBgColor: PropTypes.string.isRequired,
 };
-
-const CategoryButtonWithTheme = (props) => {
-  const bgColor = useColorModeValue("gray.100", "gray.700");
-  const textColor = useColorModeValue("gray.700", "gray.100");
-  const hoverBgColor = useColorModeValue("gray.200", "gray.600");
-
-  return (
-    <CategoryButtonComponent
-      {...props}
-      bgColor={bgColor}
-      textColor={textColor}
-      hoverBgColor={hoverBgColor}
-    />
-  );
-};
-
-const CategoryButton = memo(CategoryButtonWithTheme);
-CategoryButton.displayName = "CategoryButton";
 
 const CategoryFilter = memo(({ categories, categoryFilter, setCategoryFilter }) => {
-  const bgColor = useColorModeValue("gray.100", "gray.700");
-  const textColor = useColorModeValue("gray.700", "gray.100");
-  const hoverBgColor = useColorModeValue("gray.200", "gray.600");
-
+  const { colorMode } = useColorMode();
+  
   return (
-    <Box
-      position="relative"
-      bg={bgColor}
-      p={6}
-      mx="auto"
-      borderRadius="xl"
-      boxShadow="lg"
-      border="1px"
-      borderColor={useColorModeValue("gray.200", "gray.700")}
-    >
-      <Wrap spacing={4}>
-        <WrapItem>
-          <CategoryButton
-            category="Todas las categorías"
-            isSelected={!categoryFilter}
-            onClick={() => setCategoryFilter("")}
-            bgColor={bgColor}
-            textColor={textColor}
-            hoverBgColor={hoverBgColor}
-          />
-        </WrapItem>
+    <div className={`
+      p-6 rounded-xl shadow-lg border
+      ${colorMode === 'dark' 
+        ? 'bg-gray-800/50 border-gray-700' 
+        : 'bg-white/50 border-gray-200'
+      }
+      backdrop-blur-sm
+    `}>
+      <div className="flex flex-wrap gap-3">
+        <CategoryButton
+          category="Todas"
+          isSelected={!categoryFilter}
+          onClick={() => setCategoryFilter("")}
+        />
         {categories.map((category) => (
-          <WrapItem key={category}>
-            <CategoryButton
-              category={category}
-              isSelected={categoryFilter === category}
-              onClick={() => setCategoryFilter(category)}
-              bgColor={bgColor}
-              textColor={textColor}
-              hoverBgColor={hoverBgColor}
-            />
-          </WrapItem>
+          <CategoryButton
+            key={category}
+            category={category}
+            isSelected={categoryFilter === category}
+            onClick={() => setCategoryFilter(category)}
+          />
         ))}
-      </Wrap>
-    </Box>
+      </div>
+    </div>
   );
 });
+
 CategoryFilter.displayName = "CategoryFilter";
 
 CategoryFilter.propTypes = {

@@ -2,41 +2,36 @@ import { FaLandmark, FaTree, FaWater, FaMountain } from "react-icons/fa";
 
 export const AREA_THEMES = {
   Centro: {
-    gradient: "linear(to-r, yellow.400, green.400)",
-    badge: "rgba(255, 214, 0, 0.9)",
+    gradient: 'from-yellow-400 to-green-400',
+    badge: '#FFD600E6',
     icon: FaLandmark,
-    hover: "yellow.400",
-    colorScheme: "yellow"
+    color: 'yellow'
   },
   Noroeste: {
-    gradient: "linear(to-r, green.400, teal.400)",
-    badge: "rgba(72, 187, 120, 0.9)",
+    gradient: 'from-green-400 to-teal-400',
+    badge: '#48BB78E6',
     icon: FaTree,
-    hover: "green.400",
-    colorScheme: "green"
+    color: 'green'
   },
   Sureste: {
-    gradient: "linear(to-r, blue.400, cyan.400)",
-    badge: "rgba(66, 153, 225, 0.9)",
+    gradient: 'from-blue-400 to-cyan-400',
+    badge: '#4299E1E6',
     icon: FaWater,
-    hover: "blue.400",
-    colorScheme: "blue"
+    color: 'blue'
   },
   Norte: {
-    gradient: "linear(to-r, orange.400, yellow.400)",
-    badge: "rgba(237, 137, 54, 0.9)",
+    gradient: 'from-orange-400 to-yellow-400',
+    badge: '#ED8936E6',
     icon: FaMountain,
-    hover: "orange.400",
-    colorScheme: "orange"
+    color: 'orange'
   }
 };
 
 export const getAreaTheme = (area) => {
   return AREA_THEMES[area] || {
-    gradient: "linear(to-r, gray.400, gray.600)",
-    badge: "rgba(113, 128, 150, 0.9)",
+    gradient: 'from-gray-400 to-gray-600',
+    badge: '#718096E6',
     icon: FaLandmark,
-    hover: "gray.400",
-    colorScheme: "gray"
+    color: 'gray'
   };
 };

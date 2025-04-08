@@ -1,21 +1,7 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
-import {
-  Box,
-  Container,
-  SimpleGrid,
-  Text,
-  Link,
-  Image,
-  useColorModeValue,
-  Icon,
-  VStack,
-  Button,
-  Divider,
-  Tooltip,
-  HStack,
-  chakra,
-} from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   FaFacebook,
   FaTwitter,
@@ -27,68 +13,26 @@ import {
   FaHeart,
   FaExternalLinkAlt,
   FaLinkedin,
+  FaDiscord,
 } from "react-icons/fa";
-import { Link as RouterLink } from "react-router-dom";
 import { DiGithubBadge } from "react-icons/di";
 import PropTypes from "prop-types";
-import { FaDiscord } from "react-icons/fa6";
 
-// Componentes Motion optimizados
-const MotionBox = chakra(motion.div);
-const MotionFlex = chakra(motion.div, {
-  baseStyle: { display: "flex" },
-});
+// Componentes Memorizados
+const SocialLink = memo(({ icon: Icon, href, label }) => (
+  <motion.a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    whileHover={{ scale: 1.2, rotate: 5 }}
+    transition={{ duration: 0.2 }}
+    className="text-gray-600 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-300 transition-colors"
+    aria-label={label}
+  >
+    <Icon className="w-6 h-6" />
+  </motion.a>
+));
 
-// Animaciones reutilizables
-const animations = {
-  socialHover: {
-    scale: 1.2,
-    rotate: 5,
-    transition: { duration: 0.2 },
-  },
-  linkHover: {
-    x: 4,
-    transition: { duration: 0.2 },
-  },
-  fadeInUp: {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.5 },
-  },
-};
-
-// Componente SocialLink optimizado
-const SocialLink = memo(({ icon, href, label }) => {
-  const iconColor = useColorModeValue("gray.600", "gray.400");
-  const hoverColor = useColorModeValue("teal.500", "teal.300");
-
-  return (
-    <Tooltip label={label} hasArrow placement="top">
-      <MotionBox
-        whileHover={animations.socialHover}
-        display="inline-block"
-        aria-label={label}
-      >
-        <Link
-          href={href}
-          isExternal
-          display="flex"
-          alignItems="center"
-          aria-label={`Visitar ${label}`}
-        >
-          <Icon
-            as={icon}
-            w={6}
-            h={6}
-            color={iconColor}
-            _hover={{ color: hoverColor }}
-            transition="all 0.3s"
-          />
-        </Link>
-      </MotionBox>
-    </Tooltip>
-  );
-});
 SocialLink.displayName = "SocialLink";
 
 SocialLink.propTypes = {
@@ -97,74 +41,18 @@ SocialLink.propTypes = {
   label: PropTypes.string.isRequired,
 };
 
-// Componente DeveloperLink memoizado
-const DeveloperLink = memo(({ icon, href, label }) => {
-  const iconColor = useColorModeValue("gray.600", "gray.400");
-  const hoverColor = useColorModeValue("teal.500", "teal.300");
+const NavLink = memo(({ icon: Icon, label, to }) => (
+  <motion.div whileHover={{ x: 4 }} className="w-full">
+    <RouterLink
+      to={to}
+      className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-300 py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+    >
+      <Icon className="w-5 h-5" />
+      <span>{label}</span>
+    </RouterLink>
+  </motion.div>
+));
 
-  return (
-    <Tooltip label={label} hasArrow placement="top">
-      <MotionBox
-        whileHover={animations.socialHover}
-        display="inline-block"
-        aria-label={label}
-      >
-        <Link
-          href={href}
-          isExternal
-          display="flex"
-          alignItems="center"
-          aria-label={`Visitar ${label}`}
-        >
-          <Icon
-            as={icon}
-            w={6}
-            h={6}
-            color={iconColor}
-            _hover={{ color: hoverColor }}
-            transition="all 0.3s"
-          />
-        </Link>
-      </MotionBox>
-    </Tooltip>
-  );
-});
-
-DeveloperLink.displayName = "DeveloperLink";
-
-DeveloperLink.propTypes = {
-  icon: PropTypes.elementType.isRequired,
-  href: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-};
-
-// Componente NavLink optimizado
- const NavLink = memo(({ icon, label, to }) => {
-  const textColor = useColorModeValue("gray.600", "gray.400");
-  const hoverColor = useColorModeValue("teal.500", "teal.300");
-
-  return (
-    <MotionBox whileHover={animations.linkHover}>
-      <Button
-        as={RouterLink}
-        to={to}
-        variant="ghost"
-        size="sm"
-        leftIcon={<Icon as={icon} />}
-        color={textColor}
-        _hover={{
-          color: hoverColor,
-          transform: "translateX(4px)",
-          bg: useColorModeValue("gray.100", "gray.700"),
-        }}
-        transition="all 0.3s"
-        aria-label={label}
-      >
-        {label}
-      </Button>
-    </MotionBox>
-  );
-});
 NavLink.displayName = "NavLink";
 
 NavLink.propTypes = {
@@ -173,12 +61,8 @@ NavLink.propTypes = {
   to: PropTypes.string.isRequired,
 };
 
-// Componente Footer principal
 const Footer = memo(() => {
-  const bgColor = useColorModeValue("gray.50", "gray.900");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const textColor = useColorModeValue("gray.600", "gray.400");
-  const headingColor = useColorModeValue("gray.700", "gray.200");
+  const { colorMode } = useColorMode();
 
   const socialLinks = [
     {
@@ -224,156 +108,107 @@ const Footer = memo(() => {
   ];
 
   return (
-    <Box
-      as="footer"
-      bg={bgColor}
-      borderTopWidth="1px"
-      borderColor={borderColor}
-      position="relative"
-      zIndex={2}
-    >
-      <Container maxW="8xl" py={10}>
-        <SimpleGrid
-          templateColumns={{ base: "1fr", md: "2fr 1fr 1fr" }}
-          spacing={{ base: 8, md: 12 }}
-        >
-          {/* Sección Logo y Descripción */}
-          <VStack align="start" spacing={6}>
-            <MotionBox
+    <footer className={`relative z-10 ${
+      colorMode === "dark" ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"
+    } border-t`}>
+      <div className="container mx-auto max-w-8xl py-10 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,1fr] gap-8 md:gap-12">
+          {/* Logo y Descripción */}
+          <div className="space-y-6">
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ duration: 0.2 }}
             >
               <RouterLink to="/">
-                <Image
+                <img
                   src="/logo.png"
                   alt="Logo de Catamarca Turismo"
-                  height="60px"
-                  objectFit="contain"
+                  className="h-[60px] object-contain"
                   loading="lazy"
                 />
               </RouterLink>
-            </MotionBox>
+            </motion.div>
 
-            <Text fontSize="sm" color={textColor} maxW="md" lineHeight="tall">
+            <p className={`text-sm max-w-md leading-relaxed ${
+              colorMode === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}>
               Descubre la magia de Catamarca con nosotros. Tu guía definitiva
               para explorar los tesoros ocultos de esta hermosa provincia
               argentina.
-            </Text>
+            </p>
 
-            <HStack spacing={4} wrap="wrap">
+            <div className="flex space-x-4 flex-wrap">
               {socialLinks.map((link) => (
                 <SocialLink key={link.href} {...link} />
               ))}
-            </HStack>
-            <Link
+            </div>
+
+            <a
               href="https://www.visitcatamarca.com/"
-              isExternal
-              color={textColor}
-              _hover={{ color: "teal.500" }}
-              display="flex"
-              alignItems="center"
-              gap={2}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-teal-500 transition-colors"
             >
-              Sitio Oficial <Icon as={FaExternalLinkAlt} w={3} h={3} />
-            </Link>
-          </VStack>
+              <span>Sitio Oficial</span>
+              <FaExternalLinkAlt className="w-3 h-3" />
+            </a>
+          </div>
 
           {/* Enlaces Rápidos */}
-          <VStack align="start" spacing={4}>
-            <Text
-              fontWeight="600"
-              fontSize="lg"
-              color={headingColor}
-              borderBottom="2px"
-              borderColor="teal.500"
-              pb={2}
-              position="relative"
-              _after={{
-                content: '""',
-                position: "absolute",
-                bottom: "-2px",
-                left: "0",
-                width: "30%",
-                height: "2px",
-                bg: "teal.500",
-                transition: "width 0.3s ease",
-              }}
-              _hover={{
-                _after: {
-                  width: "100%",
-                },
-              }}
-            >
+          <div className="space-y-4">
+            <h3 className={`text-lg font-semibold border-b-2 border-teal-500 pb-2 inline-block ${
+              colorMode === "dark" ? "text-gray-200" : "text-gray-700"
+            }`}>
               Enlaces Rápidos
-            </Text>
-
-            <VStack align="start" spacing={2} width="full">
+            </h3>
+            <div className="space-y-2">
               {navLinks.map((link) => (
                 <NavLink key={link.to} {...link} />
               ))}
-            </VStack>
-          </VStack>
+            </div>
+          </div>
 
-          {/* Sección Desarrollador */}
-          <VStack align="start" spacing={4}>
-            <Text
-              fontWeight="600"
-              fontSize="lg"
-              color={headingColor}
-              borderBottom="2px"
-              borderColor="teal.500"
-              pb={2}
-            >
+          {/* Desarrollador */}
+          <div className="space-y-4">
+            <h3 className={`text-lg font-semibold border-b-2 border-teal-500 pb-2 inline-block ${
+              colorMode === "dark" ? "text-gray-200" : "text-gray-700"
+            }`}>
               Desarrollado Por
-            </Text>
-            <Text fontSize="md" color={textColor}>
+            </h3>
+            <p className={`text-md ${
+              colorMode === "dark" ? "text-gray-400" : "text-gray-600"
+            }`}>
               Mauricio Sierra
-            </Text>
-            <Text fontSize="sm" color={textColor}>
-              Redes Sociales y Contacto: 
-            </Text>
-            <HStack spacing={4} wrap="wrap">
+            </p>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Redes Sociales y Contacto:
+            </p>
+            <div className="flex space-x-4 flex-wrap">
               {developerLink.map((link) => (
-                <DeveloperLink key={link.href} {...link} />
+                <SocialLink key={link.href} {...link} />
               ))}
-            </HStack>
-          </VStack>
-        </SimpleGrid>
+            </div>
+          </div>
+        </div>
 
-        <Divider my={8} borderColor={borderColor} />
+        <hr className={`my-8 ${
+          colorMode === "dark" ? "border-gray-700" : "border-gray-200"
+        }`} />
 
-        <MotionFlex
-          {...animations.fadeInUp}
-          direction={{ base: "column", sm: "row" }}
-          align="center"
-          justify="center"
-          color={textColor}
-          fontSize="sm"
-          gap={2}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2 text-sm text-gray-600 dark:text-gray-400"
         >
-          <Text>© {new Date().getFullYear()} Catamarca Turismo.</Text>
-          <HStack spacing={1}>
-            <Text>Hecho con</Text>
-            <Icon
-              as={FaHeart}
-              color="red.400"
-              w={4}
-              h={4}
-              animation="pulse 1.5s infinite"
-              sx={{
-                "@keyframes pulse": {
-                  "0%": { transform: "scale(1)" },
-                  "50%": { transform: "scale(1.2)" },
-                  "100%": { transform: "scale(1)" },
-                },
-              }}
-            />
-            <Text>en Argentina</Text>
-          </HStack>
-        </MotionFlex>
-      </Container>
-    </Box>
+          <span>© {new Date().getFullYear()} Catamarca Turismo.</span>
+          <div className="flex items-center space-x-1">
+            <span>Hecho con</span>
+            <FaHeart className="w-4 h-4 text-red-400 animate-pulse" />
+            <span>en Argentina</span>
+          </div>
+        </motion.div>
+      </div>
+    </footer>
   );
 });
 

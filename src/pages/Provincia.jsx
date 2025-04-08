@@ -1,179 +1,94 @@
-import { useState, useMemo, memo } from 'react';
+import { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import {
-  Box,
-  Container,
-  SimpleGrid,
-  VStack,
-  Heading,
-  Text,
-  Image,
-  Badge,
-  useColorModeValue,
-  Link as ChakraLink,
-} from "@chakra-ui/react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { departamentos } from "../data/departamentos";
+import { useColorMode } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-const MotionBox = motion(Box);
-
-// Mover la configuración de gradientes fuera del componente
 const gradientConfigs = {
   "Antofagasta de la Sierra": {
-    lightGradient: "linear(to-r, orange.400, yellow.400, yellow.600)",
-    darkGradient: "linear(to-r, orange.400, yellow.400, yellow.600)",
-    lightColor: "orange.600",
-    darkColor: "orange.300"
+    gradient: "from-amber-400 via-orange-400 to-rose-500",
+    hoverGradient: "from-amber-500 via-orange-500 to-rose-600",
+    textGradient: "from-amber-600 to-orange-600",
+    description: "Desiertos y Salares"
   },
   "Tinogasta": {
-    lightGradient: "linear(to-r, purple.400, red.400, orange.400)",
-    darkGradient: "linear(to-r, purple.400, red.400, orange.400)", 
-    lightColor: "purple.600",
-    darkColor: "purple.300"
+    gradient: "from-violet-400 via-purple-400 to-fuchsia-500",
+    hoverGradient: "from-violet-500 via-purple-500 to-fuchsia-600",
+    textGradient: "from-violet-600 to-purple-600",
+    description: "Viñedos y Montañas"
   },
   "Fiambalá": {
-    lightGradient: "linear(to-r, yellow.400, orange.400, red.500)",
-    darkGradient: "linear(to-r, yellow.400, orange.400, red.500)",
-    lightColor: "yellow.600",
-    darkColor: "yellow.300"
+    gradient: "from-rose-400 via-pink-400 to-red-500",
+    hoverGradient: "from-rose-500 via-pink-500 to-red-600",
+    textGradient: "from-rose-600 to-pink-600",
+    description: "Termas y Aventura"
   },
   "Catamarca Capital": {
-    lightGradient: "linear(to-r, green.400, yellow.400, green.500)",
-    darkGradient: "linear(to-r, green.400, yellow.400, green.500)",
-    lightColor: "green.600",
-    darkColor: "green.300"
+    gradient: "from-emerald-400 via-teal-400 to-cyan-500",
+    hoverGradient: "from-emerald-500 via-teal-500 to-cyan-600",
+    textGradient: "from-emerald-600 to-teal-600",
+    description: "Historia y Cultura"
   },
   default: {
-    lightGradient: "linear(to-r, teal.400, blue.500)",
-    darkGradient: "linear(to-r, teal.400, blue.500)",
-    lightColor: "teal.600",
-    darkColor: "teal.300"
+    gradient: "from-sky-400 via-blue-400 to-indigo-500",
+    hoverGradient: "from-sky-500 via-blue-500 to-indigo-600",
+    textGradient: "from-sky-600 to-blue-600",
+    description: "Explora el Destino"
   }
 };
 
 const DepartamentoCard = memo(({ loc }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const cardBgColor = useColorModeValue("white", "gray.800");
-  const isDark = useColorModeValue(false, true);
-
-  const getGradientConfig = (name) => {
-    const config = gradientConfigs[name] || gradientConfigs.default;
-    return {
-      gradient: isDark ? config.darkGradient : config.lightGradient,
-      color: isDark ? config.darkColor : config.lightColor
-    };
-  };
-
-  const gradientConfig = useMemo(() => getGradientConfig(loc.name), [loc.name, isDark]);
+  const { colorMode } = useColorMode();
+  const config = gradientConfigs[loc.name] || gradientConfigs.default;
 
   return (
-    <MotionBox
-      layout="position"
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      transition={{ 
-        duration: 0.3,
-        type: "spring",
-        stiffness: 260,
-        damping: 20 
-      }}
       whileHover={{ y: -8 }}
+      transition={{ duration: 0.3, type: "spring" }}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
+      className="h-full"
     >
-      <ChakraLink
-        as={RouterLink}
+      <Link 
         to={loc.path}
-        _hover={{ textDecoration: 'none' }}
-        role="article"
-        aria-label={`Explorar ${loc.name}`}
+        className={`block h-full rounded-xl overflow-hidden ${
+          colorMode === 'light' ? 'bg-white' : 'bg-gray-800'
+        } shadow-lg transition-all duration-300 hover:shadow-2xl`}
       >
-        <Box
-          borderRadius="xl"
-          overflow="hidden"
-          bg={cardBgColor}
-          boxShadow={useColorModeValue(
-            '0 4px 6px rgba(160, 174, 192, 0.6)',
-            '0 4px 6px rgba(0, 0, 0, 0.4)'
-          )}
-          position="relative"
-          height="400px"
-          _hover={{
-            transform: 'translateY(-8px)',
-            boxShadow: '2xl',
-          }}
-          transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-        >
-          <Box position="relative" height="220px" overflow="hidden">
-            <Image
-              src={loc.image}
-              alt={loc.name}
-              objectFit="cover"
-              w="full"
-              h="full"
-              transition="transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)"
-              transform={isHovered ? "scale(1.1)" : "scale(1)"}
-              loading="lazy"
-            />
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ 
-                type: "spring",
-                stiffness: 260,
-                damping: 20 
-              }}
-            >
-              <Badge
-                position="absolute"
-                top={4}
-                right={4}
-                px={3}
-                py={1}
-                borderRadius="full"
-                bg={`${gradientConfig.color}AA`}
-                color="white"
-                backdropFilter="blur(8px)"
-                boxShadow="lg"
-              >
-                Explorar
-              </Badge>
-            </motion.div>
-          </Box>
+        <div className="relative h-56 overflow-hidden">
+          <img
+            src={loc.image}
+            alt={loc.name}
+            className={`w-full h-full object-cover transition-transform duration-500 ${
+              isHovered ? 'scale-110' : 'scale-100'
+            }`}
+            loading="lazy"
+          />
+          <div className={`absolute inset-0 bg-gradient-to-t ${config.gradient} opacity-50`} />
+          <div className="absolute top-4 right-4">
+            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${config.gradient} shadow-lg backdrop-blur-sm`}>
+              {config.description}
+            </span>
+          </div>
+        </div>
 
-          <VStack 
-            p={6} 
-            spacing={4} 
-            align="start" 
-            height="180px"
-          >
-            <Heading
-              size="lg"
-              color={gradientConfig.color}
-              fontFamily="JetBrains Mono"
-              transition="all 0.3s ease"
-              _hover={{
-                bgGradient: gradientConfig.gradient,
-                bgClip: "text",
-                transform: "translateX(4px)"
-              }}
-            >
-              {loc.name}
-            </Heading>
-            <Text
-              fontSize="md"
-              color={useColorModeValue("gray.600", "gray.300")}
-              noOfLines={3}
-              lineHeight="tall"
-            >
-              {loc.description}
-            </Text>
-          </VStack>
-        </Box>
-      </ChakraLink>
-    </MotionBox>
+        <div className="p-6 space-y-4">
+          <h3 className={`text-2xl font-bold font-mono bg-gradient-to-r ${config.textGradient} bg-clip-text text-transparent transition-transform duration-300 hover:translate-x-1`}>
+            {loc.name}
+          </h3>
+          <p className={`${
+            colorMode === 'light' ? 'text-gray-600' : 'text-gray-300'
+          } line-clamp-3 leading-relaxed`}>
+            {loc.description}
+          </p>
+        </div>
+      </Link>
+    </motion.div>
   );
 });
 
@@ -190,93 +105,43 @@ DepartamentoCard.propTypes = {
 };
 
 const Provincia = memo(() => {
-  const bgColor = useColorModeValue("gray.50", "gray.900");
-  const textColor = useColorModeValue("gray.600", "gray.300");
+  const { colorMode } = useColorMode();
 
   return (
-    <Container maxW="7xl" py={12} bg={bgColor}>
-      <VStack spacing={8} align="stretch">
+    <div className={`min-h-screen py-12 ${
+      colorMode === 'light' ? 'bg-gray-50' : 'bg-gray-900'
+    }`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: -50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ 
-            duration: 0.8,
-            type: "spring",
-            bounce: 0.4
-          }}
+          transition={{ duration: 0.8, type: "spring" }}
+          className="text-center mb-16 space-y-6"
         >
-          <VStack spacing={4} textAlign="center" mb={8}>
-            <Badge
-              colorScheme="purple"
-              px={4}
-              py={1}
-              borderRadius="full"
-              fontSize="sm"
-              bg="purple.400"
-              color="white"
-            >
-              Descubre Catamarca
-            </Badge>
-            <Heading
-              as="h1"
-              size="2xl"
-              bgGradient="linear(to-r, green.400, yellow.500, purple.500)"
-              bgClip="text"
-              fontFamily="JetBrains Mono"
-              letterSpacing="tight"
-              mb={2}
-              position="relative"
-              sx={{
-                "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  bottom: "-2px",
-                  left: "0",
-                  width: "100%",
-                  height: "2px",
-                  bgGradient: "linear(to-r, green.400, yellow.500, purple.500)",
-                  transform: "scaleX(0)",
-                  opacity: 0,
-                  transition: "transform 0.3s ease-in-out, opacity 0.3s ease-in-out",
-                  transformOrigin: "left"
-                },
-                "&:hover::after": {
-                  transform: "scaleX(1)",
-                  opacity: 1
-                }
-              }}
-            >
-              Explora los Departamentos
-            </Heading>
-            <Text
-              fontSize="xl"
-              color={textColor}
-              maxW="3xl"
-              mx="auto"
-              fontStyle="italic"
-              as={motion.p}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              Descubre la diversidad y belleza de cada rincón de esta hermosa provincia
-            </Text>
-          </VStack>
+          <span className="inline-block px-4 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-500">
+            Descubre Catamarca
+          </span>
+          
+          <h1 className="text-4xl md:text-5xl font-bold font-mono bg-gradient-to-r from-green-400 via-yellow-500 to-purple-500 bg-clip-text text-transparent">
+            Explora los Departamentos
+          </h1>
+          
+          <p className={`max-w-3xl mx-auto text-xl italic ${
+            colorMode === 'light' ? 'text-gray-600' : 'text-gray-300'
+          }`}>
+            Descubre la diversidad y belleza de cada rincón de esta hermosa provincia
+          </p>
         </motion.div>
 
-        <SimpleGrid
-          columns={{ base: 1, md: 2, lg: 3, xl: 4 }}
-          spacing={8}
-          alignItems="start"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           <AnimatePresence mode="sync">
             {departamentos.map((loc) => (
               <DepartamentoCard key={loc.id} loc={loc} />
             ))}
           </AnimatePresence>
-        </SimpleGrid>
-      </VStack>
-    </Container>
+        </div>
+      </div>
+    </div>
   );
 });
 

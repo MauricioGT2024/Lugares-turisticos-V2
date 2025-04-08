@@ -1,14 +1,8 @@
-import { Box, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LoadingSpinner = () => {
-  const bgGradient = useColorModeValue(
-    "radial-gradient(circle, gray.50 0%, white 100%)",
-    "radial-gradient(circle, gray.900 0%, gray.800 100%)"
-  );
-
-  const spinnerColor = useColorModeValue("teal.500", "teal.200");
-  const textColor = useColorModeValue("gray.600", "gray.300");
+  const { colorMode } = useColorMode();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -33,18 +27,11 @@ const LoadingSpinner = () => {
         animate="show"
         exit="hidden"
       >
-        <Box
-          height="100vh"
-          width="100%"
-          display="flex"
-          flexDirection="column"
-          justifyContent="center"
-          alignItems="center"
-          gap={6}
-          bgGradient={bgGradient}
-          position="relative"
-          overflow="hidden"
-        >
+        <div className={`h-screen w-full flex flex-col justify-center items-center gap-6 overflow-hidden ${
+          colorMode === "dark" 
+            ? "bg-[radial-gradient(circle,theme(colors.gray.900)_0%,theme(colors.gray.800)_100%)]" 
+            : "bg-[radial-gradient(circle,theme(colors.gray.50)_0%,theme(colors.white)_100%)]"
+        }`}>
           <motion.div
             variants={itemVariants}
             animate={{
@@ -56,36 +43,29 @@ const LoadingSpinner = () => {
               ease: "easeInOut",
               repeat: Infinity,
             }}
-            style={{
-              filter: "drop-shadow(0 0 10px rgba(49, 151, 149, 0.2))",
-            }}
+            className="relative"
           >
-            <Spinner
-              thickness="3px"
-              speed="0.8s"
-              emptyColor="transparent"
-              color={spinnerColor}
-              size="xl"
-              width="70px"
-              height="70px"
-            />
+            <div className={`w-[70px] h-[70px] rounded-full border-3 border-transparent border-t-current ${
+              colorMode === "dark" ? "text-teal-200" : "text-teal-500"
+            } animate-spin drop-shadow-[0_0_10px_rgba(49,151,149,0.2)]`} />
           </motion.div>
 
-          <motion.div variants={itemVariants} style={{ textAlign: "center" }}>
-            <Text
-              fontSize="xl"
-              fontWeight="500"
-              color={textColor}
-              letterSpacing="0.5px"
-              mb={2}
-            >
+          <motion.div 
+            variants={itemVariants} 
+            className="text-center"
+          >
+            <h2 className={`text-xl font-medium tracking-wide mb-2 ${
+              colorMode === "dark" ? "text-gray-300" : "text-gray-600"
+            }`}>
               Cargando...
-            </Text>
-            <Text fontSize="sm" color={textColor} opacity={0.8}>
+            </h2>
+            <p className={`text-sm ${
+              colorMode === "dark" ? "text-gray-400" : "text-gray-600"
+            } opacity-80`}>
               Preparando tu experiencia
-            </Text>
+            </p>
           </motion.div>
-        </Box>
+        </div>
       </motion.div>
     </AnimatePresence>
   );

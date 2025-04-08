@@ -3,27 +3,32 @@ import { FaMountain, FaWater, FaCity, FaRegCompass } from "react-icons/fa";
 export const categoryConfig = {
   Volcan: {
     icon: FaMountain,
-    gradient: "linear(to-r, red.400, orange.400)",
-    color: "red.500",
+    bgClass: 'bg-gradient-to-r from-red-400 to-orange-400',
+    textClass: 'text-red-500',
+    hoverClass: 'hover:text-red-500',
   },
   Laguna: {
     icon: FaWater,
-    gradient: "linear(to-r, blue.400, cyan.400)",
-    color: "blue.500",
+    bgClass: 'bg-gradient-to-r from-blue-400 to-cyan-400',
+    textClass: 'text-blue-500',
+    hoverClass: 'hover:text-blue-500',
   },
   Capital: {
     icon: FaCity,
-    gradient: "linear(to-r, purple.400, pink.400)",
-    color: "purple.500",
+    bgClass: 'bg-gradient-to-r from-purple-400 to-pink-400',
+    textClass: 'text-purple-500',
+    hoverClass: 'hover:text-purple-500',
   },
   Campo: {
     icon: FaRegCompass,
-    gradient: "linear(to-r, green.400, teal.400)",
-    color: "green.500",
+    bgClass: 'bg-gradient-to-r from-green-400 to-teal-400',
+    textClass: 'text-green-500',
+    hoverClass: 'hover:text-green-500',
   },
   Salar: {
     icon: FaWater,
-    gradient: "linear(to-r, cyan.400, blue.400)",
-    color: "cyan.500",
+    bgClass: 'bg-gradient-to-r from-cyan-400 to-blue-400',
+    textClass: 'text-cyan-500',
+    hoverClass: 'hover:text-cyan-500',
   },
 };

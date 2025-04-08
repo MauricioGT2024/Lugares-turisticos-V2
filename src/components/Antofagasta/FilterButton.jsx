@@ -1,51 +1,45 @@
-import { Button, useColorModeValue } from "@chakra-ui/react";
 import { memo } from "react";
+import { motion } from "framer-motion";
+import { useColorMode } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
+import { categoryConfig } from './categoryConfig';
 
-const FilterButtonComponent = ({ category, isSelected, onClick, bgColor, textColor, hoverBgColor }) => {
+const FilterButton = memo(({ category, isSelected, onClick }) => {
+  const { colorMode } = useColorMode();
+  const config = categoryConfig[category] || {};
+  const Icon = config.icon;
+  
   return (
-    <Button
-      size="sm"
-      bg={isSelected ? hoverBgColor : bgColor}
-      color={textColor}
-      variant="solid"
+    <motion.button
+      whileHover={{ y: -2 }}
+      whileTap={{ scale: 0.95 }}
       onClick={onClick}
-      _hover={{
-        bg: isSelected ? hoverBgColor : bgColor,
-        transform: "translateY(-1px)",
-        boxShadow: "sm",
-      }}
-      transition="all 0.15s ease-in-out"
-      aria-label={`Filtrar por ${category}`}
-      _active={{ transform: "scale(0.95)" }}
+      className={`
+        inline-flex items-center gap-2 px-4 py-2 
+        rounded-full text-sm font-medium
+        transition-all duration-200
+        focus:outline-none focus:ring-2 focus:ring-offset-2
+        ${isSelected 
+          ? `${config.bgClass} text-white` 
+          : colorMode === 'dark'
+            ? 'bg-gray-800 text-gray-200 hover:bg-gray-700 border-gray-700'
+            : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-200'
+        }
+        ${!isSelected ? 'border' : ''}
+      `}
     >
+      {Icon && <Icon className="w-4 h-4" />}
       {category}
-    </Button>
+    </motion.button>
   );
-};
+});
 
-FilterButtonComponent.propTypes = {
+FilterButton.displayName = "FilterButton";
+
+FilterButton.propTypes = {
   category: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
-  bgColor: PropTypes.string.isRequired,
-  textColor: PropTypes.string.isRequired,
-  hoverBgColor: PropTypes.string.isRequired,
 };
 
-const FilterButtonWithTheme = (props) => {
-  const bgColor = useColorModeValue("gray.100", "gray.700");
-  const textColor = useColorModeValue("gray.700", "gray.100");
-  const hoverBgColor = useColorModeValue("gray.200", "gray.600");
-
-  return (
-    <FilterButtonComponent
-      {...props}
-      bgColor={bgColor}
-      textColor={textColor}
-      hoverBgColor={hoverBgColor}
-    />
-  );
-};
-
-export const FilterButton = memo(FilterButtonWithTheme);
+export default FilterButton;

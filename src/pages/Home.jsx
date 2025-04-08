@@ -1,284 +1,149 @@
-import { memo, useState, useCallback } from "react";
-import PropTypes from "prop-types";
-import {
-  Box,
-  Heading,
-  Text,
-  SimpleGrid,
-  Card,
-  CardBody,
-  Image,
-  Button,
-  VStack,
-  Container,
-  Badge,
-  Icon,
-  useColorModeValue,
-  Flex,
-  Tooltip,
-} from "@chakra-ui/react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Link } from "react-router-dom";
-import { places } from "../data/home";
-import { 
-  FaMapMarkedAlt, 
-  FaArrowRight, 
-  FaCompass,
-} from "react-icons/fa";
+import { memo, useState } from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { places } from '../data/home';
+import { useColorMode } from '@chakra-ui/react';
+import { FaMapMarkedAlt, FaArrowRight } from 'react-icons/fa';
+import PropTypes from 'prop-types';
 
-// Componentes con Motion
-const MotionCard = motion.create(Card);
-const MotionBox = motion.create(Box);
-const MotionFlex = motion.create(Flex);
+const DestinationCard = memo(({ place }) => {
+	const [isHovered, setIsHovered] = useState(false);
 
-// Variantes de animación
-const animations = {
-  container: {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  },
-  item: {
-    hidden: { 
-      opacity: 0, 
-      y: 30,
-      scale: 0.9
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        type: "spring",
-        bounce: 0.4,
-        duration: 0.8
-      }
-    }
-  },
-  hover: {
-    scale: 1.05,
-    y: -10,
-    transition: {
-      type: "spring",
-      stiffness: 300,
-      damping: 10
-    }
-  }
-};
+	return (
+		<motion.div
+			initial={{ opacity: 0, y: 20 }}
+			whileInView={{ opacity: 1, y: 0 }}
+			viewport={{ once: true }}
+			whileHover={{ y: -10 }}
+			transition={{ duration: 0.5 }}
+			className='group relative overflow-hidden rounded-2xl'
+			onHoverStart={() => setIsHovered(true)}
+			onHoverEnd={() => setIsHovered(false)}
+		>
+			<div className='aspect-[4/5] overflow-hidden'>
+				<motion.img
+					src={place.image}
+					alt={place.name}
+					animate={{ scale: isHovered ? 1.1 : 1 }}
+					transition={{ duration: 0.4 }}
+					className='h-full w-full object-cover'
+					loading='lazy'
+				/>
+				<div className='absolute inset-0 bg-gradient-to-t from-black/70 to-transparent' />
+			</div>
 
-{/* Componente de tarjeta optimizado */}
-const PlaceCard = memo(({ place }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const cardBg = useColorModeValue("white", "gray.800");
-  const textColor = useColorModeValue("gray.700", "gray.200");
-  const badgeColor = useColorModeValue("teal.500", "teal.300");
-
-  return (
-    <MotionCard
-      variants={animations.item}
-      whileHover={animations.hover}
-      bg={cardBg}
-      borderRadius="xl"
-      overflow="hidden"
-      boxShadow="lg"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      initial="hidden"
-      animate="visible"
-    >
-      <Box position="relative" overflow="hidden" height="250px">
-        <motion.div
-          animate={{
-            scale: isHovered ? 1.1 : 1,
-          }}
-          transition={{ duration: 0.3 }}
-        >
-          <Image
-            src={place.image}
-            alt={place.name}
-            width="100%"
-            height="100%"
-            objectFit="cover"
-            loading="lazy"
-          />
-        </motion.div>
-        <Badge
-          position="absolute"
-          top="4"
-          right="4"
-          bg={badgeColor}
-          color="white"
-          px="3"
-          py="1"
-          borderRadius="full"
-          boxShadow="md"
-          backdropFilter="blur(8px)"
-        >
-          <Icon as={FaCompass} mr="2" />
-          Explorar
-        </Badge>
-      </Box>
-
-      <CardBody p="6">
-        <VStack align="start" spacing="4">
-          <Heading 
-            size="md" 
-            color={textColor}
-            _hover={{ color: "teal.500" }}
-            transition="color 0.2s"
-          >
-            {place.name}
-          </Heading>
-          <Text 
-            color={textColor} 
-            fontSize="sm" 
-            noOfLines={3}
-          >
-            {place.description}
-          </Text>
-          <Link 
-            to={place.path} 
-            style={{ width: "100%" }}
-          >
-            <Button
-              rightIcon={<FaArrowRight />}
-              colorScheme="teal"
-              size="md"
-              width="full"
-              variant="outline"
-              _hover={{
-                transform: "translateX(4px)",
-                boxShadow: "md",
-              }}
-              transition="all 0.2s"
-            >
-              Descubrir
-            </Button>
-          </Link>
-        </VStack>
-      </CardBody>
-    </MotionCard>
-  );
+			<div className='absolute bottom-0 p-6 w-full'>
+				<h3 className='text-2xl font-bold text-white mb-2'>{place.name}</h3>
+				<p className='text-gray-200 line-clamp-2 mb-4 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300'>
+					{place.description}
+				</p>
+				<Link
+					to={place.path}
+					className='inline-flex items-center space-x-2 text-white bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:bg-white/30'
+				>
+					<span>Explorar</span>
+					<FaArrowRight className='w-4 h-4' />
+				</Link>
+			</div>
+		</motion.div>
+	);
 });
-
-PlaceCard.propTypes = {
-  place: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    path: PropTypes.string.isRequired,
-  }).isRequired,
+DestinationCard.propTypes = {
+	place: PropTypes.shape({
+		image: PropTypes.string.isRequired,
+		name: PropTypes.string.isRequired,
+		description: PropTypes.string.isRequired,
+		path: PropTypes.string.isRequired,
+	}).isRequired,
 };
 
-PlaceCard.displayName = "PlaceCard";
+DestinationCard.displayName = 'DestinationCard';
 
-// Componente principal
 const Home = () => {
-  const bgGradient = useColorModeValue(
-    "linear(to-b, gray.50, white)",
-    "linear(to-b, gray.900, gray.800)"
-  );
-  const textColor = useColorModeValue("gray.600", "gray.300");
+	const { colorMode } = useColorMode();
 
-  const handleExploreClick = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
+	return (
+		<main
+			className={`min-h-screen ${
+				colorMode === 'light'
+					? 'bg-gradient-to-b from-gray-50 to-white'
+					: 'bg-gradient-to-b from-gray-900 to-gray-800'
+			}`}
+		>
+			{/* Hero Section */}
+			<section className='relative h-screen flex items-center justify-center overflow-hidden'>
+				<div className='relative z-10 text-center px-4'>
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.8 }}
+						className='space-y-6'
+					>
+						<h1 className='text-5xl md:text-7xl font-bold text-white'>
+							Catamarca
+							<span className='block text-2xl md:text-3xl mt-2 text-gray-200'>
+								Tierra de Contrastes
+							</span>
+						</h1>
+						<p className='text-xl text-gray-200 max-w-2xl mx-auto'>
+							Descubre paisajes impresionantes, cultura milenaria y experiencias
+							únicas en el corazón del noroeste argentino.
+						</p>
+						<Link
+							to='/provincia'
+							className='inline-flex items-center space-x-3 bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-full hover:bg-white/30 transition-all duration-300 group'
+						>
+							<span>Comenzar Aventura</span>
+							<FaMapMarkedAlt className='w-5 h-5 transform group-hover:rotate-12 transition-transform' />
+						</Link>
+					</motion.div>
+				</div>
 
-  return (
-    <Box
-      as="main"
-      minH="calc(100vh - 80px)"
-      bgGradient={bgGradient}
-      py={{ base: 8, md: 16 }}
-      px={4}
-      overflow="hidden"
-    >
-      <Container maxW="7xl">
-        <VStack spacing={12}>
-          <MotionFlex
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            direction="column"
-            align="center"
-            textAlign="center"
-            mb={8}
-          >
-            <Badge
-              colorScheme="teal"
-              px={4}
-              py={2}
-              borderRadius="full"
-              fontSize="md"
-              mb={6}
-            >
-              Descubre la Magia de Catamarca
-            </Badge>
+				<motion.div
+					animate={{ y: [0, -10, 0] }}
+					transition={{ duration: 2, repeat: Infinity }}
+					className='absolute bottom-8 left-1/2 -translate-x-1/2'
+				>
+					<div className='w-6 h-10 border-2 border-white/50 rounded-full flex justify-center'>
+						<div className='w-1 h-2 bg-white/50 rounded-full mt-2 animate-bounce' />
+					</div>
+				</motion.div>
+			</section>
 
-            <Heading
-              as={motion.h1}
-              size={{ base: "2xl", md: "3xl" }}
-              bgGradient="linear(to-r, teal.400, blue.500)"
-              bgClip="text"
-              mb={4}
-              whileHover={{ scale: 1.05 }}
-            >
-              Explora Nuestros Destinos
-            </Heading>
+			{/* Destinations Section */}
+			<section className='py-20 px-4'>
+				<div className='max-w-7xl mx-auto'>
+					<motion.div
+						initial={{ opacity: 0 }}
+						whileInView={{ opacity: 1 }}
+						viewport={{ once: true }}
+						className='text-center mb-16'
+					>
+						<h2
+							className={`text-4xl font-bold mb-4 ${
+								colorMode === 'light' ? 'text-gray-800' : 'text-white'
+							}`}
+						>
+							Destinos Destacados
+						</h2>
+						<p
+							className={`text-xl ${
+								colorMode === 'light' ? 'text-gray-600' : 'text-gray-300'
+							}`}
+						>
+							Explora los lugares más fascinantes de Catamarca
+						</p>
+					</motion.div>
 
-            <Text
-              fontSize={{ base: "lg", md: "xl" }}
-              color={textColor}
-              maxW="2xl"
-              mb={8}
-            >
-              Descubre los paisajes más impresionantes, la rica cultura y las experiencias únicas 
-              que Catamarca tiene para ofrecer.
-            </Text>
-
-            <Tooltip label="Explorar la provincia">
-              <Link to="/provincia">
-                <Button
-                  size="lg"
-                  colorScheme="teal"
-                  rightIcon={<FaMapMarkedAlt />}
-                  onClick={handleExploreClick}
-                  _hover={{
-                    transform: "translateY(-4px)",
-                    boxShadow: "xl"
-                  }}
-                  transition="all 0.2s"
-                >
-                  Comenzar Aventura
-                </Button>
-              </Link>
-            </Tooltip>
-          </MotionFlex>
-
-          <AnimatePresence>
-            <MotionBox
-              variants={animations.container}
-              initial="hidden"
-              animate="visible"
-              as={SimpleGrid}
-              columns={{ base: 1, md: 2, lg: 3 }}
-              spacing={8}
-              w="full"
-            >
-              {places.map((place) => (
-                <PlaceCard key={place.path} place={place} />
-              ))}
-            </MotionBox>
-          </AnimatePresence>
-        </VStack>
-      </Container>
-    </Box>
-  );
+					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+						{places.map((place) => (
+							<DestinationCard key={place.path} place={place} />
+						))}
+					</div>
+				</div>
+			</section>
+		</main>
+	);
 };
-
+Home.displayName = 'Home';
 export default memo(Home);

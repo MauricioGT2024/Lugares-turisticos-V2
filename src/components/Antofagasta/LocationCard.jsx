@@ -1,88 +1,81 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
-import {
-	Box,
-	Image,
-	Heading,
-	Text,
-	Badge,
-	VStack,
-	Icon,
-	useColorModeValue,
-} from '@chakra-ui/react';
+import { useColorMode } from '@chakra-ui/react';
 import { categoryConfig } from './categoryConfig';
 import { ANTOFAGASTA_ANIMATIONS } from './config/animations';
 
 const LocationCard = ({ location, onShowDetails }) => {
-	const config = categoryConfig[location.categoria] || categoryConfig.Campo;
+  const { colorMode } = useColorMode();
+  const config = categoryConfig[location.categoria] || categoryConfig.Campo;
+  const Icon = config.icon;
 
-	return (
-		<Box
-			as={motion.div}
-			variants={ANTOFAGASTA_ANIMATIONS.cardVariants}
-			whileHover='hover'
-			role='article'
-			cursor='pointer'
-			onClick={() => onShowDetails(location.id)}
-			position='relative'
-			borderRadius='xl'
-			overflow='hidden'
-			bg={useColorModeValue('white', 'gray.800')}
-			boxShadow='xl'
-		>
-			<Box position='relative' h='250px'>
-				<Image
-					src={location.imgSrc}
-					alt={location.title}
-					objectFit='cover'
-					w='full'
-					h='full'
-					transition='transform 0.3s ease'
-					_groupHover={{ transform: 'scale(1.05)' }}
-				/>
-				<Badge
-					position='absolute'
-					top={4}
-					right={4}
-					px={3}
-					py={1}
-					borderRadius='full'
-					bgGradient={config.gradient}
-					color='white'
-					backdropFilter='blur(8px)'
-					boxShadow='lg'
-				>
-					<Icon as={config.icon} mr={2} />
-					{location.categoria}
-				</Badge>
-			</Box>
+  return (
+    <motion.article
+      variants={ANTOFAGASTA_ANIMATIONS.cardVariants}
+      whileHover="hover"
+      onClick={() => onShowDetails(location.id)}
+      className="group cursor-pointer"
+    >
+      <div className={`
+        relative rounded-2xl overflow-hidden shadow-lg
+        transition-all duration-300 ease-in-out
+        ${colorMode === 'dark' ? 'bg-gray-800' : 'bg-white'}
+        hover:shadow-2xl
+      `}>
+        <div className="relative h-60 overflow-hidden">
+          <img
+            src={location.imgSrc}
+            alt={location.title}
+            className="w-full h-full object-cover transition duration-500 
+                     group-hover:scale-110 group-hover:rotate-1"
+          />
+          <div className={`
+            absolute top-4 right-4 px-4 py-1.5 
+            rounded-full flex items-center gap-2
+            text-sm font-medium text-white
+            backdrop-blur-sm bg-opacity-90
+            ${config.bgClass}
+          `}>
+            <Icon className="w-4 h-4" />
+            <span>{location.categoria}</span>
+          </div>
+        </div>
 
-			<VStack p={6} spacing={3} align='start'>
-				<Heading size='md' color={`${config.color}`}>
-					{location.title}
-				</Heading>
-				<Text noOfLines={3} color={useColorModeValue('gray.600', 'gray.300')}>
-					{location.description}
-				</Text>
-			</VStack>
-		</Box>
-	);
+        <div className="p-6 space-y-4">
+          <h3 className={`
+            text-lg font-bold tracking-tight
+            transition-colors duration-300
+            ${colorMode === 'dark' ? 'text-white' : 'text-gray-900'}
+            ${config.hoverClass}
+          `}>
+            {location.title}
+          </h3>
+          <p className={`
+            text-sm line-clamp-3
+            ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'}
+          `}>
+            {location.description}
+          </p>
+        </div>
+      </div>
+    </motion.article>
+  );
 };
 
 LocationCard.propTypes = {
-	location: PropTypes.shape({
-		id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-		imgSrc: PropTypes.string.isRequired,
-		title: PropTypes.string.isRequired,
-		description: PropTypes.string.isRequired,
-		mapSrc: PropTypes.string.isRequired,
-		path: PropTypes.string,
-		wiki: PropTypes.string,
-		categoria: PropTypes.string.isRequired,
-		area: PropTypes.string,
-	}).isRequired,
-	onShowDetails: PropTypes.func.isRequired,
+  location: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    imgSrc: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    mapSrc: PropTypes.string.isRequired,
+    path: PropTypes.string,
+    wiki: PropTypes.string,
+    categoria: PropTypes.string.isRequired,
+    area: PropTypes.string,
+  }).isRequired,
+  onShowDetails: PropTypes.func.isRequired,
 };
 
 export default React.memo(LocationCard);

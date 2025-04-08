@@ -1,51 +1,48 @@
-import { Box, Wrap, WrapItem, Text, useColorModeValue } from "@chakra-ui/react";
+import { memo } from "react";
+import { useColorMode } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import FilterButton from "./FilterButton";
 import { getIconByCategory } from "./icons";
 
-const FilterGroup = ({ 
+const FilterGroup = memo(({ 
   title = "Filtros", 
   items = [], 
   selected = "", 
   onSelect = () => {}, 
   showIcons = true 
 }) => {
-  // Validar que items sea un array
+  const { colorMode } = useColorMode();
   const safeItems = Array.isArray(items) ? items : [];
 
   return (
-    <Box>
-      <Text
-        fontSize="sm"
-        fontWeight="semibold"
-        mb={3}
-        color={useColorModeValue("gray.600", "gray.300")}
-      >
+    <div className="w-full">
+      <h3 className={`
+        text-sm font-semibold mb-3
+        ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'}
+      `}>
         {title}
-      </Text>
-      <Wrap spacing={2}>
-        <WrapItem>
-          <FilterButton
-            label="Todos"
-            isSelected={!selected}
-            onClick={() => onSelect("")}
-            icon={showIcons ? getIconByCategory("Todos") : null}
-          />
-        </WrapItem>
+      </h3>
+      
+      <div className="flex flex-wrap gap-2">
+        <FilterButton
+          label="Todos"
+          isSelected={!selected}
+          onClick={() => onSelect("")}
+          icon={showIcons ? getIconByCategory("Todos") : null}
+        />
         {safeItems.map((item) => (
-          <WrapItem key={item}>
-            <FilterButton
-              label={item}
-              isSelected={selected === item}
-              onClick={() => onSelect(item)}
-              icon={showIcons ? getIconByCategory(item) : null}
-            />
-          </WrapItem>
+          <FilterButton
+            key={item}
+            label={item}
+            isSelected={selected === item}
+            onClick={() => onSelect(item)}
+            icon={showIcons ? getIconByCategory(item) : null}
+          />
         ))}
-      </Wrap>
-    </Box>
+      </div>
+    </div>
   );
-};
+});
 
 FilterGroup.propTypes = {
   title: PropTypes.string,
@@ -55,12 +52,6 @@ FilterGroup.propTypes = {
   showIcons: PropTypes.bool,
 };
 
-FilterGroup.defaultProps = {
-  title: "Filtros",
-  items: [],
-  selected: "",
-  onSelect: () => {},
-  showIcons: true,
-};
+FilterGroup.displayName = "FilterGroup";
 
 export default FilterGroup;

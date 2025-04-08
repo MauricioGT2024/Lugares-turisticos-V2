@@ -1,221 +1,134 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import {
-	Box,
-	VStack,
-	Heading,
-	Text,
-	Button,
-	useColorModeValue,
-	Image,
-	HStack,
-	Icon,
-	Badge,
-	Spinner,
-} from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import { useColorMode } from '@chakra-ui/react';
 import { FaEye } from 'react-icons/fa';
 
-const MotionBox = motion(Box);
-
 const LocationCard = ({ location, onClick, config }) => {
-	const [imageLoaded, setImageLoaded] = useState(false);
-	const handleShowDetailsClick = useCallback(
-		() => onClick(location.id),
-		[location.id, onClick]
-	);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const { colorMode } = useColorMode();
+  const Icon = config.icon;
+  
+  const handleImageLoad = useCallback(() => {
+    setImageLoaded(true);
+  }, []);
 
-	const bgColor = useColorModeValue('white', 'gray.800');
-	const borderColor = useColorModeValue('gray.200', 'gray.700');
-	const textColor = useColorModeValue('gray.600', 'gray.300');
-	const headingColor = useColorModeValue(
-		config.color || 'gray.800',
-		config.darkColor || 'whiteAlpha.900'
-	);
-	const buttonHoverBg = useColorModeValue('gray.100', 'whiteAlpha.200');
-	const buttonHoverColor = useColorModeValue('gray.700', 'white');
+  return (
+    <motion.article
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -4 }}
+      className="group"
+    >
+      <div className={`
+        h-[420px] rounded-xl overflow-hidden
+        ${colorMode === 'dark' ? 'bg-gray-800' : 'bg-white'}
+        shadow-lg hover:shadow-2xl
+        transition-all duration-300 ease-out
+        border border-transparent
+        ${colorMode === 'dark' 
+          ? 'hover:border-gray-700' 
+          : 'hover:border-gray-200'
+        }
+      `}>
+        <div className="relative h-48">
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin"
+                   style={{ borderColor: `${config.spinnerColor || '#38B2AC'} transparent` }} 
+              />
+            </div>
+          )}
+          
+          <img
+            src={location.imgSrc}
+            alt={location.title}
+            onLoad={handleImageLoad}
+            className={`
+              w-full h-full object-cover
+              transition-all duration-500
+              group-hover:scale-105
+              ${imageLoaded ? 'opacity-100' : 'opacity-0'}
+            `}
+          />
+          
+          {config.category && (
+            <span className={`
+              absolute top-3 right-3 
+              px-3 py-1.5 rounded-full
+              flex items-center gap-2
+              text-sm font-medium text-white
+              shadow-lg backdrop-blur-sm
+              ${config.badgeClass || 'bg-teal-500'}
+            `}>
+              {Icon && <Icon className="w-4 h-4" />}
+              {location.category}
+            </span>
+          )}
+        </div>
 
-	const cardVariants = {
-		hidden: { opacity: 0, y: 10 },
-		visible: {
-			opacity: 1,
-			y: 0,
-			transition: {
-				duration: 0.3,
-				ease: 'easeOut',
-			},
-		},
-		hover: {
-			scale: 1.02,
-			transition: {
-				duration: 0.2,
-			},
-		},
-	};
+        <div className="p-5 flex flex-col h-[calc(420px-192px)]">
+          <div className="flex items-center gap-2 mb-3">
+            {Icon && <Icon className={`w-5 h-5 ${config.iconClass || 'text-teal-500'}`} />}
+            <h3 className={`
+              font-bold text-lg line-clamp-2
+              ${colorMode === 'dark' ? 'text-white' : 'text-gray-900'}
+            `}>
+              {location.title}
+            </h3>
+          </div>
 
-	return (
-		<MotionBox
-			variants={cardVariants}
-			initial='hidden'
-			animate='visible'
-			exit='hidden'
-			bg={bgColor}
-			borderWidth='1px'
-			borderColor={borderColor}
-			borderRadius='xl'
-			overflow='hidden'
-			height='420px'
-			display='flex'
-			flexDirection='column'
-			boxShadow='lg'
-			position='relative'
-			_before={{
-				content: '""',
-				position: 'absolute',
-				top: 0,
-				left: 0,
-				right: 0,
-				bottom: 0,
-				borderRadius: 'xl',
-				border: '1px solid',
-				borderColor: 'transparent',
-				transition: '0.3s ease-out',
-				pointerEvents: 'none',
-			}}
-			whileHover='hover'
-			_hover={{
-				boxShadow: 'xl',
-				_before: {
-					borderColor: useColorModeValue('blackAlpha.200', 'whiteAlpha.200'),
-				},
-			}}
-			transition='all 0.3s ease-out'
-		>
-			<Box position='relative' height='200px' flexShrink={0}>
-				<Image
-					src={location.imgSrc}
-					alt={location.title}
-					objectFit='cover'
-					width='100%'
-					height='100%'
-					loading='lazy'
-					onLoad={() => setImageLoaded(true)}
-					opacity={imageLoaded ? 1 : 0}
-					transition='opacity 0.3s ease'
-				/>
-				{!imageLoaded && (
-					<Box
-						position='absolute'
-						top={0}
-						left={0}
-						right={0}
-						bottom={0}
-						display='flex'
-						alignItems='center'
-						justifyContent='center'
-					>
-						<Spinner size='sm' color={config.color || 'teal.500'} />
-					</Box>
-				)}
-				{config.category && (
-					<Badge
-						position='absolute'
-						top={3}
-						right={3}
-						px={2}
-						py={1}
-						borderRadius='full'
-						bgGradient={config.gradient}
-						color='white'
-						display='flex'
-						alignItems='center'
-						gap={1}
-						boxShadow='md'
-						backdropFilter='blur(5px)'
-						fontSize='sm'
-					>
-						<Icon
-							as={config.icon}
-							aria-label={location.category}
-							boxSize='16px'
-						/>
-						{location.category}
-					</Badge>
-				)}
-			</Box>
-			<VStack
-				p={5}
-				align='start'
-				spacing={3}
-				flexGrow={1}
-				display='flex'
-				flexDirection='column'
-			>
-				<HStack spacing={2}>
-					{config.icon && (
-						<Box as={config.icon} color={config.color} boxSize='20px' />
-					)}
-					<Heading size='md' noOfLines={2} color={headingColor}>
-						{location.title}
-					</Heading>
-				</HStack>
-				<Text
-					fontSize='sm'
-					color={textColor}
-					noOfLines={3}
-					lineHeight='1.6'
-					transition='0.3s ease-out'
-					_hover={{
-						color: useColorModeValue('gray.800', 'whiteAlpha.900'),
-					}}
-				>
-					{location.description}
-				</Text>
-				<Button
-					leftIcon={<FaEye />}
-					onClick={handleShowDetailsClick}
-					colorScheme={config.colorScheme || 'gray'}
-					variant='ghost'
-					size='sm'
-					w='full'
-					mt='auto'
-					_hover={{
-						bg: buttonHoverBg,
-						color: buttonHoverColor,
-						transform: 'translateY(-2px)',
-						boxShadow: 'sm',
-					}}
-					transition='0.2s'
-					aria-label={`Ver detalles de ${location.title}`}
-				>
-					Ver Detalles
-				</Button>
-			</VStack>
-		</MotionBox>
-	);
+          <p className={`
+            text-sm line-clamp-3 mb-4 flex-grow
+            ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'}
+          `}>
+            {location.description}
+          </p>
+
+          <button
+            onClick={() => onClick(location.id)}
+            className={`
+              flex items-center justify-center gap-2
+              w-full px-4 py-2 mt-auto
+              rounded-lg text-sm font-medium
+              transform transition-all duration-200
+              ${colorMode === 'dark' 
+                ? 'text-gray-300 hover:text-white hover:bg-gray-700' 
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+              }
+              focus:outline-none focus:ring-2 focus:ring-offset-2
+              focus:ring-teal-500
+            `}
+          >
+            <FaEye className="w-4 h-4" />
+            Ver Detalles
+          </button>
+        </div>
+      </div>
+    </motion.article>
+  );
 };
 
 LocationCard.propTypes = {
-	location: PropTypes.shape({
-		id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-		imgSrc: PropTypes.string.isRequired,
-		title: PropTypes.string.isRequired,
-		description: PropTypes.string.isRequired,
-		mapSrc: PropTypes.string.isRequired,
-		path: PropTypes.string,
-		wiki: PropTypes.string,
-		category: PropTypes.string,
-		area: PropTypes.string,
-	}).isRequired,
-	onClick: PropTypes.func.isRequired,
-	config: PropTypes.shape({
-		colorScheme: PropTypes.string,
-		color: PropTypes.string,
-		darkColor: PropTypes.string,
-		icon: PropTypes.elementType,
-		gradient: PropTypes.string,
-		category: PropTypes.string,
-	}).isRequired,
+  location: PropTypes.shape({
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    imgSrc: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    mapSrc: PropTypes.string.isRequired,
+    path: PropTypes.string,
+    wiki: PropTypes.string,
+    category: PropTypes.string,
+    area: PropTypes.string,
+  }).isRequired,
+  onClick: PropTypes.func.isRequired,
+  config: PropTypes.shape({
+    spinnerColor: PropTypes.string,
+    badgeClass: PropTypes.string,
+    iconClass: PropTypes.string,
+    icon: PropTypes.elementType,
+    category: PropTypes.string,
+  }).isRequired,
 };
 
 export default React.memo(LocationCard);

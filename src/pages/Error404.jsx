@@ -1,119 +1,92 @@
-import React from "react";
-import {
-  Box,
-  Flex,
-  Heading,
-  Text,
-  Button,
-  useColorModeValue,
-  Icon,
-  VStack,
-} from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaHome, FaExclamationTriangle } from "react-icons/fa";
 
 const Error404 = () => {
-  const textColor = useColorModeValue("gray.700", "gray.300");
-  const bgColor = useColorModeValue("gray.50", "gray.800");
-  const gradientColors = useColorModeValue(
-    "linear(to-r, teal.400, blue.500)",
-    "linear(to-r, teal.200, blue.400)"
-  );
+  const { colorMode } = useColorMode();
 
   return (
-    <Flex
-      minH="100vh"
-      align="center"
-      justify="center"
-      bg={bgColor}
-      px={4}
-      overflow="hidden"
-    >
+    <div className={`
+      min-h-screen flex items-center justify-center px-4 
+      ${colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}
+    `}>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
+        className="text-center space-y-6"
       >
-        <VStack spacing={6} textAlign="center">
-          <Icon
-            as={FaExclamationTriangle}
-            w={16}
-            h={16}
-            color="yellow.400"
-            animate={{ 
-              rotate: [0, 10, -10, 10, 0],
-              scale: [1, 1.1, 1, 1.1, 1] 
-            }}
-            transition={{ 
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut" 
-            }}
-          />
+        <motion.div
+          animate={{ 
+            rotate: [0, 10, -10, 10, 0],
+            scale: [1, 1.1, 1, 1.1, 1] 
+          }}
+          transition={{ 
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut" 
+          }}
+          className="inline-block"
+        >
+          <FaExclamationTriangle className="w-16 h-16 text-yellow-400" />
+        </motion.div>
 
-          <Heading
-            as={motion.h1}
-            size="4xl"
-            bgGradient={gradientColors}
-            bgClip="text"
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            whileHover={{ scale: 1.1 }}
+        <motion.h1
+          className={`
+            text-8xl font-bold bg-gradient-to-r 
+            ${colorMode === 'dark' 
+              ? 'from-teal-200 to-blue-400' 
+              : 'from-teal-400 to-blue-500'} 
+            bg-clip-text text-transparent
+          `}
+          initial={{ scale: 0.5 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.5 }}
+          whileHover={{ scale: 1.1 }}
+        >
+          404
+        </motion.h1>
+
+        <div className="space-y-3">
+          <h2 className={`text-3xl font-normal
+            ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}
           >
-            404
-          </Heading>
+            Página no encontrada
+          </h2>
 
-          <VStack spacing={3}>
-            <Heading
-              as="h2"
-              size="xl"
-              color={textColor}
-              fontWeight="normal"
-            >
-              Página no encontrada
-            </Heading>
+          <p className={`
+            text-lg max-w-md mx-auto opacity-80
+            ${colorMode === 'dark' ? 'text-gray-400' : 'text-gray-600'}
+          `}>
+            Lo sentimos, la página que estás buscando no existe o ha sido movida.
+            Te sugerimos volver al inicio.
+          </p>
+        </div>
 
-            <Text 
-              color={textColor} 
-              fontSize="lg"
-              maxW="md"
-              opacity={0.8}
-            >
-              Lo sentimos, la página que estás buscando no existe o ha sido movida.
-              Te sugerimos volver al inicio.
-            </Text>
-          </VStack>
-
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+        <motion.div
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ReactRouterLink
+            to="/"
+            className={`
+              inline-flex items-center px-6 py-3 rounded-lg
+              font-medium text-white shadow-lg
+              transition-all duration-300 ease-out
+              transform hover:-translate-y-1
+              bg-gradient-to-r
+              ${colorMode === 'dark' 
+                ? 'from-teal-400 to-blue-500 hover:from-teal-500 hover:to-blue-600' 
+                : 'from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700'}
+            `}
           >
-            <Button
-              as={ReactRouterLink}
-              to="/"
-              size="lg"
-              colorScheme="teal"
-              bgGradient={gradientColors}
-              color="white"
-              leftIcon={<FaHome />}
-              _hover={{
-                bgGradient: "linear(to-r, teal.500, blue.600)",
-                transform: "translateY(-2px)",
-                boxShadow: "lg",
-              }}
-              _active={{
-                transform: "translateY(0)",
-              }}
-              transition="all 0.2s"
-            >
-              Volver al inicio
-            </Button>
-          </motion.div>
-        </VStack>
+            <FaHome className="mr-2 text-xl" />
+            Volver al inicio
+          </ReactRouterLink>
+        </motion.div>
       </motion.div>
-    </Flex>
+    </div>
   );
 };
 

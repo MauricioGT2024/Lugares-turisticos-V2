@@ -12,3 +12,12 @@ export interface FilterConfig {
 export interface ActiveFilters {
   [key: string]: string;
 }
+
+export interface IconConfig {
+  icon: React.ElementType;
+  class: string;
+}
+
+export interface CategoryIcons {
+  [key: string]: IconConfig;
+}

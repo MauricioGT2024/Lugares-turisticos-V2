@@ -1,35 +1,37 @@
-import { Button, Icon, useColorModeValue } from "@chakra-ui/react";
+import { memo } from "react";
 import { motion } from "framer-motion";
+import { useColorMode } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-const MotionButton = motion(Button);
-
-const FilterButton = ({ label, isSelected, onClick, icon }) => {
-  const bgColor = useColorModeValue("gray.100", "gray.700");
-  const selectedBg = useColorModeValue("teal.500", "teal.200");
-  const textColor = useColorModeValue("gray.700", "white");
-  const selectedTextColor = useColorModeValue("white", "gray.800");
-
+const FilterButton = memo(({ label, isSelected, onClick, icon: Icon }) => {
+  const { colorMode } = useColorMode();
+  
   return (
-    <MotionButton
-      size="sm"
-      bg={isSelected ? selectedBg : bgColor}
-      color={isSelected ? selectedTextColor : textColor}
-      onClick={onClick}
-      leftIcon={icon && <Icon as={icon} />}
+    <motion.button
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.95 }}
-      transition={{ duration: 0.2 }}
-      _hover={{
-        boxShadow: "md",
-      }}
-      borderRadius="full"
-      px={4}
+      onClick={onClick}
+      className={`
+        inline-flex items-center gap-2 px-4 py-2 rounded-full
+        text-sm font-medium transition-all duration-200
+        ${isSelected 
+          ? 'bg-teal-500 text-white' 
+          : colorMode === 'dark'
+            ? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+            : 'bg-white text-gray-700 hover:bg-gray-50'
+        }
+        ${!isSelected && (colorMode === 'dark' ? 'border-gray-700' : 'border-gray-200')}
+        ${!isSelected && 'border'}
+        focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2
+      `}
     >
+      {Icon && <Icon className="w-4 h-4" />}
       {label}
-    </MotionButton>
+    </motion.button>
   );
-};
+});
+
+FilterButton.displayName = "FilterButton";
 
 FilterButton.propTypes = {
   label: PropTypes.string.isRequired,

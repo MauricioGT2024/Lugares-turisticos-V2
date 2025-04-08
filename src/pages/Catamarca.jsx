@@ -1,30 +1,17 @@
 import { useState, useMemo, useCallback } from "react";
 import {
-  Box,
-  Container,
-  SimpleGrid,
-  VStack,
-  Heading,
-  Text,
-  Badge,
-  useColorModeValue,
-  Wrap,
-  WrapItem,
-  useBreakpointValue,
-  chakra,
+  useColorMode,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
-  ModalFooter,
   ModalBody,
+  ModalFooter,
   ModalCloseButton,
   useDisclosure,
-  Button,
-  Link,
 } from "@chakra-ui/react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-import { FaMapMarkerAlt, FaInfoCircle } from "react-icons/fa";
+import { FaMapMarkerAlt, FaInfoCircle,  } from "react-icons/fa";
 import { 
   AreaFilter, 
   CatamarcaLocationCard as LocationCard, 
@@ -35,27 +22,12 @@ import { locations } from "../data/catamarca";
 import { filterAnimations } from "../components/Catamarca/config/animations";
 import React from "react";
 
-const MotionBox = chakra(motion.div);
-
-
-
 const Catamarca = () => {
-  // 1. Estados
   const [selectedArea, setSelectedArea] = useState("all");
   const [selectedLocationData, setSelectedLocationData] = useState(null);
-  
-  // 2. Hooks de Chakra UI
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const bgGradient = useColorModeValue(
-    "linear(to-b, gray.50, white)",
-    "linear(to-b, gray.900, gray.800)"
-  );
-  const textColor = useColorModeValue("gray.600", "gray.300");
-  const modalBgColor = useColorModeValue("white", "gray.800");
-  const modalTextColor = useColorModeValue("gray.700", "gray.200");
-  const columns = useBreakpointValue({ base: 1, md: 2, lg: 3 });
+  const { colorMode } = useColorMode();
 
-  // 3. Memos
   const themeConfig = useMemo(() => {
     if (!selectedLocationData) return null;
     return getAreaTheme(selectedLocationData.area);
@@ -71,11 +43,6 @@ const Catamarca = () => {
     return { filteredLocations: filtered, areas: uniqueAreas };
   }, [selectedArea]);
 
-  const modalHeaderGradient = useMemo(() => 
-    themeConfig?.gradient || 'linear(to-r, gray.400, gray.600)'
-  , [themeConfig]);
-
-  // 4. Callbacks
   const handleShowDetails = useCallback(
     (id) => {
       const foundLocation = locations.find((loc) => loc.id === id);
@@ -92,86 +59,55 @@ const Catamarca = () => {
     setSelectedLocationData(null);
   }, [onClose]);
 
-  // 5. Render
   return (
     <LayoutGroup>
-      <Box bgGradient={bgGradient} minH="100vh" py={12} role="main">
-        <Container maxW="8xl">
-          <VStack spacing={10}>
+      <main className={`min-h-screen py-12 ${
+        colorMode === 'dark' ? 'bg-gradient-to-b from-gray-900 to-gray-800' 
+        : 'bg-gradient-to-b from-gray-50 to-white'
+      }`}>
+        <div className="container mx-auto max-w-7xl px-4">
+          <div className="space-y-10">
             {/* Header Section */}
-            <MotionBox {...animations.fadeInDown}>
-              <VStack spacing={6} textAlign="center">
-                <Badge
-                  colorScheme="yellow"
-                  px={6}
-                  py={2}
-                  borderRadius="full"
-                  fontSize="md"
-                  textTransform="uppercase"
-                  letterSpacing="wide"
-                  boxShadow="sm"
-                >
-                  Capital Histórica
-                </Badge>
+            <motion.div {...animations.fadeInDown} className="text-center space-y-6">
+              <span className="inline-block px-6 py-2 rounded-full text-sm font-medium 
+                             bg-yellow-400 text-white uppercase tracking-wide shadow-sm">
+                Capital Histórica
+              </span>
 
-                <Heading
-                  as={motion.h1}
-                  size="2xl"
-                  bgGradient="linear(to-r, yellow.400, green.400, yellow.400)"
-                  bgClip="text"
-                  fontWeight="bold"
-                  letterSpacing="tight"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  San Fernando del Valle
-                </Heading>
+              <motion.h1 
+                className="text-5xl font-bold bg-gradient-to-r from-yellow-400 via-green-400 to-yellow-400 
+                         bg-clip-text text-transparent"
+                whileHover={{ scale: 1.02 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                San Fernando del Valle
+              </motion.h1>
 
-                <Text 
-                  fontSize="xl" 
-                  color={textColor} 
-                  maxW="2xl"
-                  lineHeight="tall"
-                >
-                  Descubre los tesoros escondidos de la capital catamarqueña
-                </Text>
-              </VStack>
-            </MotionBox>
+              <p className={`text-xl max-w-2xl mx-auto leading-relaxed
+                ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Descubre los tesoros escondidos de la capital catamarqueña
+              </p>
+            </motion.div>
 
             {/* Filter Section */}
-            <Wrap 
-              justify="center" 
-              spacing={4} 
-              py={4}
-              as={motion.div}
-              variants={animations.container}
-            >
-              <WrapItem>
-                <AreaFilter
-                  area="Todos"
-                  isSelected={selectedArea === "all"}
-                  onClick={() => setSelectedArea("all")}
-                />
-              </WrapItem>
+            <motion.div variants={animations.container} className="flex flex-wrap justify-center gap-4 py-4">
+              <AreaFilter
+                area="Todos"
+                isSelected={selectedArea === "all"}
+                onClick={() => setSelectedArea("all")}
+              />
               {areas.map((area) => (
-                <WrapItem key={area}>
-                  <AreaFilter
-                    area={area}
-                    isSelected={selectedArea === area}
-                    onClick={() => setSelectedArea(area)}
-                  />
-                </WrapItem>
+                <AreaFilter
+                  key={area}
+                  area={area}
+                  isSelected={selectedArea === area}
+                  onClick={() => setSelectedArea(area)}
+                />
               ))}
-            </Wrap>
+            </motion.div>
 
             {/* Grid Section */}
-            <SimpleGrid
-              columns={columns}
-              spacing={8}
-              w="full"
-              as={motion.div}
-              layout
-            >
+            <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               <AnimatePresence mode="popLayout" initial={false}>
                 {filteredLocations.map((location) => (
                   <motion.div
@@ -189,110 +125,94 @@ const Catamarca = () => {
                   </motion.div>
                 ))}
               </AnimatePresence>
-            </SimpleGrid>
-          </VStack>
-        </Container>
+            </motion.div>
+          </div>
+        </div>
 
         {/* Modal */}
-        <Modal
-          isOpen={isOpen}
+        <Modal 
+          isOpen={isOpen} 
           onClose={handleCloseModal}
-          size="xl"
           isCentered
           motionPreset="slideInBottom"
           scrollBehavior="inside"
+          size="xl"
         >
-          <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(5px)" />
-          <ModalContent bg={modalBgColor} borderRadius="xl">
+          <ModalOverlay backdropFilter="blur(5px)" bg="blackAlpha.700" />
+          <ModalContent 
+            bg={colorMode === 'dark' ? 'gray.800' : 'white'}
+            rounded="xl"
+            overflow="hidden"
+            mx={4}
+          >
             <ModalHeader
-              borderTopRadius="xl"
-              bgGradient={modalHeaderGradient}
-              color="white"
               py={4}
-              display="flex"
-              alignItems="center"
-              gap={2}
-            >
-              {selectedLocationData?.title || "Detalles"}
-            </ModalHeader>
-            <ModalCloseButton
+              bgGradient={themeConfig?.gradient || 'linear(to-r, gray.400, gray.600)'}
               color="white"
-              _focus={{ boxShadow: "none" }}
-              _hover={{ bg: "whiteAlpha.300" }}
-            />
+            >
+              {selectedLocationData?.title}
+            </ModalHeader>
+            <ModalCloseButton color="white" />
+
             <ModalBody py={6}>
               {selectedLocationData && (
-                <VStack spacing={6} align="stretch">
-                  <Box 
-                    borderRadius="lg" 
-                    overflow="hidden" 
-                    h="300px"
-                    boxShadow="md"
-                    border="1px"
-                  >
+                <div className="space-y-6">
+                  <div className="rounded-lg overflow-hidden shadow-md border border-gray-200 dark:border-gray-700">
                     <iframe
                       title={selectedLocationData.title}
                       src={selectedLocationData.mapSrc}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 0 }}
+                      className="w-full h-[300px]"
                       loading="lazy"
                       allowFullScreen
                     />
-                  </Box>
-                  <Text 
-                    fontSize="md" 
-                    color={modalTextColor}
-                    lineHeight="tall"
-                  >
+                  </div>
+                  <p className={`
+                    leading-relaxed
+                    ${colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'}
+                  `}>
                     {selectedLocationData.description}
-                  </Text>
-                </VStack>
+                  </p>
+                </div>
               )}
             </ModalBody>
+
             <ModalFooter 
-              borderBottomRadius="xl"
-              borderTop="1px"
-              borderColor={useColorModeValue("gray.100", "gray.700")}
+              borderTop="1px" 
+              borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.100'}
               gap={2}
             >
               {selectedLocationData?.path && (
-                <Button
-                  as={Link}
+                <a
                   href={selectedLocationData.path}
                   target="_blank"
                   rel="noopener noreferrer"
-                  leftIcon={<FaMapMarkerAlt />}
-                  colorScheme="blue"
-                  variant="outline"
-                  mr={3}
-                  size="sm"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition"
                 >
+                  <FaMapMarkerAlt className="mr-2" />
                   Ver en Mapa
-                </Button>
+                </a>
               )}
               {selectedLocationData?.wiki && (
-                <Button
-                  as={Link}
+                <a
                   href={selectedLocationData.wiki}
                   target="_blank"
                   rel="noopener noreferrer"
-                  leftIcon={<FaInfoCircle />}
-                  colorScheme="teal"
-                  variant="outline"
-                  mr={3}
-                  size="sm"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-teal-600 border border-teal-600 rounded-lg hover:bg-teal-600 hover:text-white transition"
                 >
+                  <FaInfoCircle className="mr-2" />
                   Más Info
-                </Button>
+                </a>
               )}
-              <Button colorScheme="gray" onClick={handleCloseModal} size="sm">
+              <button
+                onClick={handleCloseModal}
+                className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-600 rounded-lg hover:bg-gray-600 hover:text-white transition"
+              >
                 Cerrar
-              </Button>
+              </button>
             </ModalFooter>
           </ModalContent>
         </Modal>
-      </Box>
+      </main>
     </LayoutGroup>
   );
 };

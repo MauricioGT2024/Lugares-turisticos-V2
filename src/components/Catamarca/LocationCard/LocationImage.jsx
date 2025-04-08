@@ -1,24 +1,32 @@
 import { memo } from 'react';
-import { Image, AspectRatio } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { useColorMode } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
 
-const LocationImage = memo(({ src, alt }) => (
-  <AspectRatio ratio={16 / 9}>
-    <Image
-      as={motion.img}
-      src={src}
-      alt={alt}
-      objectFit="cover"
-      w="full"
-      h="full"
-      transition="0.3s ease"
-      _hover={{ transform: "scale(1.05)" }}
-      loading="lazy"
-      fallbackSrc="/placeholder.jpg"
-    />
-  </AspectRatio>
-));
+const LocationImage = memo(({ src, alt }) => {
+  const { colorMode } = useColorMode();
+
+  return (
+    <div className="relative aspect-video overflow-hidden">
+      <motion.img
+        src={src}
+        alt={alt}
+        className={`
+          w-full h-full object-cover transition-transform duration-300 
+          group-hover:scale-105
+          ${colorMode === 'dark' ? 'brightness-90' : 'brightness-100'}
+        `}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        loading="lazy"
+        onError={(e) => {
+          e.target.src = '/placeholder.jpg';
+        }}
+      />
+    </div>
+  );
+});
 
 LocationImage.propTypes = {
   src: PropTypes.string.isRequired,

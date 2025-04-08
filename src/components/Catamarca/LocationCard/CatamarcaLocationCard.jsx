@@ -1,73 +1,59 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
-import { Box, Image, Heading, Text, Badge, VStack, Icon, useColorModeValue } from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { getAreaTheme, getIconByArea } from "../";
-import { ANIMATION_PRESETS } from "../config/animations";
 
 const CatamarcaLocationCard = ({ location, onShowDetails }) => {
-  const { colorScheme, gradient } = getAreaTheme(location.area);
+  const { colorMode } = useColorMode();
+  const { gradient, color } = getAreaTheme(location.area);
   const AreaIcon = getIconByArea(location.area);
 
   return (
-    <Box
-      as={motion.div}
-      variants={ANIMATION_PRESETS.item}
-      whileHover="hover"
-      cursor="pointer"
+    <motion.article
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.2 }}
       onClick={() => onShowDetails(location.id)}
-      role="article"
-      aria-label={location.title}
+      className="group cursor-pointer"
     >
-      <VStack
-        bg={useColorModeValue("white", "gray.800")}
-        borderRadius="2xl"
-        overflow="hidden"
-        boxShadow="lg"
-        spacing={0}
-        h="full"
-      >
-        <Box position="relative" w="full" h="250px">
-          <Image
+      <div className={`
+        h-full rounded-2xl overflow-hidden shadow-lg hover:shadow-xl 
+        transition-shadow duration-300 
+        ${colorMode === 'dark' ? 'bg-gray-800' : 'bg-white'}
+      `}>
+        <div className="relative h-64">
+          <img
             src={location.imgSrc}
             alt={location.title}
-            objectFit="cover"
-            w="full"
-            h="full"
-            transition="transform 0.3s ease"
-            _groupHover={{ transform: "scale(1.05)" }}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
-          <Badge
-            position="absolute"
-            top={4}
-            right={4}
-            px={3}
-            py={1}
-            borderRadius="full"
-            bgGradient={gradient}
-            color="white"
-            display="flex"
-            alignItems="center"
-            gap={2}
-          >
-            <Icon as={AreaIcon} />
-            {location.area}
-          </Badge>
-        </Box>
+          <div className={`
+            absolute top-4 right-4 px-3 py-1.5 rounded-full
+            flex items-center gap-2 text-white text-sm font-medium
+            bg-gradient-to-r ${gradient}
+          `}>
+            <AreaIcon className="w-4 h-4" />
+            <span>{location.area}</span>
+          </div>
+        </div>
 
-        <VStack p={6} spacing={3} align="start" flex={1}>
-          <Heading size="md" color={`${colorScheme}.500`}>
+        <div className="p-6 space-y-3">
+          <h3 className={`
+            text-xl font-bold transition-colors duration-200
+            ${colorMode === 'dark' ? 'text-white' : 'text-gray-900'}
+            group-hover:text-${color}-500
+          `}>
             {location.title}
-          </Heading>
-          <Text 
-            noOfLines={3}
-            color={useColorModeValue("gray.600", "gray.300")}
-          >
+          </h3>
+          <p className={`
+            line-clamp-3
+            ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'}
+          `}>
             {location.description}
-          </Text>
-        </VStack>
-      </VStack>
-    </Box>
+          </p>
+        </div>
+      </div>
+    </motion.article>
   );
 };
 
