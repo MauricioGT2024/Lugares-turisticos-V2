@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useColorMode } from '@chakra-ui/react';
 import { places } from '../data/home';
 import DestinationCard from '../components/Home/DestinationCard';
+import { FaChevronDown } from 'react-icons/fa';
 
 const useTheme = (colorMode) => ({
 	bg: colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50',
@@ -28,13 +29,47 @@ const Home = () => {
 					animate={{ opacity: 1, y: 0 }}
 					className='relative z-10 h-full flex flex-col justify-center items-center text-center px-4'
 				>
-					<h1 className='text-4xl md:text-6xl font-bold text-white mb-6'>
+					<h1
+						className={`text-4xl md:text-6xl font-bold mb-6 ${
+							colorMode === 'dark' ? 'text-white' : 'text-gray-900'
+						}`}
+					>
 						Descubre Catamarca
 					</h1>
-					<p className='text-lg md:text-xl text-gray-200 max-w-2xl'>
+					<p
+						className={`text-lg md:text-xl max-w-2xl ${
+							colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'
+						}`}
+					>
 						Explora la magia de nuestra tierra, donde las montañas tocan el
 						cielo y la historia cobra vida.
 					</p>
+
+					{/* Indicador de Scroll */}
+					<motion.div
+						className='absolute bottom-10 ' 
+						animate={{
+							y: [0, 10, 0],
+						}}
+						transition={{
+							duration: 2,
+							repeat: Infinity,
+							ease: 'easeInOut',
+						}}
+					>
+						<span
+							className={`text-sm mb-2 ${
+								colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
+							}`}
+						>
+							Scrollea para descubrir más
+						</span>
+						<FaChevronDown
+							className={`w-6 h-6  justify-center mx-auto ${
+								colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
+							}`}
+						/>
+					</motion.div>
 				</motion.div>
 			</section>
 
