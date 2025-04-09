@@ -1,206 +1,77 @@
-import {
-  Box,
-  Image,
-  Heading,
-  Text,
-  Button,
-  useColorModeValue,
-  Icon,
-  Badge,
-  VStack,
-  HStack,
-  Spinner,
-} from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import {
-  FaMapMarkedAlt,
-  FaHotel,
-  FaLocationArrow,
-  FaStar,
-} from "react-icons/fa";
+import { FaMapMarkedAlt, FaHotel, FaLocationArrow } from "react-icons/fa";
 import PropTypes from "prop-types";
-import CustomModal from "../UI/CustomModal";
-import { useDisclosure } from "@chakra-ui/react";
-import { useState } from "react";
 
-const MotionBox = motion(Box);
+const locationColors = {
+  "Catamarca": "from-blue-500 to-blue-700",
+  "Tinogasta": "from-orange-500 to-orange-700",
+  "Fiambalá": "from-purple-500 to-purple-700",
+  "Antofagasta de la Sierra": "from-emerald-500 to-emerald-700",
+};
 
-// Añadido colorScheme a las props con 'teal' como fallback
-const AnimatedCard = ({
-  image,
-  title,
-  description,
-  iframe,
-  location,
-  mapUrl,
-  colorScheme = "teal",
-}) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  // Colores derivados del colorScheme
-  const badgeBg = useColorModeValue(`${colorScheme}.50`, `${colorScheme}.800`);
-  const badgeColor = useColorModeValue(
-    `${colorScheme}.800`,
-    `${colorScheme}.100`
-  );
-  const iconColor = useColorModeValue(
-    `${colorScheme}.500`,
-    `${colorScheme}.300`
-  );
-  const buttonHoverBg = useColorModeValue(
-    `${colorScheme}.600`,
-    `${colorScheme}.300`
-  );
-  const modalButtonColorScheme = colorScheme; // Usar el mismo colorScheme para el botón del modal
-
-  const modalFooter = (
-    <>
-      <Button
-        as="a"
-        href={mapUrl}
-        isExternal
-        variant="solid"
-        colorScheme={modalButtonColorScheme}
-        leftIcon={<FaMapMarkedAlt />}
-      >
-        Ver Mapa de {title}
-      </Button>
-      <Button
-        variant="ghost"
-        colorScheme={modalButtonColorScheme}
-        onClick={onClose}
-        ml={3}
-      >
-        Cerrar Mapa
-      </Button>
-    </>
-  );
+const AnimatedCard = ({ image, title, description, location, mapUrl }) => {
+  const { colorMode } = useColorMode();
+  const gradientColor = locationColors[location] || "from-teal-500 to-teal-700";
 
   return (
-    <MotionBox
-      maxW="full"
-      borderRadius="2xl"
-      overflow="hidden"
-      bg={useColorModeValue("white", "gray.800")}
-      borderWidth="1px" // Borde estándar
-      borderColor={useColorModeValue("gray.200", "gray.700")}
-      boxShadow="md" // Sombra más sutil
-      position="relative"
-      initial={{ opacity: 0, scale: 0.95 }} // Animación inicial sutil
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.02 }} // Reducir la escala para una animación más sutil
-      transition={{ duration: 0.15 }} // Reducir duración para mejor performance
-      role="article" // Añadir rol para accesibilidad
-      aria-label={`Hospedaje ${title}`} // Añadir aria-label
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      whileHover={{ y: -5 }}
+      className={`group relative overflow-hidden rounded-2xl ${
+        colorMode === "dark" ? "bg-gray-800" : "bg-white"
+      } shadow-xl transition-all duration-300 hover:shadow-2xl`}
     >
-      <Box position="relative" height="200px">
-        {" "}
-        {/* Altura de imagen ajustada */}
-        <Image
+      <div className="aspect-[4/3] overflow-hidden">
+        <motion.img
           src={image}
           alt={title}
-          objectFit="cover"
-          width="100%"
-          height="100%"
-          loading="lazy"
-          onLoad={() => setImageLoaded(true)}
-          opacity={imageLoaded ? 1 : 0}
-          transition="opacity 0.3s ease"
+          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+          layoutId={`image-${title}`}
         />
-        {!imageLoaded && (
-          <Box
-            position="absolute"
-            top={0}
-            left={0}
-            right={0}
-            bottom={0}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Spinner size="sm" color={`${colorScheme}.500`} />
-          </Box>
-        )}
-        <Box
-          position="absolute"
-          top="0"
-          left="0"
-          right="0"
-          bottom="0"
-          bg="linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.7) 100%)"
-        />
-        <Badge
-          position="absolute"
-          top={4}
-          right={4}
-          px={3}
-          py={1}
-          borderRadius="lg"
-          bg={badgeBg} // Aplicar color derivado
-          color={badgeColor} // Aplicar color derivado
-          display="flex"
-          alignItems="center"
-          gap={1.5} // Espacio ajustado en badge
-          boxShadow="sm" // Sombra sutil en badge
-        >
-          <Icon as={FaLocationArrow} /> {/* Color heredado */}
-          {location}
-        </Badge>
-      </Box>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+      </div>
 
-      <VStack p={6} spacing={4} align="stretch">
-        <HStack justify="space-between">
-          <Heading size="md" display="flex" alignItems="center" gap={2}>
-            <Icon as={FaHotel} color={iconColor} />{" "}
-            {/* Aplicar color derivado */}
-            {title}
-          </Heading>
-          <Icon as={FaStar} color="yellow.400" />{" "}
-          {/* Mantener estrella amarilla */}
-        </HStack>
+      <div className="absolute top-4 right-4">
+        <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
+          colorMode === "dark" ? "bg-gray-700/70" : "bg-white/70"
+        } backdrop-blur-sm`}>
+          <FaLocationArrow className={`h-3 w-3 bg-gradient-to-r ${gradientColor} bg-clip-text`} />
+          <span className="bg-gradient-to-r bg-clip-text text-transparent ${gradientColor}">
+            {location}
+          </span>
+        </span>
+      </div>
 
-        <Text fontSize="md" color={useColorModeValue("gray.600", "gray.300")}>
+      <div className="p-6">
+        <h3 className={`flex items-center gap-2 text-xl font-semibold ${
+          colorMode === "dark" ? "text-white" : "text-gray-900"
+        }`}>
+          <FaHotel className={`h-5 w-5 bg-gradient-to-r ${gradientColor} bg-clip-text`} />
+          {title}
+        </h3>
+
+        <p className={`mt-3 text-sm ${
+          colorMode === "dark" ? "text-gray-400" : "text-gray-600"
+        }`}>
           {description}
-        </Text>
+        </p>
 
-        <Button
-          onClick={onOpen}
-          size="md"
-          colorScheme={colorScheme} // Aplicar colorScheme
-          variant="solid"
-          width="full"
-          leftIcon={<FaMapMarkedAlt />}
-          mt={2}
-          _hover={{
-            bg: buttonHoverBg, // Aplicar color derivado
-          }}
+        <motion.a
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          href={mapUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`mt-6 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r ${gradientColor} py-2.5 text-sm font-medium text-white transition-all duration-300 hover:opacity-90`}
         >
-          Ver Mapa
-        </Button>
-      </VStack>
-
-      <CustomModal
-        isOpen={isOpen}
-        onClose={onClose}
-        title={`Ubicación: ${title}`}
-        headerGradient={`linear(to-r, ${colorScheme}.400, ${colorScheme}.600)`}
-        size="2xl"
-        footer={modalFooter}
-      >
-        <Box height={{ base: "300px", md: "450px" }} width="100%">
-          <iframe
-            src={iframe}
-            title={`Mapa de ${title}`}
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowFullScreen
-          />
-        </Box>
-      </CustomModal>
-    </MotionBox>
+          <FaMapMarkedAlt className="h-4 w-4" />
+          Ver Ubicación
+        </motion.a>
+      </div>
+    </motion.div>
   );
 };
 
@@ -208,9 +79,7 @@ AnimatedCard.propTypes = {
   image: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  iframe: PropTypes.string.isRequired,
   location: PropTypes.string.isRequired,
-  colorScheme: PropTypes.string, // Añadir propType para colorScheme
   mapUrl: PropTypes.string.isRequired,
 };
 

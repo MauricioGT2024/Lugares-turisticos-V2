@@ -62,56 +62,41 @@ DestinationCard.displayName = 'DestinationCard';
 const Home = () => {
 	const { colorMode } = useColorMode();
 
-	return (
-		<main
-			className={`min-h-screen ${
-				colorMode === 'light'
-					? 'bg-gradient-to-b from-gray-50 to-white'
-					: 'bg-gradient-to-b from-gray-900 to-gray-800'
-			}`}
-		>
-			{/* Hero Section */}
-			<section className='relative h-screen flex items-center justify-center overflow-hidden'>
-				<div className='relative z-10 text-center px-4'>
-					<motion.div
-						initial={{ opacity: 0, y: 20 }}
-						animate={{ opacity: 1, y: 0 }}
-						transition={{ duration: 0.8 }}
-						className='space-y-6'
-					>
-						<h1 className='text-5xl md:text-7xl font-bold text-white'>
-							Catamarca
-							<span className='block text-2xl md:text-3xl mt-2 text-gray-200'>
-								Tierra de Contrastes
-							</span>
-						</h1>
-						<p className='text-xl text-gray-200 max-w-2xl mx-auto'>
-							Descubre paisajes impresionantes, cultura milenaria y experiencias
-							únicas en el corazón del noroeste argentino.
-						</p>
-						<Link
-							to='/provincia'
-							className='inline-flex items-center space-x-3 bg-white/20 backdrop-blur-md text-white px-8 py-4 rounded-full hover:bg-white/30 transition-all duration-300 group'
-						>
-							<span>Comenzar Aventura</span>
-							<FaMapMarkedAlt className='w-5 h-5 transform group-hover:rotate-12 transition-transform' />
-						</Link>
-					</motion.div>
-				</div>
+	// Definir tema dinámico
+	const theme = {
+		bg: colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50',
+		text: {
+			primary: colorMode === 'dark' ? 'text-white' : 'text-gray-900',
+			secondary: colorMode === 'dark' ? 'text-gray-400' : 'text-gray-600',
+			accent: colorMode === 'dark' ? 'text-teal-400' : 'text-teal-600',
+		},
+		card: colorMode === 'dark' ? 'bg-gray-800' : 'bg-white',
+		border: colorMode === 'dark' ? 'border-gray-700' : 'border-gray-200',
+		shadow:
+			colorMode === 'dark' ? 'shadow-[0_0_15px_rgba(0,0,0,0.3)]' : 'shadow-lg',
+	};
 
+	return (
+		<div className={`min-h-screen ${theme.bg} transition-colors duration-300`}>
+			{/* Hero Section */}
+			<section className='relative h-screen'>
 				<motion.div
-					animate={{ y: [0, -10, 0] }}
-					transition={{ duration: 2, repeat: Infinity }}
-					className='absolute bottom-8 left-1/2 -translate-x-1/2'
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					className='relative z-10 h-full flex flex-col justify-center items-center text-center px-4'
 				>
-					<div className='w-6 h-10 border-2 border-white/50 rounded-full flex justify-center'>
-						<div className='w-1 h-2 bg-white/50 rounded-full mt-2 animate-bounce' />
-					</div>
+					<h1 className='text-4xl md:text-6xl font-bold text-white mb-6'>
+						Descubre Catamarca
+					</h1>
+					<p className='text-lg md:text-xl text-gray-200 max-w-2xl'>
+						Explora la magia de nuestra tierra, donde las montañas tocan el
+						cielo y la historia cobra vida.
+					</p>
 				</motion.div>
 			</section>
 
 			{/* Destinations Section */}
-			<section className='py-20 px-4'>
+			<section className={`py-20 px-4 ${theme.bg}`}>
 				<div className='max-w-7xl mx-auto'>
 					<motion.div
 						initial={{ opacity: 0 }}
@@ -119,18 +104,10 @@ const Home = () => {
 						viewport={{ once: true }}
 						className='text-center mb-16'
 					>
-						<h2
-							className={`text-4xl font-bold mb-4 ${
-								colorMode === 'light' ? 'text-gray-800' : 'text-white'
-							}`}
-						>
+						<h2 className={`text-4xl font-bold mb-4 ${theme.text.primary}`}>
 							Destinos Destacados
 						</h2>
-						<p
-							className={`text-xl ${
-								colorMode === 'light' ? 'text-gray-600' : 'text-gray-300'
-							}`}
-						>
+						<p className={`text-xl ${theme.text.secondary}`}>
 							Explora los lugares más fascinantes de Catamarca
 						</p>
 					</motion.div>
@@ -142,7 +119,7 @@ const Home = () => {
 					</div>
 				</div>
 			</section>
-		</main>
+		</div>
 	);
 };
 Home.displayName = 'Home';
