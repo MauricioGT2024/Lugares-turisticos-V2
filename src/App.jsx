@@ -7,11 +7,12 @@ import {
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import LoadingSpinner from './components/LoadingSpinner';
 import Error404 from './pages/Error404';
 import Footer from './pages/Footer';
 import About from './pages/About';
+
 const pageTransition = {
 	initial: {
 		opacity: 0,
@@ -42,6 +43,16 @@ const pageTransition = {
 	},
 };
 
+const ScrollToTop = () => {
+	const location = useLocation();
+
+	useEffect(() => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}, [location.pathname]);
+
+	return null;
+};
+
 function AppContent() {
 	const location = useLocation();
 	const LazyProvincia = lazy(() => import('./pages/Provincia'));
@@ -54,6 +65,7 @@ function AppContent() {
 
 	return (
 		<>
+			 <ScrollToTop />
 			<Navbar />
 			<Suspense fallback={<LoadingSpinner />}>
 				<AnimatePresence mode='wait'>
