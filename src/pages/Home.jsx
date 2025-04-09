@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { places } from '../data/home';
 import { useColorMode } from '@chakra-ui/react';
-import { FaMapMarkedAlt, FaArrowRight } from 'react-icons/fa';
+import { FaArrowRight } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 
 const DestinationCard = memo(({ place }) => {
