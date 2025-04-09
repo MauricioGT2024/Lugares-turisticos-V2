@@ -1,17 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
-import {
-  useColorMode,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { useColorMode } from "@chakra-ui/react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
-import { FaMapMarkerAlt, FaInfoCircle,  } from "react-icons/fa";
+import { FaMapMarkerAlt, FaInfoCircle, FaTimes } from "react-icons/fa";
 import { 
   AreaFilter, 
   CatamarcaLocationCard as LocationCard, 
@@ -25,13 +15,11 @@ import React from "react";
 const Catamarca = () => {
   const [selectedArea, setSelectedArea] = useState("all");
   const [selectedLocationData, setSelectedLocationData] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { colorMode } = useColorMode();
+  const isDark = colorMode === 'dark';
 
-  const themeConfig = useMemo(() => {
-    if (!selectedLocationData) return null;
-    return getAreaTheme(selectedLocationData.area);
-  }, [selectedLocationData]);
+  
 
   const { filteredLocations, areas } = useMemo(() => {
     const filtered =
@@ -43,28 +31,28 @@ const Catamarca = () => {
     return { filteredLocations: filtered, areas: uniqueAreas };
   }, [selectedArea]);
 
-  const handleShowDetails = useCallback(
-    (id) => {
-      const foundLocation = locations.find((loc) => loc.id === id);
-      if (foundLocation) {
-        setSelectedLocationData(foundLocation);
-        onOpen();
-      }
-    },
-    [onOpen]
-  );
+  const openModal = useCallback((id) => {
+    const foundLocation = locations.find((loc) => loc.id === id);
+    if (foundLocation) {
+      setSelectedLocationData(foundLocation);
+      setIsModalOpen(true);
+    }
+  }, []);
 
-  const handleCloseModal = useCallback(() => {
-    onClose();
-    setSelectedLocationData(null);
-  }, [onClose]);
+  const closeModal = useCallback(() => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedLocationData(null), 300);
+  }, []);
 
   return (
     <LayoutGroup>
-      <main className={`min-h-screen py-12 ${
-        colorMode === 'dark' ? 'bg-gradient-to-b from-gray-900 to-gray-800' 
-        : 'bg-gradient-to-b from-gray-50 to-white'
-      }`}>
+      <main className={`
+        min-h-screen py-12 
+        ${isDark 
+          ? 'bg-gradient-to-b from-gray-900 to-gray-800' 
+          : 'bg-gradient-to-b from-gray-50 to-white'}
+        transition-colors duration-300
+      `}>
         <div className="container mx-auto max-w-7xl px-4">
           <div className="space-y-10">
             {/* Header Section */}
@@ -84,7 +72,7 @@ const Catamarca = () => {
               </motion.h1>
 
               <p className={`text-xl max-w-2xl mx-auto leading-relaxed
-                ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                 Descubre los tesoros escondidos de la capital catamarqueña
               </p>
             </motion.div>
@@ -120,7 +108,7 @@ const Catamarca = () => {
                   >
                     <LocationCard
                       location={location}
-                      onShowDetails={handleShowDetails}
+                      onShowDetails={openModal}
                     />
                   </motion.div>
                 ))}
@@ -130,88 +118,107 @@ const Catamarca = () => {
         </div>
 
         {/* Modal */}
-        <Modal 
-          isOpen={isOpen} 
-          onClose={handleCloseModal}
-          isCentered
-          motionPreset="slideInBottom"
-          scrollBehavior="inside"
-          size="xl"
-        >
-          <ModalOverlay backdropFilter="blur(5px)" bg="blackAlpha.700" />
-          <ModalContent 
-            bg={colorMode === 'dark' ? 'gray.800' : 'white'}
-            rounded="xl"
-            overflow="hidden"
-            mx={4}
-          >
-            <ModalHeader
-              py={4}
-              bgGradient={themeConfig?.gradient || 'linear(to-r, gray.400, gray.600)'}
-              color="white"
-            >
-              {selectedLocationData?.title}
-            </ModalHeader>
-            <ModalCloseButton color="white" />
+        <AnimatePresence>
+          {isModalOpen && selectedLocationData && (
+            <div className="fixed inset-0 z-50 overflow-y-auto">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-black/70 backdrop-blur-sm"
+                onClick={closeModal}
+              />
+              
+              <div className="min-h-screen px-4 text-center">
+                <div className="inline-block align-middle my-8 w-full max-w-xl">
+                  <motion.div
+                    initial={{ opacity: 0, y: 50, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    className={`
+                      relative rounded-xl overflow-hidden shadow-2xl 
+                      ${isDark ? 'bg-gray-800' : 'bg-white'}
+                      text-left
+                    `}
+                  >
+                    {/* Modal Header */}
+                    <div className={`
+                      relative px-6 py-4
+                      bg-gradient-to-r ${getAreaTheme(selectedLocationData.area).gradient}
+                    `}>
+                      <h3 className="text-xl font-bold text-white">
+                        {selectedLocationData.title}
+                      </h3>
+                      <button
+                        onClick={closeModal}
+                        className="absolute right-4 top-4 text-white/80 hover:text-white transition-colors"
+                      >
+                        <FaTimes className="w-5 h-5" />
+                      </button>
+                    </div>
 
-            <ModalBody py={6}>
-              {selectedLocationData && (
-                <div className="space-y-6">
-                  <div className="rounded-lg overflow-hidden shadow-md border border-gray-200 dark:border-gray-700">
-                    <iframe
-                      title={selectedLocationData.title}
-                      src={selectedLocationData.mapSrc}
-                      className="w-full h-[300px]"
-                      loading="lazy"
-                      allowFullScreen
-                    />
-                  </div>
-                  <p className={`
-                    leading-relaxed
-                    ${colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'}
-                  `}>
-                    {selectedLocationData.description}
-                  </p>
+                    {/* Modal Body */}
+                    <div className="p-6 space-y-6">
+                      <div className="rounded-lg overflow-hidden shadow-md border border-gray-200 dark:border-gray-700">
+                        <iframe
+                          title={selectedLocationData.title}
+                          src={selectedLocationData.mapSrc}
+                          className="w-full h-[300px]"
+                          loading="lazy"
+                          allowFullScreen
+                        />
+                      </div>
+                      <p className={`leading-relaxed ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                        {selectedLocationData.description}
+                      </p>
+                    </div>
+
+                    {/* Modal Footer */}
+                    <div className={`
+                      flex justify-end gap-3 px-6 py-4
+                      border-t ${isDark ? 'border-gray-700' : 'border-gray-200'}
+                    `}>
+                      {selectedLocationData.path && (
+                        <a
+                          href={selectedLocationData.path}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium 
+                                   text-blue-600 dark:text-blue-400 border border-blue-600 dark:border-blue-400 
+                                   rounded-lg hover:bg-blue-600 hover:text-white transition-colors"
+                        >
+                          <FaMapMarkerAlt />
+                          Ver en Mapa
+                        </a>
+                      )}
+                      {selectedLocationData.wiki && (
+                        <a
+                          href={selectedLocationData.wiki}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium 
+                                   text-teal-600 dark:text-teal-400 border border-teal-600 dark:border-teal-400 
+                                   rounded-lg hover:bg-teal-600 hover:text-white transition-colors"
+                        >
+                          <FaInfoCircle />
+                          Más Info
+                        </a>
+                      )}
+                      <button
+                        onClick={closeModal}
+                        className="px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 
+                                 border border-red-600 dark:border-red-400 rounded-lg 
+                                 hover:bg-red-600 hover:text-white transition-colors"
+                      >
+                        Cerrar
+                      </button>
+                    </div>
+                  </motion.div>
                 </div>
-              )}
-            </ModalBody>
-
-            <ModalFooter 
-              borderTop="1px" 
-              borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.100'}
-              gap={2}
-            >
-              {selectedLocationData?.path && (
-                <a
-                  href={selectedLocationData.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition"
-                >
-                  <FaMapMarkerAlt className="mr-2" />
-                  Ver en Mapa
-                </a>
-              )}
-              {selectedLocationData?.wiki && (
-                <a
-                  href={selectedLocationData.wiki}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-teal-600 border border-teal-600 rounded-lg hover:bg-teal-600 hover:text-white transition"
-                >
-                  <FaInfoCircle className="mr-2" />
-                  Más Info
-                </a>
-              )}
-              <button
-                onClick={handleCloseModal}
-                className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-600 rounded-lg hover:bg-gray-600 hover:text-white transition"
-              >
-                Cerrar
-              </button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+              </div>
+            </div>
+          )}
+        </AnimatePresence>
       </main>
     </LayoutGroup>
   );

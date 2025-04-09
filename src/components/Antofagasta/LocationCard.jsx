@@ -13,9 +13,13 @@ const LocationCard = ({ location, onShowDetails }) => {
   return (
     <motion.article
       variants={ANTOFAGASTA_ANIMATIONS.cardVariants}
-      whileHover="hover"
+      whileHover={{ scale: 1.02, y: -5 }}
       onClick={() => onShowDetails(location.id)}
-      className="group cursor-pointer"
+      className={`
+        group cursor-pointer rounded-2xl overflow-hidden
+        ${colorMode === 'dark' ? 'bg-gray-800' : 'bg-white'}
+        shadow-lg hover:shadow-2xl transition-all duration-300
+      `}
     >
       <div className={`
         relative rounded-2xl overflow-hidden shadow-lg

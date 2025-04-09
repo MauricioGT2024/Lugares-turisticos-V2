@@ -1,64 +1,48 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Box, Image, Heading, Text, Badge, useColorModeValue } from '@chakra-ui/react';
+import { useColorMode } from '@chakra-ui/react';
 
 const LocationCard = ({ location, onShowDetails }) => {
-  const bgColor = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.600');
+  const { colorMode } = useColorMode();
 
   return (
-    <Box
-      role="article"
-      cursor="pointer"
+    <article 
       onClick={() => onShowDetails(location)}
-      borderRadius="xl"
-      overflow="hidden"
-      bg={bgColor}
-      borderWidth="1px"
-      borderColor={borderColor}
-      boxShadow="xl"
-      position="relative"
-      transition="all 0.2s"
+      className={`
+        cursor-pointer rounded-xl overflow-hidden
+        ${colorMode === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-200'}
+        border shadow-xl relative transition-all duration-200 hover:scale-[1.02]
+      `}
     >
-      <Box position="relative" height="240px">
-        <Image
+      <div className="relative h-60">
+        <img
           src={location.imgSrc}
           alt={location.name}
-          objectFit="cover"
-          w="full"
-          h="full"
-          transition="transform 0.3s ease"
-          _groupHover={{ transform: "scale(1.05)" }}
+          className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-105"
         />
-        <Badge
-          position="absolute"
-          top={4}
-          right={4}
-          px={3}
-          py={1}
-          borderRadius="full"
-          colorScheme="purple"
-          boxShadow="md"
-          backdropFilter="blur(8px)"
-        >
+        <span className={`
+          absolute top-4 right-4 px-3 py-1 rounded-full
+          bg-purple-500 text-white text-sm font-medium
+          shadow-md backdrop-blur-sm
+        `}>
           {location.category}
-        </Badge>
-      </Box>
+        </span>
+      </div>
 
-      <Box p={6}>
-        <Heading 
-          size="md" 
-          mb={2}
-          bgGradient="linear(to-r, purple.400, red.400)"
-          bgClip="text"
-        >
+      <div className="p-6">
+        <h2 className={`
+          text-lg font-bold mb-2
+          bg-gradient-to-r from-purple-400 to-red-400 bg-clip-text text-transparent
+        `}>
           {location.name}
-        </Heading>
-        <Text color={useColorModeValue("gray.600", "gray.300")}>
+        </h2>
+        <p className={`
+          ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'}
+        `}>
           {location.description}
-        </Text>
-      </Box>
-    </Box>
+        </p>
+      </div>
+    </article>
   );
 };
 

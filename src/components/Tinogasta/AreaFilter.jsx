@@ -1,26 +1,13 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Button,
-  useColorModeValue,
-  Stack,
-  IconButton,
-  Tooltip,
-} from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 import { FaTimes } from 'react-icons/fa';
 import { useCategoryConfig } from '../Locations/useCategoryConfig';
 
-const MotionButton = motion(Button);
+const MotionButton = motion.button;
 
 const AreaFilter = memo(({ areaFilter, setAreaFilter }) => {
   const { categories } = useCategoryConfig();
-  const bgColor = useColorModeValue('gray.50', 'gray.700');
-  const textColor = useColorModeValue('gray.700', 'gray.200');
-  const selectedBgColor = useColorModeValue('purple.500', 'purple.200');
-  const selectedTextColor = useColorModeValue('white', 'gray.800');
-  const hoverColor = useColorModeValue('gray.200', 'whiteAlpha.200');
 
   const clearFilter = () => setAreaFilter('');
 
@@ -32,24 +19,8 @@ const AreaFilter = memo(({ areaFilter, setAreaFilter }) => {
   };
 
   return (
-    <Box
-      p={4}
-      borderRadius="md"
-      boxSize="auto"
-      maxW="100dvh"
-      mx="auto"
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-    >
-      <Stack
-        direction={['row']}
-        wrap="wrap"
-        spacing={2}
-        justifyContent="center"
-        align="center"
-        width="100%"
-      >
+    <div className="p-4 rounded-md mx-auto flex flex-col items-center max-w-[100dvh]">
+      <div className="flex flex-row flex-wrap gap-2 justify-center items-center w-full">
         {categories.map((category) => (
           <MotionButton
             key={category}
@@ -58,39 +29,36 @@ const AreaFilter = memo(({ areaFilter, setAreaFilter }) => {
             animate="visible"
             whileHover="hover"
             whileTap="tap"
-            size="sm"
-            borderRadius="full"
-            px={4}
-            fontSize="sm"
-            fontWeight="medium"
-            color={areaFilter === category ? selectedTextColor : textColor}
-            bg={areaFilter === category ? selectedBgColor : bgColor}
-            _hover={{ bg: hoverColor }}
-            _focus={{ boxShadow: 'none' }}
             onClick={() => setAreaFilter(category)}
             aria-label={`Filtrar por ${category}`}
+            className={`
+              px-4 py-1 text-sm font-medium rounded-full
+              ${areaFilter === category 
+                ? 'bg-purple-500 text-white dark:bg-purple-200 dark:text-gray-800' 
+                : 'bg-gray-50 text-gray-700 dark:bg-gray-700 dark:text-gray-200'}
+              hover:bg-gray-200 dark:hover:bg-gray-600 
+              transition-all duration-200
+            `}
           >
             {category}
           </MotionButton>
         ))}
-      </Stack>
+      </div>
       {areaFilter && (
-        <Tooltip label="Quitar filtro">
-          <IconButton
-            aria-label="Quitar filtro"
-            icon={<FaTimes />}
-            size="sm"
-            colorScheme="purple"
-            variant="ghost"
-            onClick={clearFilter}
-            mt={2}
-            _hover={{ bg: hoverColor }}
-          />
-        </Tooltip>
+        <button
+          onClick={clearFilter}
+          className="mt-2 p-2 text-purple-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
+          title="Quitar filtro"
+        >
+          <FaTimes />
+        </button>
       )}
-    </Box>
+    </div>
   );
 });
+
+
+AreaFilter.displayName = 'AreaFilter';
 
 AreaFilter.propTypes = {
   areaFilter: PropTypes.string.isRequired,

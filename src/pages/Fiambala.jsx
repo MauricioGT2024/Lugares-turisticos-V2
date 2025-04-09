@@ -1,23 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
-import {
-  useColorMode,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Link,
-} from '@chakra-ui/react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, useDisclosure } from '@chakra-ui/react';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { FaInfoCircle } from 'react-icons/fa';
 import { locations } from '../data/fiambala';
 import LocationCard from '../components/Fiambala/LocationCard';
 import { CATEGORY_CONFIG } from '../components/Fiambala/CategoryConfig';
 import FilterGroup from '../components/FilterSystem/FilterGroup';
-import { FIAMBALA_ANIMATIONS, filterAnimations } from '../components/Fiambala/config/animations';
 
 const Fiambala = () => {
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -27,12 +15,9 @@ const Fiambala = () => {
 
   const categories = Object.keys(CATEGORY_CONFIG);
 
-  const handleShowDetails = useCallback((id) => {
-    const location = locations.find((loc) => loc.id === id);
-    if (location) {
-      setSelectedLocationData(location);
-      onOpen();
-    }
+  const handleShowDetails = useCallback((location) => {
+    setSelectedLocationData(location);
+    onOpen();
   }, [onOpen]);
 
   const handleCloseModal = () => {
@@ -40,180 +25,137 @@ const Fiambala = () => {
     setTimeout(() => setSelectedLocationData(null), 300);
   };
 
-  const filteredLocations = useMemo(
-    () =>
-      categoryFilter
-        ? locations.filter((loc) => loc.category === categoryFilter)
-        : locations,
+  const filteredLocations = useMemo(() =>
+    categoryFilter
+      ? locations.filter((loc) => loc.category === categoryFilter)
+      : locations,
     [categoryFilter]
   );
 
   return (
-    <motion.main
-      variants={FIAMBALA_ANIMATIONS.pageTransition}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      className={`min-h-screen py-12 ${
-        colorMode === 'dark' 
-          ? 'bg-gradient-to-b from-gray-900 to-gray-800' 
-          : 'bg-gradient-to-b from-gray-50 to-white'
-      }`}
-    >
-      <div className="container mx-auto max-w-7xl px-4 md:px-8">
-        <div className="space-y-8">
-          {/* Header Section */}
+    <div className={`min-h-screen py-12 ${
+      colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50'
+    }`}>
+      <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+        <div className="flex flex-col items-center space-y-8">
           <motion.div
-            variants={FIAMBALA_ANIMATIONS.container}
-            className="text-center space-y-6"
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, type: 'spring', bounce: 0.4 }}
+            className="text-center space-y-4 mb-8"
           >
-            <span className="inline-block px-6 py-2 rounded-full text-sm font-medium
-                           bg-yellow-400 text-white uppercase tracking-wide shadow-sm">
+            <span className="inline-block px-4 py-1 rounded-full text-sm font-medium bg-yellow-400 text-white">
               Explora Fiambalá
             </span>
-
-            <h1 className="text-5xl font-bold font-mono bg-gradient-to-r 
-                         from-yellow-400 via-orange-400 to-red-500
-                         bg-clip-text text-transparent
-                         hover:after:scale-x-100 hover:after:opacity-100
-                         relative after:absolute after:bottom-0 after:left-0
-                         after:w-full after:h-0.5 after:bg-gradient-to-r
-                         after:from-yellow-400 after:via-orange-400 after:to-red-500
-                         after:transform after:scale-x-0 after:opacity-0
-                         after:transition-all after:duration-300 after:ease-in-out">
+            
+            <h1 className="text-4xl md:text-5xl font-bold font-['JetBrains_Mono'] bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent">
               Fiambalá
             </h1>
 
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className={`text-xl max-w-3xl mx-auto italic
-                ${colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
+              className={`text-xl max-w-3xl mx-auto italic ${
+                colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
+              }`}
             >
               Donde el desierto se encuentra con las termas, creando un oasis
               de aventura y relax en el corazón de Catamarca
             </motion.p>
           </motion.div>
 
-          {/* Filter Section */}
           <FilterGroup
-            title='Categorías'
+            title="Categorías"
             items={categories}
             selected={categoryFilter}
             onSelect={setCategoryFilter}
-            colorScheme="yellow"
           />
 
-          {/* Grid Section */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <AnimatePresence mode="popLayout" initial={false}>
-              {filteredLocations.map((loc) => (
-                <motion.div
-                  key={loc.id}
-                  variants={filterAnimations}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                  layout
-                >
-                  <LocationCard
-                    location={loc}
-                    onShowDetails={handleShowDetails}
-                  />
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
+          <LayoutGroup>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <AnimatePresence mode="popLayout">
+                {filteredLocations.map((loc) => (
+                  <motion.div
+                    key={loc.id}
+                    layout
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <LocationCard
+                      location={loc}
+                      onShowDetails={handleShowDetails}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </LayoutGroup>
         </div>
       </div>
 
-      {/* Modal */}
-      <Modal
-        isOpen={isOpen}
-        onClose={handleCloseModal}
-        size="xl"
-        isCentered
-        motionPreset="slideInBottom"
-        scrollBehavior="inside"
-      >
-        <ModalOverlay backdropFilter="blur(5px)" bg="blackAlpha.700" />
-        <ModalContent
+      {/* Modal de Chakra UI con estilos de Tailwind */}
+      <Modal isOpen={isOpen} onClose={handleCloseModal} size="xl" isCentered motionPreset="slideInBottom">
+        <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(5px)" />
+        <ModalContent 
           bg={colorMode === 'dark' ? 'gray.800' : 'white'}
-          rounded="xl"
-          overflow="hidden"
-          mx={4}
+          className="rounded-xl overflow-hidden shadow-2xl"
         >
-          <ModalHeader
-            py={4}
-            bgGradient={
-              selectedLocationData
-                ? (CATEGORY_CONFIG[selectedLocationData.category] || {}).gradient
-                : 'linear(to-r, gray.400, gray.600)'
-            }
-            color="white"
-            fontFamily="mono"
-          >
-            {selectedLocationData?.title || 'Detalles'}
-          </ModalHeader>
-          <ModalCloseButton
-            color="white"
-            _hover={{ bg: 'whiteAlpha.300' }}
-          />
-
-          <ModalBody py={6}>
-            {selectedLocationData && (
-              <div className="space-y-4">
-                <div className="rounded-lg overflow-hidden shadow-md border 
-                              dark:border-gray-700 h-[300px]">
+          {selectedLocationData && (
+            <>
+              <ModalHeader className={`p-4 ${CATEGORY_CONFIG[selectedLocationData.category]?.bgClass || 'bg-gray-600'} text-white`}>
+                <h2 className="text-xl font-bold font-['JetBrains_Mono']">
+                  {selectedLocationData.title}
+                </h2>
+              </ModalHeader>
+              <ModalCloseButton className="text-white hover:bg-white/20" />
+              
+              <ModalBody className="p-6 space-y-4">
+                <div className="h-[300px] rounded-lg overflow-hidden">
                   <iframe
                     title={selectedLocationData.title}
                     src={selectedLocationData.mapSrc}
-                    className="w-full h-full"
+                    className="w-full h-full border-0"
                     loading="lazy"
                   />
                 </div>
-                <p className={`
-                  leading-relaxed
-                  ${colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'}
-                `}>
+                
+                <p className={colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'}>
                   {selectedLocationData.description}
                 </p>
-              </div>
-            )}
-          </ModalBody>
+              </ModalBody>
 
-          <ModalFooter 
-            borderTop="1px" 
-            borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.100'}
-            justifyContent="space-between"
-          >
-            <div>
-              {selectedLocationData?.path && (
-                <Link
-                  href={selectedLocationData.path}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium
-                             text-teal-600 border border-teal-600 rounded-md
-                             hover:bg-teal-600 hover:text-white transition"
+              <ModalFooter className="space-x-3">
+                {selectedLocationData.path && (
+                  <a
+                    href={selectedLocationData.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border border-teal-500 text-teal-500 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors"
+                  >
+                    <FaInfoCircle className="mr-2" />
+                    Más Info
+                  </a>
+                )}
+                
+                <button
+                  onClick={handleCloseModal}
+                  className={`px-4 py-2 text-sm font-medium rounded-lg ${
+                    colorMode === 'dark'
+                      ? 'bg-gray-700 hover:bg-gray-600'
+                      : 'bg-gray-200 hover:bg-gray-300'
+                  } transition-colors`}
                 >
-                  <FaInfoCircle className="mr-2" />
-                  Más Info
-                </Link>
-              )}
-            </div>
-            <button
-              onClick={handleCloseModal}
-              className="px-4 py-2 text-sm font-medium text-gray-600
-                         bg-gray-100 rounded-md hover:bg-gray-200 transition"
-            >
-              Cerrar
-            </button>
-          </ModalFooter>
+                  Cerrar
+                </button>
+              </ModalFooter>
+            </>
+          )}
         </ModalContent>
       </Modal>
-    </motion.main>
+    </div>
   );
 };
 
