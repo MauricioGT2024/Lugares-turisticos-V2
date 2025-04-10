@@ -1,23 +1,20 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
-import { useColorMode } from "@chakra-ui/react";
-import { getAreaTheme, getIconByArea } from "../../Catamarca";
-import { ANIMATION_PRESETS } from "../../Catamarca/animations";
+import { ANIMATIONS, getAreaConfig } from "./config/constants";
 
-const CatamarcaLocationCard = ({ location, onShowDetails }) => {
-  const { colorMode } = useColorMode();
-  const { gradient, color } = getAreaTheme(location.area);
-  const AreaIcon = getIconByArea(location.area);
+const LocationCard = ({ location, onShowDetails }) => {
+  const { gradient, icon: AreaIcon } = getAreaConfig(location.area);
 
   return (
     <motion.article
-      variants={ANIMATION_PRESETS.cardVariants}
+      variants={ANIMATIONS.card}
       whileHover="hover"
       whileTap="tap"
       onClick={() => onShowDetails(location.id)}
       className="group cursor-pointer relative h-[400px] rounded-xl overflow-hidden"
     >
+      {/* Imagen y Overlay */}
       <div className="absolute inset-0">
         <motion.img
           src={location.imgSrc}
@@ -34,6 +31,7 @@ const CatamarcaLocationCard = ({ location, onShowDetails }) => {
         />
       </div>
 
+      {/* Badge */}
       <div className={`
         absolute top-4 right-4 px-4 py-2 
         rounded-full backdrop-blur-sm
@@ -47,35 +45,29 @@ const CatamarcaLocationCard = ({ location, onShowDetails }) => {
         <span>{location.area}</span>
       </div>
 
+      {/* Contenido */}
       <motion.div 
         className="absolute inset-x-0 bottom-0 p-6"
         initial={{ opacity: 0, y: 20 }}
         whileHover={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <h3 className="text-2xl font-bold text-white mb-2">
-          {location.title}
-        </h3>
-        <p className="text-gray-200 line-clamp-2">
-          {location.description}
-        </p>
+        <h3 className="text-2xl font-bold text-white mb-2">{location.title}</h3>
+        <p className="text-gray-200 line-clamp-2">{location.description}</p>
       </motion.div>
     </motion.article>
   );
 };
 
-CatamarcaLocationCard.propTypes = {
+LocationCard.propTypes = {
   location: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     imgSrc: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    mapSrc: PropTypes.string.isRequired,
-    path: PropTypes.string,
-    wiki: PropTypes.string,
     area: PropTypes.string.isRequired,
   }).isRequired,
   onShowDetails: PropTypes.func.isRequired,
 };
 
-export default React.memo(CatamarcaLocationCard);
+export default React.memo(LocationCard);

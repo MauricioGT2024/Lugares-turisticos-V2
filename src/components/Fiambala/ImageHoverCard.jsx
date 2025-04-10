@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { CATEGORY_CONFIG } from './CategoryConfig';
 
-const LocationCard = ({ location, onShowDetails }) => {
+const ImageHoverCard = ({ location, onShowDetails }) => {
   const config = CATEGORY_CONFIG[location.category] || {};
 
   return (
@@ -12,7 +12,7 @@ const LocationCard = ({ location, onShowDetails }) => {
       className="relative h-[400px] rounded-xl overflow-hidden cursor-pointer group"
       onClick={() => onShowDetails(location)}
     >
-      {/* Imagen de fondo */}
+      {/* Imagen */}
       <div className="absolute inset-0">
         <img
           src={location.imgSrc}
@@ -45,7 +45,6 @@ const LocationCard = ({ location, onShowDetails }) => {
           <h2 className="text-2xl font-bold text-white">
             {location.title}
           </h2>
-
           <p className="text-gray-200 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
             {location.description}
           </p>
@@ -55,7 +54,7 @@ const LocationCard = ({ location, onShowDetails }) => {
   );
 };
 
-LocationCard.propTypes = {
+ImageHoverCard.propTypes = {
   location: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     imgSrc: PropTypes.string.isRequired,
@@ -66,4 +65,4 @@ LocationCard.propTypes = {
   onShowDetails: PropTypes.func.isRequired,
 };
 
-export default LocationCard;
+export default ImageHoverCard;

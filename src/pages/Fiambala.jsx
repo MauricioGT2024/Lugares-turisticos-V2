@@ -1,11 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, ModalCloseButton, useDisclosure } from '@chakra-ui/react';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FaInfoCircle } from 'react-icons/fa';
 import { locations } from '../data/fiambala';
-import LocationCard from '../components/Fiambala/LocationCard';
 import { CATEGORY_CONFIG } from '../components/Fiambala/CategoryConfig';
 import FilterGroup from '../components/FilterSystem/FilterGroup';
+import ImageHoverCard from '../components/Fiambala/ImageHoverCard';
 
 const Fiambala = () => {
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -33,71 +33,71 @@ const Fiambala = () => {
   );
 
   return (
-    <div className={`min-h-screen py-12 ${
-      colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50'
-    }`}>
+    <div className={`min-h-screen py-12 ${colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
       <div className="container mx-auto px-4 md:px-8 max-w-7xl">
-        <div className="flex flex-col items-center space-y-8">
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, type: 'spring', bounce: 0.4 }}
-            className="text-center space-y-4 mb-8"
-          >
-            <span className="inline-block px-4 py-1 rounded-full text-sm font-medium bg-yellow-400 text-white">
-              Explora Fiambalá
-            </span>
-            
-            <h1 className="text-4xl md:text-5xl font-bold font-['JetBrains_Mono'] bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent">
-              Fiambalá
-            </h1>
+        {/* Header Section */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center space-y-8 mb-16"
+        >
+          <span className="inline-block px-4 py-1 rounded-full text-sm font-medium bg-yellow-400 text-white">
+            Explora Fiambalá
+          </span>
+          
+          <h1 className="text-4xl md:text-6xl font-bold font-['JetBrains_Mono'] bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent">
+            Fiambalá
+          </h1>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className={`text-xl max-w-3xl mx-auto italic ${
-                colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
-              }`}
-            >
-              Donde el desierto se encuentra con las termas, creando un oasis
-              de aventura y relax en el corazón de Catamarca
-            </motion.p>
-          </motion.div>
+          <p className={`text-xl max-w-3xl mx-auto italic ${
+            colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
+          }`}>
+            Donde el desierto se encuentra con las termas, creando un oasis
+            de aventura y relax en el corazón de Catamarca
+          </p>
+        </motion.div>
 
+        {/* Filter Section */}
+        <div className="mb-12">
           <FilterGroup
             title="Categorías"
             items={categories}
             selected={categoryFilter}
             onSelect={setCategoryFilter}
           />
-
-          <LayoutGroup>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              <AnimatePresence mode="popLayout">
-                {filteredLocations.map((loc) => (
-                  <motion.div
-                    key={loc.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <LocationCard
-                      location={loc}
-                      onShowDetails={handleShowDetails}
-                    />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          </LayoutGroup>
         </div>
+
+        {/* Grid de Locations */}
+        <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <AnimatePresence mode="popLayout">
+            {filteredLocations.map((loc) => (
+              <motion.div
+                key={loc.id}
+                layout
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ImageHoverCard
+                  location={loc}
+                  onShowDetails={handleShowDetails}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
       </div>
 
-      {/* Modal de Chakra UI con estilos de Tailwind */}
-      <Modal isOpen={isOpen} onClose={handleCloseModal} size="xl" isCentered motionPreset="slideInBottom">
+      {/* Modal de Detalles */}
+      <Modal 
+        isOpen={isOpen} 
+        onClose={handleCloseModal} 
+        size="xl" 
+        isCentered 
+        motionPreset="slideInBottom"
+      >
         <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(5px)" />
         <ModalContent 
           bg={colorMode === 'dark' ? 'gray.800' : 'white'}
@@ -112,8 +112,8 @@ const Fiambala = () => {
               </ModalHeader>
               <ModalCloseButton className="text-white hover:bg-white/20" />
               
-              <ModalBody className="p-6 space-y-4">
-                <div className="h-[300px] rounded-lg overflow-hidden">
+              <ModalBody className="p-6 space-y-6">
+                <div className="h-[300px] rounded-lg overflow-hidden shadow-lg">
                   <iframe
                     title={selectedLocationData.title}
                     src={selectedLocationData.mapSrc}
@@ -122,7 +122,7 @@ const Fiambala = () => {
                   />
                 </div>
                 
-                <p className={colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'}>
+                <p className={`text-lg ${colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>
                   {selectedLocationData.description}
                 </p>
               </ModalBody>

@@ -18,7 +18,6 @@ import { location } from '../data/antofagasta';
 import LocationCard from '../components/Antofagasta/LocationCard';
 import FilterGroup from '../components/FilterSystem/FilterGroup';
 import { ANTOFAGASTA_ANIMATIONS } from '../components/Antofagasta/config/animations';
-import { filterAnimations } from '../components/Antofagasta/config/animations';
 
 const Antofagasta = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -108,11 +107,11 @@ const Antofagasta = () => {
 								{filteredLocations.map((loc) => (
 									<motion.div
 										key={loc.id}
-										variants={filterAnimations}
-										initial='hidden'
-										animate='visible'
-										exit='exit'
 										layout
+										initial={{ opacity: 0, y: 20 }}
+										animate={{ opacity: 1, y: 0 }}
+										exit={{ opacity: 0, y: -20 }}
+										transition={{ duration: 0.3 }}
 									>
 										<LocationCard
 											location={loc}

@@ -1,62 +1,84 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
-import { FaTimes } from 'react-icons/fa';
-import { useCategoryConfig } from '../Locations/useCategoryConfig';
+import { FaTimes, FaFilter } from 'react-icons/fa';
+import { useTinogastaCategories } from './hooks/useTinogastaCategories';
 
 const MotionButton = motion.button;
 
 const AreaFilter = memo(({ areaFilter, setAreaFilter }) => {
-  const { categories } = useCategoryConfig();
-
-  const clearFilter = () => setAreaFilter('');
-
-  const buttonVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: 'easeOut' } },
-    hover: { scale: 1.05, transition: { duration: 0.1 } },
-    tap: { scale: 0.95 },
-  };
-
+  const { categories } = useTinogastaCategories();
+  
   return (
-    <div className="p-4 rounded-md mx-auto flex flex-col items-center max-w-[100dvh]">
-      <div className="flex flex-row flex-wrap gap-2 justify-center items-center w-full">
-        {categories.map((category) => (
-          <MotionButton
-            key={category}
-            variants={buttonVariants}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-            whileTap="tap"
-            onClick={() => setAreaFilter(category)}
-            aria-label={`Filtrar por ${category}`}
-            className={`
-              px-4 py-1 text-sm font-medium rounded-full
-              ${areaFilter === category 
-                ? 'bg-purple-500 text-white dark:bg-purple-200 dark:text-gray-800' 
-                : 'bg-gray-50 text-gray-700 dark:bg-gray-700 dark:text-gray-200'}
-              hover:bg-gray-200 dark:hover:bg-gray-600 
-              transition-all duration-200
-            `}
-          >
-            {category}
-          </MotionButton>
-        ))}
-      </div>
-      {areaFilter && (
-        <button
-          onClick={clearFilter}
-          className="mt-2 p-2 text-purple-500 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors"
-          title="Quitar filtro"
+    <div className="relative py-8">
+      {/* Contenedor principal con efecto de cristal */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl inline-grid mx-auto rounded-2xl backdrop-blur-md bg-white/5 p-6 border border-white/10"
+      >
+        {/* Header del filtro */}
+        <div className="flex items-center justify-around mb-6">
+          <div className="flex items-center gap-2">
+            <FaFilter className="text-purple-400" />
+            <h3 className="text-lg font-medium text-purple-400">
+              Filtrar por categoría
+            </h3>
+          </div>
+          
+          {areaFilter && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              onClick={() => setAreaFilter('')}
+              className="text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              <FaTimes className="w-5 h-5" />
+            </motion.button>
+          )}
+        </div>
+
+        {/* Grid de botones de categoría */}
+        <motion.div 
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1 }
+            }
+          }}
         >
-          <FaTimes />
-        </button>
-      )}
+          {categories.map((category) => (
+            <MotionButton
+              key={category}
+              onClick={() => setAreaFilter(category)}
+              variants={{
+                hidden: { opacity: 0, y: 20 },
+                visible: { opacity: 1, y: 0 }
+              }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className={`
+                w-full px-4 py-3 rounded-xl font-medium text-sm
+                transition-all duration-300
+                ${areaFilter === category 
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/30'
+                  : 'bg-white/5 hover:bg-white/10 text-gray-200'
+                }
+                border border-white/10 hover:border-purple-500/30
+              `}
+            >
+              {category}
+            </MotionButton>
+          ))}
+        </motion.div>
+      </motion.div>
     </div>
   );
 });
-
 
 AreaFilter.displayName = 'AreaFilter';
 

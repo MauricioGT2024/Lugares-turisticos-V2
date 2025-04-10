@@ -23,12 +23,20 @@ const Home = () => {
 
 	return (
 		<div className={`min-h-screen ${theme.bg} transition-colors duration-300`}>
+			{/* Hero Section */}
 			<section className='relative h-screen'>
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					className='relative z-10 h-full flex flex-col justify-center items-center text-center px-4'
 				>
+					<div>
+						<img
+							src='/hero-catamarca.webp'
+							alt='Hero'
+							className='absolute inset-0 w-full h-full object-cover opacity-50'
+						/>
+					</div>
 					<h1
 						className={`text-4xl md:text-6xl font-bold mb-6 ${
 							colorMode === 'dark' ? 'text-white' : 'text-gray-900'
