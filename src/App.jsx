@@ -7,11 +7,21 @@ import {
 } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import LoadingSpinner from './components/LoadingSpinner';
 import Error404 from './pages/Error404';
 import Footer from './pages/Footer';
 import About from './pages/About';
+import SplashScreen from './components/SplashScreen';
+
+// Lazy imports
+const LazyTinogasta = lazy(() => import('./pages/Tinogasta'));
+const LazyAntofagasta = lazy(() => import('./pages/Antofagasta'));
+const LazyHome = lazy(() => import('./pages/Home'));
+const LazyProvincia = lazy(() => import('./pages/Provincia'));
+const LazyCatamarca = lazy(() => import('./pages/Catamarca'));
+const LazyHospedaje = lazy(() => import('./pages/Hospedaje')); 
+const LazyFiambala = lazy(() => import('./pages/Fiambala'));
 
 const pageTransition = {
 	initial: {
@@ -55,13 +65,6 @@ const ScrollToTop = () => {
 
 function AppContent() {
 	const location = useLocation();
-	const LazyProvincia = lazy(() => import('./pages/Provincia'));
-	const LazyCatamarca = lazy(() => import('./pages/Catamarca'));
-	const LazyHospedaje = lazy(() => import('./pages/Hospedaje'));
-	const LazyHome = lazy(() => import('./pages/Home'));
-	const LazyFiambala = lazy(() => import('./pages/Fiambala'));
-	const LazyAntofagasta = lazy(() => import('./pages/Antofagasta'));
-	const LazyTinogasta = lazy(() => import('./pages/Tinogasta'));
 
 	return (
 		<>
@@ -151,9 +154,17 @@ function AppContent() {
 }
 
 function App() {
+	const [showSplash, setShowSplash] = useState(true);
+
 	return (
 		<Router>
-			<AppContent />
+			<AnimatePresence mode="wait">
+				{showSplash ? (
+					<SplashScreen onComplete={() => setShowSplash(false)} />
+				) : (
+					<AppContent />
+				)}
+			</AnimatePresence>
 		</Router>
 	);
 }
