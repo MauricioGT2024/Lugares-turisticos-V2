@@ -17,7 +17,7 @@ import { FaMapMarkedAlt, FaInfoCircle, FaTimes } from 'react-icons/fa';
 import { location } from '../data/antofagasta';
 import LocationCard from '../components/Antofagasta/LocationCard';
 import FilterGroup from '../components/FilterSystem/FilterGroup';
-import { ANTOFAGASTA_ANIMATIONS } from '../components/Antofagasta/config/animations';
+import { ANTOFAGASTA_ANIMATIONS } from '../components/Antofagasta/animations';
 
 const Antofagasta = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();

@@ -13,14 +13,14 @@ import {
 } from '@chakra-ui/react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { FaMapMarkerAlt, FaInfoCircle } from 'react-icons/fa';
+import { locations } from '../data/catamarca';
 import {
+	ANIMATIONS,
 	AreaFilter,
-	CatamarcaLocationCard as LocationCard,
-	ANIMATION_PRESETS as animations,
+	LocationCard,
+	filterAnimations,
 	getAreaTheme,
 } from '../components/Catamarca';
-import { locations } from '../data/catamarca';
-import { filterAnimations } from '../components/Catamarca/animations';
 import React from 'react';
 
 const Catamarca = () => {
@@ -73,7 +73,7 @@ const Catamarca = () => {
 					<div className='space-y-10'>
 						{/* Header Section */}
 						<motion.div
-							{...animations.fadeInDown}
+							{...ANIMATIONS.fadeInDown}
 							className='text-center space-y-6'
 						>
 							<span
@@ -102,7 +102,7 @@ const Catamarca = () => {
 
 						{/* Filter Section */}
 						<motion.div
-							variants={animations.container}
+							variants={ANIMATIONS.container}
 							className='flex flex-wrap justify-center gap-4 py-4'
 						>
 							<AreaFilter

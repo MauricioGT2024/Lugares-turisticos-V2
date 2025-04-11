@@ -16,6 +16,22 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Dark mode transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Mejoras de accesibilidad */
+@layer base {
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-teal-500;
+  }
+  
+  .dark :focus-visible {
+    @apply outline-teal-400;
+  }
+}
+
 @layer utilities {
   .backdrop-blur-sm {
     backdrop-filter: blur(4px);
@@ -40,4 +56,10 @@ html {
 /* Smooth transition for all interactive elements */
 a, button {
   @apply transition-all duration-300;
+}
+
+/* Glass morphism effects */
+.glass-morphism {
+  @apply backdrop-blur-md bg-white/10 dark:bg-gray-800/30;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
