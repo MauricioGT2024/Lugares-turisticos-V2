@@ -76,6 +76,7 @@ export const AreaFilter = memo(({ area, isSelected, onClick }) => {
         rounded-full font-medium shadow-md
         transition-all duration-300
         backdrop-blur-sm
+<<<<<<< HEAD
         ${
 					isSelected
 						? 'bg-gradient-to-r from-yellow-400 via-green-400 to-yellow-400 text-white shadow-yellow-500/30'
@@ -90,16 +91,37 @@ export const AreaFilter = memo(({ area, isSelected, onClick }) => {
 			<span>{area}</span>
 		</motion.button>
 	);
+=======
+        ${isSelected 
+          ? 'bg-gradient-to-r from-yellow-400 via-green-400 to-yellow-400 text-white shadow-yellow-500/30'
+          : colorMode === 'dark'
+            ? 'bg-gray-800/50 text-gray-200 hover:bg-gray-700/70'
+            : 'bg-white/50 text-gray-700 hover:bg-gray-50/80'
+        }
+        border border-transparent hover:border-yellow-500/30
+      `}
+    >
+      <Icon className={`w-4 h-4 ${isSelected ? 'scale-110' : 'scale-100'}`} />
+      <span>{area}</span>
+    </motion.button>
+  );
+>>>>>>> refs/remotes/origin/main
 });
 
 LocationCard.displayName = 'LocationCard';
 AreaFilter.displayName = 'AreaFilter';
 
 // PropTypes...
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> refs/remotes/origin/main
 LocationCard.propTypes = {
   location: PropTypes.shape({
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     imgSrc: PropTypes.string.isRequired,
+<<<<<<< HEAD
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
@@ -108,8 +130,21 @@ LocationCard.propTypes = {
   onShowDetails: PropTypes.func.isRequired,
 };
 
+=======
+    title: PropTypes.string,
+    name: PropTypes.string,
+    description: PropTypes.string.isRequired,
+    area: PropTypes.string,
+  }).isRequired,
+  onShowDetails: PropTypes.func.isRequired,
+};
+>>>>>>> refs/remotes/origin/main
 AreaFilter.propTypes = {
   area: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> refs/remotes/origin/main

@@ -2,8 +2,11 @@ import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { CATEGORY_CONFIG } from './CategoryConfig';
 
+<<<<<<< HEAD
 
 // ImageHoverCard
+=======
+>>>>>>> refs/remotes/origin/main
 export const ImageHoverCard = ({ location, onShowDetails }) => {
 	const config = CATEGORY_CONFIG[location.category] || {};
 

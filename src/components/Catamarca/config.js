@@ -48,7 +48,6 @@ export const DEFAULT_THEME = {
 export const getAreaTheme = (area) => AREA_THEMES[area] || DEFAULT_THEME;
 export const getIconByArea = (area) =>
 	(AREA_THEMES[area] || DEFAULT_THEME).icon;
-
 export const easings = {
 	smooth: [0.43, 0.13, 0.23, 0.96],
 	bounce: [0.68, -0.55, 0.265, 1.55],
