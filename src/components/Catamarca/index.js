@@ -4,5 +4,4 @@ export * from './config';
 // Component exports
 export { LocationCard, AreaFilter } from './components';
 
-// Utility exports
 

@@ -13,7 +13,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaInfoCircle } from 'react-icons/fa';
 import { locations } from '../data/fiambala';
-import { CATEGORY_CONFIG } from '../components/Fiambala/CategoryConfig';
+import { CATEGORY_CONFIG } from '../components/Fiambala/components';
 import FilterGroup from '../components/FilterSystem/FilterGroup';
 import { ImageHoverCard } from '../components/Fiambala/components';
 
