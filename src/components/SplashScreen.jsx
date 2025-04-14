@@ -25,7 +25,7 @@ const SplashScreen = ({ onComplete }) => {
         className="relative"
       >
         <img 
-          src="/logo.png" 
+          src="/logo.webp" 
           alt="Logo Catamarca" 
           className="w-48 h-48 object-contain"
         />

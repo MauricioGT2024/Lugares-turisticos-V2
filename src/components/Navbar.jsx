@@ -67,7 +67,7 @@ const Navbar = memo(() => {
               <motion.img
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                src="/navbar.png"
+                src="/navbar.webp"
                 alt="Logo"
                 className="h-10 w-auto"
               />

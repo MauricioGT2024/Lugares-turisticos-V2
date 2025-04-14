@@ -49,7 +49,7 @@ export const filterAnimations = {
 		opacity: 0,
 		y: 20,
 		scale: 0.95,
-	},
+	},ñ
 	visible: {
 		opacity: 1,
 		y: 0,

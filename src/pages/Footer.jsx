@@ -121,7 +121,7 @@ const Footer = memo(() => {
             >
               <RouterLink to="/">
                 <img
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="Logo de Catamarca Turismo"
                   className="h-[60px] object-contain"
                   loading="lazy"
