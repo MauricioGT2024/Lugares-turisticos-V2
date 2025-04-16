@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaHome, FaMapMarkedAlt, FaBed, FaInfoCircle, FaBars, FaTimes } from "react-icons/fa";
 import { useColorMode } from "@chakra-ui/react";
-import ColorModeSwitcher from "./ColorModeSwitcher";
+import ColorModeSwitcher from "../Screen/ColorModeSwitcher";
 import PropTypes from 'prop-types';
 
 const navItems = [

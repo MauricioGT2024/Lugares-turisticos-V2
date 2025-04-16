@@ -1,5 +1,5 @@
-import { useState, useMemo, useCallback } from 'react';
-import React from 'react';
+import { useState, useCallback, useMemo } from "react";
+import React from "react";
 import {
 	useColorMode,
 	Modal,
@@ -11,38 +11,25 @@ import {
 	ModalCloseButton,
 	useDisclosure,
 	IconButton,
-} from '@chakra-ui/react';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
-import { FaMapMarkedAlt, FaInfoCircle, FaTimes } from 'react-icons/fa';
-import { location } from '../data/antofagasta';
-import LocationCard from '../components/Antofagasta/LocationCard';
-import FilterGroup from '../components/FilterSystem/FilterGroup';
-import { ANTOFAGASTA_ANIMATIONS } from '../components/Antofagasta/animations';
+} from "@chakra-ui/react";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
+import { FaMapMarkedAlt, FaInfoCircle, FaTimes } from "react-icons/fa";
+import { location } from "../data/antofagasta";
+import LocationCard from "../components/Antofagasta/LocationCard";
+import { ANTOFAGASTA_ANIMATIONS } from "../components/Antofagasta/animations";
 
 const Antofagasta = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [selectedLocation, setSelectedLocation] = useState(null);
-	const [filters, setFilters] = useState({ category: 'Todos', search: '' });
+	const [filters, setFilters] = useState({ category: "Todos" });
 	const { colorMode } = useColorMode();
-	const isDark = colorMode === 'dark';
-
-	const categories = useMemo(
-		() => ['Todos', ...new Set(location.map((loc) => loc.categoria))],
-		[]
-	);
+	const isDark = colorMode === "dark";
 
 	const filteredLocations = useMemo(() => {
 		return location.filter((loc) => {
-			const matchesCategory =
-				filters.category === 'Todos' || loc.categoria === filters.category;
-			const matchesSearch =
-				!filters.search ||
-				loc.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-				(loc.description &&
-					loc.description.toLowerCase().includes(filters.search.toLowerCase()));
-			return matchesCategory && matchesSearch;
+			return filters.category === "Todos" || loc.categoria === filters.category;
 		});
-	}, [filters]);
+	}, [filters.category]);
 
 	const handleShowDetails = useCallback(
 		(id) => {
@@ -63,47 +50,61 @@ const Antofagasta = () => {
 	return (
 		<motion.div
 			variants={ANTOFAGASTA_ANIMATIONS.pageVariants}
-			initial='initial'
-			animate='animate'
-			exit='exit'
+			initial="initial"
+			animate="animate"
+			exit="exit"
 			className={`min-h-screen py-12 ${
-				isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'
+				isDark ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
 			}`}
 		>
-			<div className='container mx-auto px-4 md:px-8 max-w-7xl'>
+			<div className="container mx-auto px-4 md:px-8 max-w-7xl">
 				<LayoutGroup>
-					<div className='flex flex-col space-y-8'>
+					<div className="flex flex-col space-y-8">
 						<motion.header
 							variants={ANTOFAGASTA_ANIMATIONS.headerVariants}
-							className='text-center space-y-6'
+							className="text-center space-y-6"
 						>
-							<span className='inline-block px-6 py-2 rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white text-md uppercase tracking-wider shadow-lg'>
+							<span className="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white text-md uppercase tracking-wider shadow-lg">
 								Explora la Puna
 							</span>
-							<h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-400 via-yellow-400 to-red-400 bg-clip-text text-transparent'>
+							<h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-400 via-yellow-400 to-red-400 bg-clip-text text-transparent">
 								Antofagasta de la Sierra
 							</h1>
-							<p className='text-xl md:text-2xl max-w-3xl mx-auto opacity-90'>
+							<p className="text-xl md:text-2xl max-w-3xl mx-auto opacity-90">
 								Donde el desierto de altura se encuentra con volcanes milenarios
 								y salares brillantes, creando paisajes únicos en la Puna
 								catamarqueña
 							</p>
 						</motion.header>
 
-						<FilterGroup
-							title='Categorías'
-							items={categories.filter((cat) => cat !== 'Todos')}
-							selected={filters.category}
-							onSelect={(value) =>
-								setFilters((prev) => ({
-									...prev,
-									category: value || 'Todos',
-								}))
-							}
-						/>
+						<div>
+							<h2>Categorías</h2>
+							<div className="flex space-x-2">
+								{[
+									"Todos",
+									...new Set(location.map((loc) => loc.categoria)),
+								].map((item) => (
+									<button
+										key={item}
+										onClick={() =>
+											setFilters((prev) => ({ ...prev, category: item }))
+										}
+										className={`px-4 py-2 rounded-full ${
+											filters.category === item
+												? "bg-blue-500 text-white"
+												: isDark
+												? "bg-gray-700 text-white"
+												: "bg-gray-200 text-gray-700"
+										}`}
+									>
+										{item}
+									</button>
+								))}
+							</div>
+						</div>
 
-						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'>
-							<AnimatePresence mode='popLayout'>
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+							<AnimatePresence mode="popLayout">
 								{filteredLocations.map((loc) => (
 									<motion.div
 										key={loc.id}
@@ -128,14 +129,14 @@ const Antofagasta = () => {
 			<Modal
 				isOpen={isOpen}
 				onClose={handleCloseModal}
-				motionPreset='slideInBottom'
-				size='xl'
+				motionPreset="slideInBottom"
+				size="xl"
 				isCentered
 			>
-				<ModalOverlay backdropFilter='blur(10px)' bg='blackAlpha.600' />
+				<ModalOverlay backdropFilter="blur(10px)" bg="blackAlpha.600" />
 				<ModalContent
-					bg={isDark ? 'gray.800' : 'white'}
-					borderRadius='xl'
+					bg={isDark ? "gray.800" : "white"}
+					borderRadius="xl"
 					mx={4}
 				>
 					{selectedLocation && (
@@ -144,19 +145,19 @@ const Antofagasta = () => {
 							<ModalCloseButton />
 							<ModalBody>
 								<motion.div
-									className='rounded-lg overflow-hidden h-[300px] mb-4'
+									className="rounded-lg overflow-hidden h-[300px] mb-4"
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
 								>
 									<iframe
 										title={selectedLocation.title}
 										src={selectedLocation.mapSrc}
-										className='w-full h-full border-0'
-										loading='lazy'
+										className="w-full h-full border-0"
+										loading="lazy"
 									/>
 								</motion.div>
 								<motion.p
-									className='text-md'
+									className="text-md"
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
 									transition={{ delay: 0.2 }}
@@ -167,33 +168,33 @@ const Antofagasta = () => {
 							<ModalFooter gap={2}>
 								{selectedLocation.mapUrl && (
 									<IconButton
-										as='a'
+										as="a"
 										href={selectedLocation.mapUrl}
-										target='_blank'
-										rel='noopener noreferrer'
-										aria-label='Ver en mapa'
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="Ver en mapa"
 										icon={<FaMapMarkedAlt />}
-										colorScheme='blue'
-										variant='ghost'
+										colorScheme="blue"
+										variant="ghost"
 									/>
 								)}
 								{selectedLocation.path && (
 									<IconButton
-										as='a'
+										as="a"
 										href={selectedLocation.path}
-										target='_blank'
-										rel='noopener noreferrer'
-										aria-label='Más información'
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label="Más información"
 										icon={<FaInfoCircle />}
-										colorScheme='teal'
-										variant='ghost'
+										colorScheme="teal"
+										variant="ghost"
 									/>
 								)}
 								<IconButton
 									onClick={handleCloseModal}
-									aria-label='Cerrar'
+									aria-label="Cerrar"
 									icon={<FaTimes />}
-									colorScheme='red'
+									colorScheme="red"
 								/>
 							</ModalFooter>
 						</>

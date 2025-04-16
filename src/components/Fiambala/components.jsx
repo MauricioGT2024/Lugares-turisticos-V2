@@ -55,20 +55,22 @@ export const ImageHoverCard = ({ location, onShowDetails }) => {
 	const config = CATEGORY_CONFIG[location.category] || {};
 
 	return (
-		<motion.div
-			whileHover={{ scale: 1.02 }}
-			whileTap={{ scale: 0.98 }}
+		<div
 			className='relative h-[400px] rounded-xl overflow-hidden cursor-pointer group'
 			onClick={() => onShowDetails(location)}
 		>
 			{/* Imagen */}
-			<div className='absolute inset-0'>
+			<motion.div
+				className='absolute inset-0'
+				whileHover={{ scale: 1.02 }}
+				transition={{ duration: 0.3 }}
+			>
 				<img
 					src={location.imgSrc}
 					alt={location.title}
-					className='w-full h-full object-cover transition-transform duration-700 group-hover:scale-110'
+					className='w-full h-full object-cover transition-transform duration-700'
 				/>
-			</div>
+			</motion.div>
 
 			{/* Overlay gradiente */}
 			<div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500' />
@@ -89,15 +91,19 @@ export const ImageHoverCard = ({ location, onShowDetails }) => {
 			</div>
 
 			{/* Contenido */}
-			<motion.div className='absolute inset-x-0 bottom-0 p-6 translate-y-10 group-hover:translate-y-0 transition-transform duration-500'>
+			<div className='absolute inset-x-0 bottom-0 p-6 translate-y-10 group-hover:translate-y-0 transition-transform duration-500'>
 				<div className='space-y-4'>
 					<h2 className='text-2xl font-bold text-white'>{location.title}</h2>
-					<p className='text-gray-200 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100'>
+					<motion.p
+						className='text-gray-200 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100'
+						initial={{ opacity: 0 }}
+						whileHover={{ opacity: 1 }}
+					>
 						{location.description}
-					</p>
+					</motion.p>
 				</div>
-			</motion.div>
-		</motion.div>
+			</div>
+		</div>
 	);
 };
 
