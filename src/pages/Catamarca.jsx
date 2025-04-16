@@ -51,9 +51,7 @@ const CatamarcaModalBody = ({ location }) => {
 					allowFullScreen
 				/>
 			</div>
-			<p className={isDark ? "text-gray-200" : "text-gray-700"}>
-				{location.description}
-			</p>
+			<p className={isDark === "dark"}>{location.description}</p>
 		</ModalBody>
 	);
 };

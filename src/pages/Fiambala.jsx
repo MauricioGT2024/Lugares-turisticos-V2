@@ -85,13 +85,13 @@ const Fiambala = () => {
 					<div className="flex flex-wrap gap-2">
 						<button
 								key="all"
-								className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm ${
+								className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 hover:scale-105 ${
 									categoryFilter === ""
 										? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-yellow-700"
 										: colorMode === "dark"
 											? "bg-gray-800 text-gray-300 hover:bg-gray-700"
 											: "bg-gray-100 text-gray-700 hover:bg-gray-300"
-								} transition-all duration-200 hover:scale-105`}
+								}`}
 								onClick={() => setCategoryFilter("")}
 							>
 								Todos
@@ -99,13 +99,13 @@ const Fiambala = () => {
 						{categories.map((category) => (
 							<button
 								key={category}
-								className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm ${
+								className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 hover:scale-105 ${
 									categoryFilter === category
 										? "bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-yellow-700"
 										: colorMode === "dark"
 											? "bg-gray-800 text-gray-300 hover:bg-gray-700"
 											: "bg-gray-100 text-gray-700 hover:bg-gray-300"
-								} transition-all duration-200 hover:scale-105`}
+								}`}
 								onClick={() => setCategoryFilter(category)}
 							>
 								{CATEGORY_CONFIG[category]?.label || category}
