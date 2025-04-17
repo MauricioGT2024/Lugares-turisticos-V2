@@ -1,32 +1,37 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { FaMapMarkerAlt, FaInfoCircle } from "react-icons/fa";
-import { locations } from "../data/catamarca";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { FaMapMarkerAlt, FaInfoCircle } from 'react-icons/fa';
+import { locations } from '../data/catamarca';
 import {
 	ANIMATIONS,
 	AreaFilter as CatamarcaAreaFilter,
 	LocationCard,
 	getAreaTheme,
-} from "../components/Catamarca";
-import LocationPage from "../components/UI/LocationPage";
+} from '../components/Catamarca';
+import LocationPage from '../components/UI/LocationPage';
 import {
 	IconButton,
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
 	useColorMode,
-} from "@chakra-ui/react";
-import PropTypes from "prop-types";
-import ModalContent from "../components/UI/ModalContent";
+	Box,
+	Text,
+	Link,
+} from '@chakra-ui/react';
+import PropTypes from 'prop-types';
+import ModalContent from '../components/UI/ModalContent';
 
 const CatamarcaModalHeader = ({ location }) => {
 	return (
 		<ModalHeader
-			className={`bg-gradient-to-r ${
-				getAreaTheme(location.area).gradient
-			} text-white`}
+			className={`text-white`}
+			bgGradient={`linear(to-r, ${getAreaTheme(location.area).gradient})`}
+			borderRadius='md'
 		>
-			{location.title}
+			<Text fontSize='xl' fontWeight='bold' textAlign='center'>
+				{location.title}
+			</Text>
 		</ModalHeader>
 	);
 };
@@ -42,16 +47,24 @@ const CatamarcaModalBody = ({ location }) => {
 	const { isDark } = useColorMode();
 	return (
 		<ModalBody py={6}>
-			<div className="rounded-lg overflow-hidden shadow-md border border-gray-200 dark:border-gray-700 mb-4">
+			<Box
+				borderRadius='lg'
+				overflow='hidden'
+				boxShadow='md'
+				borderWidth='1px'
+				borderColor='gray.200'
+				_dark={{ borderColor: 'gray.700' }}
+				mb={4}
+			>
 				<iframe
 					title={location.title}
 					src={location.mapSrc}
-					className="w-full h-[300px]"
-					loading="lazy"
+					className='w-full h-[300px]'
+					loading='lazy'
 					allowFullScreen
 				/>
-			</div>
-			<p className={isDark === "dark"}>{location.description}</p>
+			</Box>
+			<Text color={isDark}>{location.description}</Text>
 		</ModalBody>
 	);
 };
@@ -65,30 +78,26 @@ CatamarcaModalBody.propTypes = {
 };
 
 const CatamarcaModalFooter = ({ location }) => (
-	<ModalFooter gap={2}>
+	<ModalFooter justifyContent='center' gap={2}>
 		{location.path && (
-			<IconButton
-				as="a"
-				href={location.path}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="Ver en mapa"
-				icon={<FaMapMarkerAlt />}
-				colorScheme="blue"
-				variant="ghost"
-			/>
+			<Link href={location.path} isExternal>
+				<IconButton
+					aria-label='Ver en mapa'
+					icon={<FaMapMarkerAlt />}
+					colorScheme='blue'
+					variant='solid'
+				/>
+			</Link>
 		)}
 		{location.wiki && (
-			<IconButton
-				as="a"
-				href={location.wiki}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="Más información"
-				icon={<FaInfoCircle />}
-				colorScheme="teal"
-				variant="ghost"
-			/>
+			<Link href={location.wiki} isExternal>
+				<IconButton
+					aria-label='Más información'
+					icon={<FaInfoCircle />}
+					colorScheme='teal'
+					variant='solid'
+				/>
+			</Link>
 		)}
 	</ModalFooter>
 );
@@ -105,7 +114,7 @@ const CatamarcaAreaFilterComponent = ({ filters, setFilters }) => {
 		return [...new Set(locations.map((loc) => loc.area))].sort();
 	}, []);
 
-	const selectedArea = filters.area || "all";
+	const selectedArea = filters.area || 'all';
 
 	const setSelectedArea = (area) => {
 		setFilters({ ...filters, area });
@@ -114,12 +123,12 @@ const CatamarcaAreaFilterComponent = ({ filters, setFilters }) => {
 	return (
 		<motion.div
 			variants={ANIMATIONS.container}
-			className="flex flex-wrap justify-center gap-4 py-4"
+			className='flex flex-wrap justify-center gap-4 py-4'
 		>
 			<CatamarcaAreaFilter
-				area="Todos"
-				isSelected={selectedArea === "all"}
-				onClick={() => setSelectedArea("all")}
+				area='Todos'
+				isSelected={selectedArea === 'all'}
+				onClick={() => setSelectedArea('all')}
 			/>
 			{areas.map((area) => (
 				<CatamarcaAreaFilter
@@ -141,8 +150,8 @@ CatamarcaAreaFilterComponent.propTypes = {
 };
 
 const filterCatamarcaLocations = (locations, filters) => {
-	const selectedArea = filters.area || "all";
-	return selectedArea === "all"
+	const selectedArea = filters.area || 'all';
+	return selectedArea === 'all'
 		? locations
 		: locations.filter((loc) => loc.area === selectedArea);
 };
@@ -150,17 +159,16 @@ const filterCatamarcaLocations = (locations, filters) => {
 const Catamarca = () => {
 	return (
 		<LocationPage
-			title="San Fernando del Valle"
+			title='San Fernando del Valle'
 			locations={locations}
 			filterComponent={CatamarcaAreaFilterComponent}
 			locationCardComponent={LocationCard}
-			modalContent={({ location, onClose }) => (
+			modalContent={({ location }) => (
 				<ModalContent
+					size="sm"
 					header={<CatamarcaModalHeader location={location} />}
 					body={<CatamarcaModalBody location={location} />}
-					footer={
-						<CatamarcaModalFooter location={location} onClose={onClose} />
-					}
+					footer={<CatamarcaModalFooter location={location} />}
 				/>
 			)}
 			pageVariants={ANIMATIONS.fadeInDown}

@@ -77,9 +77,9 @@ const Antofagasta = () => {
 							</p>
 						</motion.header>
 
-						<div>
-							<h2>Categorías</h2>
-							<div className="flex space-x-2">
+						<div className="w-full flex flex-col items-center">
+							<h2 className="text-2xl font-semibold mb-4">Categorías</h2>
+							<div className="flex flex-wrap justify-center gap-2">
 								{[
 									"Todos",
 									...new Set(location.map((loc) => loc.categoria)),
@@ -89,12 +89,12 @@ const Antofagasta = () => {
 										onClick={() =>
 											setFilters((prev) => ({ ...prev, category: item }))
 										}
-										className={`px-4 py-2 rounded-full ${
+										className={`px-4 py-2 rounded-full transition-colors duration-200 ${
 											filters.category === item
-												? "bg-blue-500 text-white"
+												? "bg-blue-600 text-white shadow-md hover:bg-blue-700"
 												: isDark
-												? "bg-gray-700 text-white"
-												: "bg-gray-200 text-gray-700"
+												? "bg-gray-700 text-gray-300 hover:bg-gray-600"
+												: "bg-gray-200 text-gray-700 hover:bg-gray-300"
 										}`}
 									>
 										{item}
@@ -141,11 +141,13 @@ const Antofagasta = () => {
 				>
 					{selectedLocation && (
 						<>
-							<ModalHeader>{selectedLocation.title}</ModalHeader>
+							<ModalHeader className="font-bold text-2xl">
+								{selectedLocation.title}
+							</ModalHeader>
 							<ModalCloseButton />
 							<ModalBody>
 								<motion.div
-									className="rounded-lg overflow-hidden h-[300px] mb-4"
+									className="rounded-lg overflow-hidden h-[300px] mb-4 shadow-lg"
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
 								>
