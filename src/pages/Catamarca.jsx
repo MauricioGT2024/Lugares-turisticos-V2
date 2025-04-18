@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { LazyMotion, m, domAnimation } from 'framer-motion';
 import { FaMapMarkerAlt, FaInfoCircle } from 'react-icons/fa';
 import { locations } from '../data/catamarca';
 import {
@@ -8,6 +8,7 @@ import {
 	LocationCard,
 	getAreaTheme,
 } from '../components/Catamarca';
+
 import LocationPage from '../components/UI/LocationPage';
 import {
 	IconButton,
@@ -21,20 +22,23 @@ import {
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import ModalContent from '../components/UI/ModalContent';
+import { useMemo, useCallback } from 'react'; // Import useCallback
 
-const CatamarcaModalHeader = ({ location }) => {
+const CatamarcaModalHeader = React.memo(({ location: { title, area } }) => {
 	return (
 		<ModalHeader
-			className={`text-white`}
-			bgGradient={`linear(to-r, ${getAreaTheme(location.area).gradient})`}
+			className='text-white'
+			bgGradient={`linear(to-r, ${getAreaTheme(area).gradient})`}
 			borderRadius='md'
 		>
 			<Text fontSize='xl' fontWeight='bold' textAlign='center'>
-				{location.title}
+				{title}
 			</Text>
 		</ModalHeader>
 	);
-};
+});
+
+CatamarcaModalHeader.displayName = 'CatamarcaModalHeader';
 
 CatamarcaModalHeader.propTypes = {
 	location: PropTypes.shape({
@@ -43,7 +47,7 @@ CatamarcaModalHeader.propTypes = {
 	}).isRequired,
 };
 
-const CatamarcaModalBody = ({ location }) => {
+const CatamarcaModalBody = ({ location: { title, mapSrc, description } }) => {
 	const { isDark } = useColorMode();
 	return (
 		<ModalBody py={6}>
@@ -57,14 +61,14 @@ const CatamarcaModalBody = ({ location }) => {
 				mb={4}
 			>
 				<iframe
-					title={location.title}
-					src={location.mapSrc}
+					title={title}
+					src={mapSrc}
 					className='w-full h-[300px]'
 					loading='lazy'
 					allowFullScreen
 				/>
 			</Box>
-			<Text color={isDark}>{location.description}</Text>
+			<Text color={isDark}>{description}</Text>
 		</ModalBody>
 	);
 };
@@ -110,35 +114,40 @@ CatamarcaModalFooter.propTypes = {
 };
 
 const CatamarcaAreaFilterComponent = ({ filters, setFilters }) => {
-	const areas = React.useMemo(() => {
+	const areas = useMemo(() => {
+		// Assuming locations is relatively static from import
 		return [...new Set(locations.map((loc) => loc.area))].sort();
 	}, []);
 
 	const selectedArea = filters.area || 'all';
 
-	const setSelectedArea = (area) => {
-		setFilters({ ...filters, area });
-	};
+	// Define handleClick using useCallback
+	const handleClick = useCallback(
+		(area) => {
+			setFilters((prevFilters) => ({ ...prevFilters, area }));
+		},
+		[setFilters]
+	); // Add setFilters to dependency array
 
 	return (
-		<motion.div
+		<m.div
 			variants={ANIMATIONS.container}
 			className='flex flex-wrap justify-center gap-4 py-4'
 		>
 			<CatamarcaAreaFilter
 				area='Todos'
 				isSelected={selectedArea === 'all'}
-				onClick={() => setSelectedArea('all')}
+				onClick={() => handleClick('all')} // Use handleClick
 			/>
 			{areas.map((area) => (
 				<CatamarcaAreaFilter
 					key={area}
 					area={area}
 					isSelected={selectedArea === area}
-					onClick={() => setSelectedArea(area)}
+					onClick={() => handleClick(area)} // Use handleClick
 				/>
 			))}
-		</motion.div>
+		</m.div>
 	);
 };
 
@@ -155,25 +164,26 @@ const filterCatamarcaLocations = (locations, filters) => {
 		? locations
 		: locations.filter((loc) => loc.area === selectedArea);
 };
-
 const Catamarca = () => {
 	return (
-		<LocationPage
-			title='San Fernando del Valle'
-			locations={locations}
-			filterComponent={CatamarcaAreaFilterComponent}
-			locationCardComponent={LocationCard}
-			modalContent={({ location }) => (
-				<ModalContent
-					size="sm"
-					header={<CatamarcaModalHeader location={location} />}
-					body={<CatamarcaModalBody location={location} />}
-					footer={<CatamarcaModalFooter location={location} />}
-				/>
-			)}
-			pageVariants={ANIMATIONS.fadeInDown}
-			filterFunction={filterCatamarcaLocations}
-		/>
+		<LazyMotion features={domAnimation}>
+			<LocationPage
+				title='San Fernando del Valle'
+				locations={locations}
+				filterComponent={CatamarcaAreaFilterComponent}
+				locationCardComponent={LocationCard}
+				modalContent={({ location }) => (
+					<ModalContent
+						size='sm'
+						header={<CatamarcaModalHeader location={location} />}
+						body={<CatamarcaModalBody location={location} />}
+						footer={<CatamarcaModalFooter location={location} />}
+					/>
+				)}
+				pageVariants={ANIMATIONS.fadeInDown}
+				filterFunction={filterCatamarcaLocations}
+			/>
+		</LazyMotion>
 	);
 };
 
