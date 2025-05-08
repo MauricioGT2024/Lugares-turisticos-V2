@@ -1,5 +1,5 @@
 import React from 'react';
-import { LazyMotion, m, domAnimation } from 'framer-motion';
+import { m } from 'framer-motion';
 import { FaMapMarkerAlt, FaInfoCircle } from 'react-icons/fa';
 import { locations } from '../data/catamarca';
 import {
@@ -9,7 +9,6 @@ import {
 	getAreaTheme,
 } from '../components/Catamarca';
 
-import LocationPage from '../components/UI/LocationPage';
 import {
 	IconButton,
 	ModalHeader,
@@ -19,24 +18,40 @@ import {
 	Box,
 	Text,
 	Link,
+	CloseButton,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import ModalContent from '../components/UI/ModalContent';
 import { useMemo, useCallback } from 'react'; // Import useCallback
+import { Suspense } from 'react';
+import LoadingSpinner from '../components/Screen/LoadingSpinner';
 
-const CatamarcaModalHeader = React.memo(({ location: { title, area } }) => {
-	return (
-		<ModalHeader
-			className='text-white'
-			bgGradient={`linear(to-r, ${getAreaTheme(area).gradient})`}
-			borderRadius='md'
-		>
-			<Text fontSize='xl' fontWeight='bold' textAlign='center'>
-				{title}
-			</Text>
-		</ModalHeader>
-	);
-});
+const CatamarcaModalHeader = React.memo(
+	({ location: { title, area }, onClose }) => {
+		return (
+			<ModalHeader
+				className='relative text-white'
+				bgGradient={`linear(to-r, ${getAreaTheme(area).gradient})`}
+				borderRadius='md'
+				pb={6}
+			>
+				<CloseButton
+					onClick={onClose}
+					position='absolute'
+					top={2}
+					right={2}
+					color='white'
+					bg='blackAlpha.500'
+					_hover={{ bg: 'blackAlpha.700' }}
+					zIndex={2}
+				/>
+				<Text fontSize='xl' fontWeight='bold' textAlign='center'>
+					{title}
+				</Text>
+			</ModalHeader>
+		);
+	}
+);
 
 CatamarcaModalHeader.displayName = 'CatamarcaModalHeader';
 
@@ -45,33 +60,38 @@ CatamarcaModalHeader.propTypes = {
 		title: PropTypes.string.isRequired,
 		area: PropTypes.string.isRequired,
 	}).isRequired,
+	onClose: PropTypes.func.isRequired,
 };
 
-const CatamarcaModalBody = ({ location: { title, mapSrc, description } }) => {
-	const { isDark } = useColorMode();
-	return (
-		<ModalBody py={6}>
-			<Box
-				borderRadius='lg'
-				overflow='hidden'
-				boxShadow='md'
-				borderWidth='1px'
-				borderColor='gray.200'
-				_dark={{ borderColor: 'gray.700' }}
-				mb={4}
-			>
-				<iframe
-					title={title}
-					src={mapSrc}
-					className='w-full h-[300px]'
-					loading='lazy'
-					allowFullScreen
-				/>
-			</Box>
-			<Text color={isDark}>{description}</Text>
-		</ModalBody>
-	);
-};
+const CatamarcaModalBody = React.memo(
+	({ location: { title, mapSrc, description } }) => {
+		const { isDark } = useColorMode();
+		return (
+			<ModalBody py={6}>
+				<Box
+					borderRadius='lg'
+					overflow='hidden'
+					boxShadow='md'
+					borderWidth='1px'
+					borderColor='gray.200'
+					_dark={{ borderColor: 'gray.700' }}
+					mb={4}
+				>
+					<iframe
+						title={title}
+						src={mapSrc}
+						className='w-full h-[300px]'
+						loading='lazy'
+						allowFullScreen
+					/>
+				</Box>
+				<Text color={isDark}>{description}</Text>
+			</ModalBody>
+		);
+	}
+);
+
+CatamarcaModalBody.displayName = 'CatamarcaModalBody';
 
 CatamarcaModalBody.propTypes = {
 	location: PropTypes.shape({
@@ -81,10 +101,10 @@ CatamarcaModalBody.propTypes = {
 	}).isRequired,
 };
 
-const CatamarcaModalFooter = ({ location }) => (
+const CatamarcaModalFooter = React.memo(({ location: { path, wiki } }) => (
 	<ModalFooter justifyContent='center' gap={2}>
-		{location.path && (
-			<Link href={location.path} isExternal>
+		{path && (
+			<Link href={path} isExternal>
 				<IconButton
 					aria-label='Ver en mapa'
 					icon={<FaMapMarkerAlt />}
@@ -93,8 +113,8 @@ const CatamarcaModalFooter = ({ location }) => (
 				/>
 			</Link>
 		)}
-		{location.wiki && (
-			<Link href={location.wiki} isExternal>
+		{wiki && (
+			<Link href={wiki} isExternal>
 				<IconButton
 					aria-label='Más información'
 					icon={<FaInfoCircle />}
@@ -103,8 +123,13 @@ const CatamarcaModalFooter = ({ location }) => (
 				/>
 			</Link>
 		)}
+		{!path && !wiki && (
+			<Text color='red.500'>No hay información disponible</Text>
+		)}
 	</ModalFooter>
-);
+));
+
+CatamarcaModalFooter.displayName = 'CatamarcaModalFooter';
 
 CatamarcaModalFooter.propTypes = {
 	location: PropTypes.shape({
@@ -115,19 +140,17 @@ CatamarcaModalFooter.propTypes = {
 
 const CatamarcaAreaFilterComponent = ({ filters, setFilters }) => {
 	const areas = useMemo(() => {
-		// Assuming locations is relatively static from import
 		return [...new Set(locations.map((loc) => loc.area))].sort();
 	}, []);
 
 	const selectedArea = filters.area || 'all';
 
-	// Define handleClick using useCallback
 	const handleClick = useCallback(
 		(area) => {
 			setFilters((prevFilters) => ({ ...prevFilters, area }));
 		},
 		[setFilters]
-	); // Add setFilters to dependency array
+	);
 
 	return (
 		<m.div
@@ -137,14 +160,14 @@ const CatamarcaAreaFilterComponent = ({ filters, setFilters }) => {
 			<CatamarcaAreaFilter
 				area='Todos'
 				isSelected={selectedArea === 'all'}
-				onClick={() => handleClick('all')} // Use handleClick
+				onClick={() => handleClick('all')}
 			/>
 			{areas.map((area) => (
 				<CatamarcaAreaFilter
 					key={area}
 					area={area}
 					isSelected={selectedArea === area}
-					onClick={() => handleClick(area)} // Use handleClick
+					onClick={() => handleClick(area)}
 				/>
 			))}
 		</m.div>
@@ -164,18 +187,24 @@ const filterCatamarcaLocations = (locations, filters) => {
 		? locations
 		: locations.filter((loc) => loc.area === selectedArea);
 };
+
 const Catamarca = () => {
+	const LocationPage = React.lazy(() =>
+		import('../components/UI/LocationPage')
+	);
 	return (
-		<LazyMotion features={domAnimation}>
+		<Suspense fallback={<LoadingSpinner />}>
 			<LocationPage
 				title='San Fernando del Valle'
 				locations={locations}
 				filterComponent={CatamarcaAreaFilterComponent}
 				locationCardComponent={LocationCard}
-				modalContent={({ location }) => (
+				modalContent={({ location, onClose }) => (
 					<ModalContent
 						size='sm'
-						header={<CatamarcaModalHeader location={location} />}
+						header={
+							<CatamarcaModalHeader location={location} onClose={onClose} />
+						}
 						body={<CatamarcaModalBody location={location} />}
 						footer={<CatamarcaModalFooter location={location} />}
 					/>
@@ -183,7 +212,7 @@ const Catamarca = () => {
 				pageVariants={ANIMATIONS.fadeInDown}
 				filterFunction={filterCatamarcaLocations}
 			/>
-		</LazyMotion>
+		</Suspense>
 	);
 };
 

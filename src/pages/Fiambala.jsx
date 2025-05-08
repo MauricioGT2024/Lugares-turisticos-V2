@@ -24,28 +24,28 @@ const Fiambala = () => {
 
 	const categories = Object.keys(CATEGORY_CONFIG);
 
-	const handleLocationClick = useCallback((location) => {
-		if (selectedLocationData && selectedLocationData.id === location.id) {
-			// If the same location is clicked, close the modal
-			onClose();
-			return;
-		}
-		const locationData = locations.find((loc) => loc.id === location.id);
-		if (locationData) {
-			setSelectedLocationData(locationData);
-			onOpen();
-		}
-	}, [selectedLocationData, onOpen, onClose]);
+	// Manejando el click para abrir el modal
+	const handleLocationClick = useCallback(
+		(location) => {
+			if (selectedLocationData && selectedLocationData.id === location.id) {
+				onClose();
+				return;
+			}
+			const locationData = locations.find((loc) => loc.id === location.id);
+			if (locationData) {
+				setSelectedLocationData(locationData);
+				onOpen();
+			}
+		},
+		[selectedLocationData, onOpen, onClose]
+	);
+
 	const handleCloseModal = useCallback(() => {
 		setSelectedLocationData(null);
 		onClose();
-		
 	}, [onClose]);
 
-	
-
-	
-
+	// Filtrar ubicaciones por categoría
 	const filteredLocations = useMemo(
 		() =>
 			categoryFilter
@@ -61,7 +61,7 @@ const Fiambala = () => {
 			}`}
 		>
 			<div className='container mx-auto px-4 md:px-8 max-w-7xl'>
-				{/* Header Section */}
+				{/* Header */}
 				<motion.div
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
@@ -71,11 +71,9 @@ const Fiambala = () => {
 					<span className='inline-block px-4 py-1 rounded-full text-sm font-medium bg-yellow-400 text-white'>
 						Explora Fiambala
 					</span>
-
 					<h1 className="text-4xl md:text-6xl font-bold font-['JetBrains_Mono'] bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent">
 						Fiambala
 					</h1>
-
 					<p
 						className={`text-xl max-w-3xl mx-auto italic ${
 							colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
@@ -86,20 +84,18 @@ const Fiambala = () => {
 					</p>
 				</motion.div>
 
-				{/* Sección De Filtros */}
-
-				{/* Nueva Sección De Filtros */}
+				{/* Filtros */}
 				<div className='mb-12'>
-					<h2 className='text-2xl font-semibold mb-4'>Filter by Category</h2>
+					<h2 className='text-2xl font-semibold mb-4'>Filtrar por categoría</h2>
 					<div className='flex flex-wrap gap-2'>
 						<button
 							key='all'
-							className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 hover:scale-105 ${
+							className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 ${
 								categoryFilter === ''
-									? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-yellow-700'
+									? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
 									: colorMode === 'dark'
-									? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-									: 'bg-gray-100 text-gray-700 hover:bg-gray-300'
+									? 'bg-gray-800 text-gray-300'
+									: 'bg-gray-100 text-gray-700'
 							}`}
 							onClick={() => setCategoryFilter('')}
 						>
@@ -108,12 +104,12 @@ const Fiambala = () => {
 						{categories.map((category) => (
 							<button
 								key={category}
-								className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 hover:scale-105 ${
+								className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 ${
 									categoryFilter === category
-										? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white hover:from-yellow-600 hover:to-yellow-700'
+										? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
 										: colorMode === 'dark'
-										? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-										: 'bg-gray-100 text-gray-700 hover:bg-gray-300'
+										? 'bg-gray-800 text-gray-300'
+										: 'bg-gray-100 text-gray-700'
 								}`}
 								onClick={() => setCategoryFilter(category)}
 							>
@@ -174,7 +170,6 @@ const Fiambala = () => {
 								</h2>
 							</ModalHeader>
 							<ModalCloseButton className='text-white hover:bg-white/20' />
-
 							<ModalBody className='p-6 space-y-6'>
 								<div className='h-[300px] rounded-lg overflow-hidden shadow-lg'>
 									<iframe
@@ -184,7 +179,6 @@ const Fiambala = () => {
 										loading='lazy'
 									/>
 								</div>
-
 								<p
 									className={`text-lg ${
 										colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'
@@ -193,7 +187,6 @@ const Fiambala = () => {
 									{selectedLocationData.description}
 								</p>
 							</ModalBody>
-
 							<ModalFooter className='space-x-3'>
 								{selectedLocationData.path && (
 									<a
@@ -206,7 +199,6 @@ const Fiambala = () => {
 										Más Info
 									</a>
 								)}
-
 								<button
 									onClick={handleCloseModal}
 									className={`px-4 py-2 text-sm font-medium rounded-lg ${

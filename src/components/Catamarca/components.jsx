@@ -5,87 +5,140 @@ import { useColorMode } from '@chakra-ui/react';
 import { getAreaTheme, getIconByArea } from './config';
 import { useCallback } from 'react';
 import clsx from 'clsx';
+import { useMemo } from 'react';
+
 
 const cardVariants = {
-	initial: { opacity: 0, y: 50 },
+	initial: { opacity: 0, y: 40 },
 	animate: { opacity: 1, y: 0 },
-	exit: { opacity: 0, y: -50 },
+	exit: { opacity: 0, y: -40 },
 	hover: {
-		scale: 1.05,
-		boxShadow: '0px 10px 25px rgba(0, 0, 0, 0.3)',
+		scale: 1.025,
+		boxShadow: '0 6px 32px 0 rgba(0,0,0,0.10), 0 1.5px 6px 0 rgba(0,0,0,0.06)',
 	},
-	tap: { scale: 0.95 },
+	tap: { scale: 0.98 },
 };
 
 const contentVariants = {
-	initial: { opacity: 0, y: 20 },
-	animate: { opacity: 1, y: 0, transition: { duration: 0.3, delay: 0.2 } },
-	hover: { y: -10, transition: { duration: 0.3 } },
+	initial: { opacity: 0, y: 16 },
+	animate: { opacity: 1, y: 0, transition: { duration: 0.25, delay: 0.15 } },
+	hover: { y: -4, transition: { duration: 0.2 } },
 };
 
-export const LocationCard = memo(
-	({ location: { id, imgSrc, title, description, area }, onShowDetails }) => {
-		const { gradient } = getAreaTheme(area);
-		const handleClick = useCallback(() => {
-			onShowDetails(id);
-		}, [onShowDetails, id]);
-		const AreaIcon = getIconByArea(area);
-		if (!AreaIcon) {
-			console.warn(`No icon found for area: ${area}`);
-			return null;
-		}
-		if (!imgSrc) {
-			console.warn(`No image source provided for location: ${title}`);
-			return null;
-		}
+const textVariants = {
+	initial: { opacity: 0, y: 20 },
+	animate: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+	exit: { opacity: 0, y: 20, transition: { duration: 0.3 } },
+};
 
-		return (
-			<motion.article
-				layout
+export const LocationCard = memo(({ location, onShowDetails }) => {
+	const { id, imgSrc, title, description, area } = location;
+	const { gradient } = getAreaTheme(area);
+	const { colorMode } = useColorMode();
+
+	const handleClick = useCallback(() => {
+		onShowDetails(id);
+	}, [onShowDetails, id]);
+
+	const AreaIcon = useMemo(() => getIconByArea(area), [area]);
+	if (!AreaIcon) {
+		console.warn(`No icon found for area: ${area}`);
+		return null;
+	}
+	if (!imgSrc) {
+		console.warn(`No image source provided for location: ${title}`);
+		return null;
+	}
+
+	const bgCard =
+		colorMode === 'dark'
+			? 'bg-gray-900 border-gray-800'
+			: 'bg-white border-gray-100';
+	const textTitle =
+		colorMode === 'dark'
+			? 'text-white'
+			: 'text-gray-900';
+	const textDesc =
+		colorMode === 'dark'
+			? 'text-gray-300'
+			: 'text-gray-700';
+
+	return (
+		<motion.article
+			layout
+			variants={cardVariants}
+			initial='initial'
+			animate='animate'
+			exit='exit'
+			whileHover='hover'
+			whileTap='tap'
+			onClick={handleClick}
+			className={`group relative h-[370px] rounded-xl overflow-hidden ${bgCard} border shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer`}
+		>
+			<motion.img
+				src={imgSrc}
+				alt={`Imagen de ${title} en ${area}`}
+				className='w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105'
 				variants={cardVariants}
 				initial='initial'
 				animate='animate'
-				exit='exit'
 				whileHover='hover'
-				whileTap='tap'
-				onClick={handleClick}
-				className='group relative h-[420px] rounded-2xl overflow-hidden shadow-lg transition-shadow duration-300 cursor-pointer'
+				loading='lazy'
+			/>
+			{/* Overlay minimalista */}
+			<div className='absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none' />
+			{/* Chip de área */}
+			<div
+				className={`absolute top-4 right-4 px-3 py-1 rounded-full flex items-center gap-2 shadow-sm text-white text-xs font-medium ${gradient} bg-opacity-90 backdrop-blur-sm transition-all duration-300 group-hover:scale-105`}
+				style={{ minWidth: 0 }}
 			>
-				<motion.img
-					src={imgSrc}
-					alt={`Imagen de ${location.title} en ${location.area}`}
-					className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-110'
-					variants={cardVariants}
+				{/* Icono del área */}
+
+				<AreaIcon className='w-4 h-4' />
+				<span className='truncate'>{area}</span>
+			</div>
+			{/* Contenido */}
+			<motion.div
+				className='absolute inset-x-0 bottom-0 p-5'
+				variants={contentVariants}
+				whileHover='hover'
+			>
+				<motion.h3
+					className={`text-lg font-semibold mb-1 drop-shadow-sm ${textTitle}`}
+					variants={textVariants}
 					initial='initial'
 					animate='animate'
-					whileHover='hover'
-					loading='lazy'
-					decoding='async'
-				/>
-				<motion.div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent' />
-				<motion.div
-					className='absolute inset-x-0 bottom-0 p-6'
-					variants={contentVariants}
-					whileHover='hover'
+					exit='exit'
 				>
-					<h3 className='text-2xl font-bold text-white drop-shadow-md'>
-						{title}
-					</h3>
-					<p className='text-gray-200 line-clamp-2 drop-shadow-md'>
-						{description}
-					</p>
-				</motion.div>
+					{title}
+				</motion.h3>
+				<motion.p
+					className={`text-sm line-clamp-2 drop-shadow-sm ${textDesc}`}
+					variants={textVariants}
+					initial='initial'
+					animate='animate'
+					exit='exit'
+					transition={{ delay: 0.15 }}
+				>
+					{description}
+				</motion.p>
+			</motion.div>
+		</motion.article>
+	);
+});
 
-				<div
-					className={`absolute top-4 right-4 px-4 py-2 rounded-full flex items-center gap-2 shadow-md text-white text-sm font-medium ${gradient} transition-all duration-300 group-hover:scale-110`}
-				>
-					<AreaIcon className='w-4 h-4' />
-					<span>{area}</span>
-				</div>
-			</motion.article>
-		);
-	}
-);
+LocationCard.displayName = 'LocationCard';
+
+LocationCard.propTypes = {
+	location: PropTypes.shape({
+		id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+		imgSrc: PropTypes.string.isRequired,
+		title: PropTypes.string.isRequired,
+		description: PropTypes.string.isRequired,
+		area: PropTypes.string.isRequired,
+	}).isRequired,
+	onShowDetails: PropTypes.func.isRequired,
+};
 
 const filterVariants = {
 	initial: { opacity: 0, scale: 0.8 },
@@ -96,17 +149,20 @@ const filterVariants = {
 
 export const AreaFilter = memo(({ area, isSelected, onClick }) => {
 	const { colorMode } = useColorMode();
-	const { icon: Icon } = getAreaTheme(area);
-	const isDark = colorMode === 'dark';
+	const { icon: Icon, gradient } = getAreaTheme(area);
+
 	const buttonClasses = clsx(
 		'inline-flex items-center gap-2 px-5 py-2 rounded-full font-semibold shadow-sm transition-colors duration-300',
-		isSelected
-			? 'bg-gradient-to-r from-yellow-500 via-green-500 to-yellow-500 text-white shadow-lg shadow-yellow-500/50'
-			: isDark
-			? 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
-			: 'bg-white text-gray-700 hover:bg-gray-100',
+		{
+			[gradient]: isSelected,
+			'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white':
+				!isSelected && colorMode === 'dark',
+			'bg-white text-gray-700 hover:bg-gray-100':
+				!isSelected && colorMode === 'light',
+		},
 		'border border-transparent hover:border-yellow-500/50'
 	);
+
 	return (
 		<motion.button
 			variants={filterVariants}
@@ -123,20 +179,7 @@ export const AreaFilter = memo(({ area, isSelected, onClick }) => {
 	);
 });
 
-LocationCard.displayName = 'LocationCard';
 AreaFilter.displayName = 'AreaFilter';
-
-LocationCard.propTypes = {
-	location: PropTypes.shape({
-		id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-		imgSrc: PropTypes.string.isRequired,
-		title: PropTypes.string.isRequired,
-		description: PropTypes.string.isRequired,
-		category: PropTypes.string.isRequired,
-		area: PropTypes.string.isRequired,
-	}).isRequired,
-	onShowDetails: PropTypes.func.isRequired,
-};
 
 AreaFilter.propTypes = {
 	area: PropTypes.string.isRequired,

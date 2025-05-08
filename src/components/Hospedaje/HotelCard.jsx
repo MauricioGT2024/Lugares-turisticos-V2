@@ -1,99 +1,108 @@
 import { motion } from 'framer-motion';
-import { useColorMode } from '@chakra-ui/react';
-import { FaLocationDot, FaStar } from 'react-icons/fa6';
+import { Box, Image, Text, Button, Badge } from '@chakra-ui/react';
+import { FaStar, FaMapMarkedAlt } from 'react-icons/fa';
 import PropTypes from 'prop-types';
-import { FaMapMarkedAlt } from 'react-icons/fa';
+import { FaLocationDot } from 'react-icons/fa6';
 
 const HotelCard = ({ hotel, onOpenMap }) => {
-	const { colorMode } = useColorMode();
+	const cardStyles = {
+		container: {
+			position: 'relative',
+			borderRadius: 'xl',
+			overflow: 'hidden',
+			boxShadow: 'lg',
+			transition: 'all 0.3s ease',
+			_hover: {
+				boxShadow: '2xl',
+				transform: 'scale(1.05)',
+			},
+		},
+		image: {
+			width: '100%',
+			height: '100%',
+			objectFit: 'cover',
+		},
+		overlay: {
+			position: 'absolute',
+			top: 0,
+			left: 0,
+			right: 0,
+			bottom: 0,
+			background: 'rgba(0, 0, 0, 0.5)',
+			opacity: 0,
+			transition: 'opacity 0.3s ease',
+			_groupHover: {
+				opacity: 1,
+			},
+		},
+		content: {
+			position: 'absolute',
+			top: '50%',
+			left: '50%',
+			transform: 'translate(-50%, -50%)',
+			textAlign: 'center',
+			color: 'white',
+			opacity: 0,
+			transition: 'opacity 0.3s ease',
+			_groupHover: {
+				opacity: 1,
+			},
+		},
+		badge: {
+			position: 'absolute',
+			top: 4,
+			right: 4,
+			background:
+				'linear-gradient(90deg, rgba(255, 165, 0, 1) 0%, rgba(255, 69, 0, 1) 100%)',
+			padding: '0.5rem 1rem',
+			borderRadius: 'full',
+			fontWeight: 'bold',
+			fontSize: 'sm',
+			color: 'white',
+		},
+	};
 
 	return (
 		<motion.div
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: -20 }}
-			className='group cursor-pointer'
 		>
-			<div
-				className={`
-        relative rounded-2xl overflow-hidden
-        ${colorMode === 'dark' ? 'bg-gray-800' : 'bg-white'}
-        shadow-lg hover:shadow-2xl transition-all duration-500
-      `}
-			>
-				{/* Contenedor de imagen */}
-				<div className='relative h-80 overflow-hidden'>
-					<motion.img
-						src={hotel.image}
-						alt={hotel.title}
-						className='w-full h-full object-cover'
-						whileHover={{ scale: 1.05, rotate: -1 }}
-						transition={{ duration: 0.6 }}
-					/>
-
-					{/* Overlay en hover */}
-					<div
-						className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent 
-                        opacity-0 group-hover:opacity-100 transition-all duration-300'
-					>
-						<div
-							className='absolute inset-0 flex flex-col justify-center items-center p-6 
-                          translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 
-                          transition-all duration-300'
-						>
-							<p className='text-white/90 text-center mb-4'>
-								{hotel.description}
-							</p>
-							<motion.button
-								onClick={() => onOpenMap(hotel)}
-								className='inline-flex items-center gap-2 px-6 py-2 rounded-full
-                         bg-white/20 backdrop-blur-sm hover:bg-white/30
-                         text-white font-medium transition-all'
-								whileHover={{ scale: 1.05 }}
-								whileTap={{ scale: 0.95 }}
-							>
-								<FaMapMarkedAlt className='w-4 h-4' />
-								Ver en mapa
-							</motion.button>
-						</div>
-					</div>
-
-					{/* Badge de ubicación */}
-					<div className='absolute top-4 left-4'>
-						<span
-							className='inline-flex items-center gap-2 px-3 py-1.5 
-                         rounded-full text-white text-sm font-medium
-                         bg-black/30 backdrop-blur-sm'
-						>
-							<FaLocationDot className='w-4 h-4' />
-							{hotel.location}
-						</span>
-					</div>
-
-					{/* Badge premium */}
-					<div className='absolute top-4 right-4'>
-						<motion.span
-							whileHover={{ scale: 1.05 }}
-							className='inline-flex items-center gap-2 px-3 py-1.5 
-                       rounded-full text-white text-sm font-medium
-                       bg-gradient-to-r from-amber-500 to-orange-500'
-						>
-							<FaStar className='w-4 h-4' />
-							Premium
-						</motion.span>
-					</div>
-				</div>
-
-				{/* Contenido inferior */}
-				<div className='p-6'>
-					<h3
-						className={`text-xl font-bold mb-2 
-            ${colorMode === 'dark' ? 'text-white' : 'text-gray-900'}`}
-					>
+			<Box className='group w-full h-96 object-cover' {...cardStyles.container}>
+				<Image src={hotel.image} alt={hotel.title} {...cardStyles.image} />
+				<Box {...cardStyles.overlay} />
+				<Box {...cardStyles.content}>
+					<Text fontSize='xl' fontWeight='bold' mb={2}>
 						{hotel.title}
-					</h3>
-				</div>
-			</div>
+					</Text>
+					<Text>{hotel.description}</Text>
+					<Button
+						onClick={() => onOpenMap(hotel)}
+						leftIcon={<FaMapMarkedAlt />}
+						mt={4}
+						colorScheme='teal'
+						variant='outline'
+					>
+						Ver en mapa
+					</Button>
+				</Box>
+				<Badge {...cardStyles.badge}>
+					<FaLocationDot /> {hotel.location}
+				</Badge>
+				<Badge
+					position='absolute'
+					top={4}
+					left={4}
+					background='linear-gradient(90deg, rgba(255, 215, 0, 1) 0%, rgba(255, 165, 0, 1) 100%)'
+					padding='0.5rem 1rem'
+					borderRadius='full'
+					fontWeight='bold'
+					fontSize='sm'
+					color='white'
+				>
+					<FaStar /> Premium
+				</Badge>
+			</Box>
 		</motion.div>
 	);
 };

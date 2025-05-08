@@ -13,6 +13,10 @@ import {
 import PropTypes from "prop-types";
 import { FaMapMarkerAlt, FaWikipediaW, FaTimes } from "react-icons/fa";
 import ModalContent from "../components/UI/ModalContent";
+import { motion } from 'framer-motion';
+
+
+
 
 const TinogastaModalHeader = ({ location }) => (
 	<ModalHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
@@ -28,30 +32,37 @@ TinogastaModalHeader.propTypes = {
 };
 
 const TinogastaModalBody = ({ location }) => {
+
+	const MotionBody = motion.create(ModalBody);
 	const { colorMode } = useColorMode();
 	return (
-		<ModalBody className="p-6 space-y-6">
+		<MotionBody
+			className='p-6 space-y-6'
+			initial={{ opacity: 0, y: 20 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.4 }}
+		>
 			<img
 				src={location.imgSrc}
 				alt={location.name}
-				className="w-full h-64 object-cover rounded-lg shadow-lg"
+				className='w-full h-64 object-cover rounded-lg shadow-lg'
 			/>
 			<p
 				className={`text-lg ${
-					colorMode === "dark" ? "text-gray-200" : "text-gray-700"
+					colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'
 				}`}
 			>
-				{location.description}
+				{location.descriptionLong || location.description}
 			</p>
-			<div className="rounded-lg overflow-hidden shadow-lg">
+			<div className='rounded-lg overflow-hidden shadow-lg'>
 				<iframe
 					src={location.iframe}
-					className="w-full h-[300px] border-0"
+					className='w-full h-[300px] border-0'
 					allowFullScreen
 					title={location.name}
 				/>
 			</div>
-		</ModalBody>
+		</MotionBody>
 	);
 };
 
@@ -61,6 +72,8 @@ TinogastaModalBody.propTypes = {
 		imgSrc: PropTypes.string.isRequired,
 		description: PropTypes.string.isRequired,
 		iframe: PropTypes.string.isRequired,
+		descriptionLong: PropTypes.string,
+		area: PropTypes.string,
 	}).isRequired,
 };
 

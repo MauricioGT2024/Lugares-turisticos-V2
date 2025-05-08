@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { departamentos } from '../data/departamentos';
 import { useColorMode } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
+import { useMemo } from 'react';
 
 const gradientConfigs = {
 	'Antofagasta de la Sierra': {
@@ -38,84 +39,93 @@ const gradientConfigs = {
 	},
 };
 
-const DepartamentoCard = memo(({ loc }) => {
-	const [isHovered, setIsHovered] = useState(false);
-	const { colorMode } = useColorMode();
-	const config = gradientConfigs[loc.name] || gradientConfigs.default;
+const DepartamentoCard = memo(
+	({ loc: { name, description, image, path } }) => {
+		const [isHovered, setIsHovered] = useState(false);
+		const { colorMode } = useColorMode();
+		const config = useMemo(
+			() => gradientConfigs[name] || gradientConfigs.default,
+			[name]
+		);
 
-	return (
-		<motion.div
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			exit={{ opacity: 0, y: -20 }}
-			whileHover={{ y: -8 }}
-			transition={{ duration: 0.3, type: 'spring' }}
-			onHoverStart={() => setIsHovered(true)}
-			onHoverEnd={() => setIsHovered(false)}
-			className='h-full flex flex-col justify-between'
-		>
-			<Link
-				to={loc.path}
-				className={`group block h-full rounded-xl overflow-hidden ${
-					colorMode === 'light' ? 'bg-white' : 'bg-gray-800'
-				} shadow-lg transition-all duration-300 hover:shadow-2xl`}
+		return (
+			<motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				exit={{ opacity: 0, y: -20 }}
+				whileHover={{ y: -8 }}
+				transition={{ duration: 0.3, type: 'spring' }}
+				onHoverStart={() => setIsHovered(true)}
+				onHoverEnd={() => setIsHovered(false)}
+				className='grid grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-8'
 			>
-				<div className='relative h-64 overflow-hidden rounded-xl'>
-					<motion.img
-						src={loc.image}
-						alt={loc.name}
-						className='w-full h-full object-cover'
-						animate={{
-							scale: isHovered ? 1.1 : 1,
-						}}
-						transition={{ duration: 0.4 }}
-						loading='eager'
-						onLoad={(e) => {
-							e.target.style.opacity = 1;
-						}}
-					/>
-					{/* Overlay gradiente con animación */}
-					<motion.div
-						className={`absolute inset-0 bg-gradient-to-t ${config.gradient}`}
-						initial={{ opacity: 0.3 }}
-						animate={{ opacity: isHovered ? 0.7 : 0.3 }}
-						transition={{ duration: 0.3 }}
-					/>
+				<Link
+					to={path}
+					className={`group block h-full rounded-xl overflow-hidden ${
+						colorMode === 'light' ? 'bg-white' : 'bg-gray-800'
+					} shadow-lg transition-all duration-300 hover:shadow-2xl`}
+				>
+					<div className='relative h-64 overflow-hidden rounded-xl'>
+						<motion.img
+							src={image}
+							alt={name}
+							className='w-full h-full object-cover'
+							animate={{
+								scale: isHovered ? 1.1 : 1,
+							}}
+							transition={{ duration: 0.4 }}
+							loading='eager'
+							onLoad={(e) => {
+								e.target.style.opacity = 1;
+							}}
+						/>
+						{/* Overlay gradiente con animación */}
+						<motion.div
+							className={`absolute inset-0 bg-gradient-to-t ${config.gradient}`}
+							initial={{ opacity: 0.3 }}
+							animate={{ opacity: isHovered ? 0.7 : 0.3 }}
+							transition={{ duration: 0.3 }}
+						/>
 
-					{/* Badge flotante */}
-					<div className='absolute top-4 right-4'>
-						<motion.span
-							className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${config.gradient} shadow-lg backdrop-blur-sm`}
-							animate={{ scale: isHovered ? 1.05 : 1 }}
-							transition={{ duration: 0.2 }}
+						{/* Badge flotante */}
+						<div className='absolute top-4 right-4'>
+							<motion.span
+								className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white bg-gradient-to-r ${config.gradient} shadow-lg backdrop-blur-sm`}
+								animate={{ scale: isHovered ? 1.05 : 1 }}
+								transition={{ duration: 0.2 }}
+							>
+								{config.description}
+							</motion.span>
+						</div>
+
+						{/* Contenido que aparece en hover */}
+						<motion.div
+							className='absolute inset-0 flex flex-col justify-center items-center text-white p-6 space-y-4'
+							style={{
+								background: `linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0))`,
+								opacity: isHovered ? 1 : 0,
+							}}
+							initial={{ opacity: 0 }}
+							animate={{ opacity: isHovered ? 1 : 0 }}
+							transition={{ duration: 0.3 }}
 						>
-							{config.description}
-						</motion.span>
-					</div>
-
-					{/* Contenido que aparece en hover */}
-					<motion.div
-						className='absolute inset-0 flex flex-col items-center justify-center p-6 text-white'
-						initial={{ opacity: 0 }}
-						animate={{ opacity: isHovered ? 1 : 0 }}
-						transition={{ duration: 0.3 }}
-					>
-						<h3 className='text-3xl font-bold text-center mb-3'>{loc.name}</h3>
-						<p className='text-center text-white/90'>{loc.description}</p>
-						<motion.button
-							className='mt-4 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 
+							<h3 className='text-3xl font-bold text-center mb-3'>{name}</h3>
+							<p className='text-center text-white/90'>{description}</p>
+							<motion.button
+								className='mt-4 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 
                          transition-colors duration-300 text-white font-medium'
-							whileHover={{ scale: 1.05 }}
-							whileTap={{ scale: 0.95 }}
-						>
-							Explorar
-						</motion.button>
-					</motion.div>
-				</div>
-			</Link>
-		</motion.div>
-	);
-});
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
+							>
+								Explorar
+							</motion.button>
+						</motion.div>
+					</div>
+				</Link>
+			</motion.div>
+		);
+	}
+);
 
 DepartamentoCard.displayName = 'DepartamentoCard';
 
@@ -163,7 +173,7 @@ const Provincia = memo(() => {
 					</p>
 				</motion.div>
 
-				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'>
+				<div className='grid grid-cols-[repeat(auto-fit,_minmax(250px,_1fr))] gap-8'>
 					<AnimatePresence mode='sync'>
 						{departamentos.map((loc) => (
 							<DepartamentoCard key={loc.id} loc={loc} />
