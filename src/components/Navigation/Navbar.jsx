@@ -1,141 +1,132 @@
-import { memo, useCallback, useState } from "react";
+import { useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaHome, FaMapMarkedAlt, FaBed, FaInfoCircle, FaBars, FaTimes } from "react-icons/fa";
 import { useColorMode } from "@chakra-ui/react";
 import ColorModeSwitcher from "../Screen/ColorModeSwitcher";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const navItems = [
   { path: "/", label: "Inicio", icon: FaHome },
-  {
-    label: "Departamentos",
-    path: "/provincia",
-    icon: FaMapMarkedAlt,
-  },
+  { path: "/provincia", label: "Departamentos", icon: FaMapMarkedAlt },
   { path: "/hospedaje", label: "Hospedaje", icon: FaBed },
   { path: "/about", label: "Sobre Nosotros", icon: FaInfoCircle },
 ];
-const NavLink = memo(({ item, onClick }) => {
+
+function NavLink({ item, onClick }) {
   const location = useLocation();
-  const isActive = location.pathname === item.path;
   const { colorMode } = useColorMode();
+  const isActive = location.pathname === item.path;
 
   return (
     <Link
       to={item.path}
       onClick={onClick}
-      className={`flex items-center px-4 py-2 rounded-lg transition-all duration-200 
-      ${isActive 
-        ? 'bg-teal-500 text-white' 
-        : colorMode === 'light' 
-          ? 'text-gray-700 hover:bg-teal-100' 
-          : 'text-gray-200 hover:bg-teal-800'}`}
+      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium transition-colors
+        ${isActive
+          ? "bg-teal-500 text-white"
+          : colorMode === "light"
+            ? "text-gray-700 hover:bg-teal-100"
+            : "text-gray-200 hover:bg-teal-800"
+        }`}
     >
-      <item.icon className="w-5 h-5 mr-2" />
+      <item.icon className="w-5 h-5" />
       <span>{item.label}</span>
     </Link>
   );
-});
-
-NavLink.displayName = "NavLink";
+}
 
 NavLink.propTypes = {
   item: PropTypes.shape({
     path: PropTypes.string.isRequired,
     label: PropTypes.string.isRequired,
-    icon: PropTypes.elementType.isRequired
+    icon: PropTypes.elementType.isRequired,
   }).isRequired,
-  onClick: PropTypes.func
+  onClick: PropTypes.func,
 };
 
-const Navbar = memo(() => {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = useCallback(() => setIsOpen(prev => !prev), []);
   const { colorMode } = useColorMode();
+  const toggleSidebar = useCallback(() => setIsOpen((v) => !v), []);
 
   return (
-    <nav className={`sticky top-0 z-50 w-full backdrop-blur-md ${
-      colorMode === 'light' 
-        ? 'bg-white/90 border-gray-200' 
-        : 'bg-gray-800/90 border-gray-700'
-    } border-b`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0">
-              <motion.img
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                src="/navbar.webp"
-                alt="Logo"
-                className="h-10 w-auto"
-              />
-            </Link>
-          </div>
+    <>
+      {/* Hamburger Button */}
+      <button
+        onClick={toggleSidebar}
+        className={`fixed top-4 left-4 z-[100] p-2 rounded-md shadow-md bg-white/80 dark:bg-gray-800/80
+          ${isOpen ? "pointer-events-none opacity-0" : ""}
+          transition-all`}
+        aria-label="Abrir menú"
+      >
+        <FaBars className="h-7 w-7 text-teal-600 dark:text-teal-300" />
+      </button>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex lg:items-center lg:space-x-8">
-            {navItems.map((item) => (
-              <motion.div
-                key={item.label}
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <NavLink item={item} />
-              </motion.div>
-            ))}
-            <ColorModeSwitcher />
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex items-center lg:hidden">
-            <ColorModeSwitcher />
-            <button
-              onClick={toggleMenu}
-              className={`ml-2 p-2 rounded-md ${
-                colorMode === 'light'
-                  ? 'text-gray-700 hover:bg-gray-100'
-                  : 'text-gray-200 hover:bg-gray-700'
-              }`}
-            >
-              {isOpen ? <FaTimes className="h-6 w-6" /> : <FaBars className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
+      {/* Sidebar Overlay */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden"
-          >
-            <div className="px-2 pt-2 pb-3 space-y-1">
-              {navItems.map((item) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <NavLink
-                    item={item}
-                    onClick={toggleMenu}
+          <>
+            {/* Overlay */}
+            <motion.div
+              key="overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-40"
+              style={{
+                backgroundColor:
+                  colorMode === "dark"
+                    ? "rgba(0,0,0,0.7)"
+                    : "rgba(0,0,0,0.4)",
+              }}
+              onClick={toggleSidebar}
+              aria-label="Cerrar menú"
+            />
+            {/* Sidebar */}
+            <motion.aside
+              key="sidebar"
+              initial={{ x: -320 }}
+              animate={{ x: 0 }}
+              exit={{ x: -320 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className={`fixed top-0 left-0 h-full w-72 max-w-[90vw] z-50 flex flex-col`}
+              aria-label="Menú lateral"
+              style={{
+                backgroundColor:
+                  colorMode === "dark" ? "#1a202c" : "#f7fafc",
+              }}
+            >
+              <div className="flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700">
+                <Link to="/" onClick={toggleSidebar} className="flex items-center gap-2">
+                  <img
+                    src="/navbar.webp"
+                    alt="Logo Lugares Turísticos Catamarca"
+                    className="h-10 w-auto rounded shadow"
+                    draggable={false}
                   />
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                </Link>
+                <button
+                  onClick={toggleSidebar}
+                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                  aria-label="Cerrar menú"
+                >
+                  <FaTimes className="h-6 w-6 text-gray-700 dark:text-gray-200" />
+                </button>
+              </div>
+              <nav className="flex-1 flex flex-col gap-1 px-2 py-6">
+                {navItems.map((item) => (
+                  <NavLink key={item.label} item={item} onClick={toggleSidebar} />
+                ))}
+              </nav>
+              <div className="px-4 pb-6">
+                <ColorModeSwitcher />
+              </div>
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
-    </nav>
+    </>
   );
-});
-
-Navbar.displayName = "Navbar";
-export default Navbar;
+}

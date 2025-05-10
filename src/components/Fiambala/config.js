@@ -17,17 +17,26 @@ export const FIAMBALA_ANIMATIONS = {
 			opacity: 1,
 			y: 0,
 			transition: {
-				duration: 0.6,
+				duration: 0.8,
 				ease: [0.6, -0.05, 0.01, 0.99],
 			},
 		},
-		exit: { opacity: 0, y: -20 },
+		exit: { 
+			opacity: 0,
+			y: -20,
+			transition: {
+				duration: 0.6
+			}
+		},
 	},
 	container: {
 		initial: { opacity: 0 },
 		animate: {
 			opacity: 1,
-			transition: { staggerChildren: 0.1 },
+			transition: { 
+				staggerChildren: 0.1,
+				delayChildren: 0.2
+			},
 		},
 	},
 	item: {
@@ -35,11 +44,17 @@ export const FIAMBALA_ANIMATIONS = {
 		animate: {
 			opacity: 1,
 			y: 0,
-			transition: { duration: 0.4 },
+			transition: { 
+				duration: 0.6,
+				ease: [0.6, -0.05, 0.01, 0.99],
+			},
 		},
 		hover: {
-			y: -5,
-			transition: { duration: 0.2 },
+			y: -8,
+			transition: { 
+				duration: 0.3,
+				ease: "easeOut"
+			},
 		},
 	},
 };
@@ -49,7 +64,7 @@ export const filterAnimations = {
 		opacity: 0,
 		y: 20,
 		scale: 0.95,
-	},ñ
+	},
 	visible: {
 		opacity: 1,
 		y: 0,

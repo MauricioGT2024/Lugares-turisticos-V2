@@ -14,7 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaInfoCircle } from 'react-icons/fa';
 import { locations } from '../data/fiambala';
 import { CATEGORY_CONFIG } from '../components/Fiambala/components';
-import { ImageHoverCard } from '../components/Fiambala/components';
+import LocationCard from '../components/UI/Cards/LocationCard';
 
 const Fiambala = () => {
 	const [categoryFilter, setCategoryFilter] = useState('');
@@ -55,76 +55,110 @@ const Fiambala = () => {
 	);
 
 	return (
-		<div
-			className={`min-h-screen py-12 ${
-				colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50'
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={{ opacity: 1 }}
+			exit={{ opacity: 0 }}
+			className={`min-h-screen ${
+				colorMode === 'dark' ? 'bg-gray-900' : 'bg-gradient-to-br from-amber-50 to-orange-50'
 			}`}
 		>
-			<div className='container mx-auto px-4 md:px-8 max-w-7xl'>
-				{/* Header */}
-				<motion.div
-					initial={{ opacity: 0, y: -20 }}
+			{/* Hero Section */}
+			<div className="relative h-[50vh] mb-12">
+				<div className="absolute inset-0">
+					<img
+						src="/fiambala-hero.jpg" // Asegúrate de tener esta imagen
+						alt="Fiambala Panorama"
+						className="w-full h-full object-cover"
+					/>
+					<div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent" />
+				</div>
+				
+				<motion.div 
+					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.8 }}
-					className='text-center space-y-8 mb-16'
+					className="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center"
 				>
-					<span className='inline-block px-4 py-1 rounded-full text-sm font-medium bg-yellow-400 text-white'>
-						Explora Fiambala
-					</span>
-					<h1 className="text-4xl md:text-6xl font-bold font-['JetBrains_Mono'] bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent">
-						Fiambala
-					</h1>
-					<p
-						className={`text-xl max-w-3xl mx-auto italic ${
-							colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
-						}`}
+					<motion.span 
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ delay: 0.2 }}
+						className="inline-block px-6 py-2 rounded-full text-sm font-medium bg-amber-500/80 text-white backdrop-blur-sm"
 					>
-						Donde el desierto se encuentra con las termas, creando un oasis de
-						aventura y relax en el corazón de Catamarca
-					</p>
+						Descubre la magia de
+					</motion.span>
+					
+					<motion.h1
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ delay: 0.4 }}
+						className="text-6xl md:text-7xl font-bold mt-4 mb-6 text-white font-['JetBrains_Mono']"
+					>
+						Fiambala
+					</motion.h1>
+					
+					<motion.p
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						transition={{ delay: 0.6 }}
+						className="max-w-2xl text-lg text-gray-200"
+					>
+						Donde el desierto se encuentra con las termas, creando un oasis de aventura y relax
+					</motion.p>
 				</motion.div>
+			</div>
 
-				{/* Filtros */}
-				<div className='mb-12'>
-					<h2 className='text-2xl font-semibold mb-4'>Filtrar por categoría</h2>
-					<div className='flex flex-wrap gap-2'>
-						<button
-							key='all'
-							className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 ${
+			<div className="container mx-auto px-4 py-12">
+				{/* Filtros con nuevo diseño */}
+				<motion.div 
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					className="mb-16"
+				>
+					<h2 className="text-2xl font-semibold mb-6 text-center">
+						Explora por categoría
+					</h2>
+					<div className="flex flex-wrap justify-center gap-3">
+						<motion.button
+							whileHover={{ scale: 1.05 }}
+							whileTap={{ scale: 0.95 }}
+							className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
 								categoryFilter === ''
-									? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
+									? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30'
 									: colorMode === 'dark'
-									? 'bg-gray-800 text-gray-300'
-									: 'bg-gray-100 text-gray-700'
+									? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+									: 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
 							}`}
 							onClick={() => setCategoryFilter('')}
 						>
 							Todos
-						</button>
+						</motion.button>
 						{categories.map((category) => (
-							<button
+							<motion.button
+								whileHover={{ scale: 1.05 }}
+								whileTap={{ scale: 0.95 }}
 								key={category}
-								className={`px-4 py-2 rounded-full text-sm font-medium shadow-sm transition-all duration-200 ${
+								className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
 									categoryFilter === category
-										? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-white'
+										? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30'
 										: colorMode === 'dark'
-										? 'bg-gray-800 text-gray-300'
-										: 'bg-gray-100 text-gray-700'
+										? 'bg-gray-800 text-gray-300 hover:bg-gray-700'
+										: 'bg-white text-gray-700 hover:bg-gray-50 shadow-md'
 								}`}
 								onClick={() => setCategoryFilter(category)}
 							>
 								{CATEGORY_CONFIG[category]?.label || category}
-							</button>
+							</motion.button>
 						))}
 					</div>
-				</div>
+				</motion.div>
 
-				{/* Grid de Locations */}
+				{/* Grid con nuevo layout */}
 				<motion.div
 					layout
-					className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
+					className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4"
 				>
-					<AnimatePresence mode='popLayout'>
+					<AnimatePresence mode="popLayout">
 						{filteredLocations.map((loc) => (
 							<motion.div
 								key={loc.id}
@@ -134,9 +168,11 @@ const Fiambala = () => {
 								exit={{ opacity: 0, scale: 0.8 }}
 								transition={{ duration: 0.3 }}
 							>
-								<ImageHoverCard
+								<LocationCard
 									location={loc}
-									onShowDetails={handleLocationClick}
+									onClick={handleLocationClick}
+									Icon={CATEGORY_CONFIG[loc.category]?.icon}
+									gradientClass={CATEGORY_CONFIG[loc.category]?.bgClass}
 								/>
 							</motion.div>
 						))}
@@ -148,73 +184,125 @@ const Fiambala = () => {
 			<Modal
 				isOpen={isOpen}
 				onClose={handleCloseModal}
-				size='xl'
+				size='4xl'
 				isCentered
 				motionPreset='slideInBottom'
 			>
-				<ModalOverlay bg='blackAlpha.700' backdropFilter='blur(5px)' />
+				<ModalOverlay 
+					bg='blackAlpha.800' 
+					backdropFilter='blur(8px)'
+					motionPreset='fade'
+				/>
 				<ModalContent
 					bg={colorMode === 'dark' ? 'gray.800' : 'white'}
-					className='rounded-xl overflow-hidden shadow-2xl'
+					className='rounded-2xl overflow-hidden shadow-2xl border border-white/10'
 				>
 					{selectedLocationData && (
 						<>
-							<ModalHeader
-								className={`p-4 ${
-									CATEGORY_CONFIG[selectedLocationData.category]?.bgClass ||
-									'bg-gray-600'
-								} text-white`}
-							>
-								<h2 className="text-xl font-bold font-['JetBrains_Mono']">
-									{selectedLocationData.title}
-								</h2>
-							</ModalHeader>
-							<ModalCloseButton className='text-white hover:bg-white/20' />
-							<ModalBody className='p-6 space-y-6'>
-								<div className='h-[300px] rounded-lg overflow-hidden shadow-lg'>
-									<iframe
-										title={selectedLocationData.title}
-										src={selectedLocationData.mapSrc}
-										className='w-full h-full border-0'
-										loading='lazy'
-									/>
+							<div className="relative h-[200px] overflow-hidden">
+								<img 
+									src={selectedLocationData.imgSrc}
+									alt={selectedLocationData.title}
+									className="w-full h-full object-cover"
+								/>
+								<div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+								<ModalHeader className="absolute bottom-0 left-0 right-0 text-white bg-transparent">
+									<div className="container px-6">
+										<span className={`
+											inline-block px-3 py-1 rounded-full text-sm font-medium mb-2
+											${CATEGORY_CONFIG[selectedLocationData.category]?.bgClass}
+										`}>
+											{selectedLocationData.category}
+										</span>
+										<h2 className="text-2xl font-bold font-['JetBrains_Mono']">
+											{selectedLocationData.title}
+										</h2>
+									</div>
+								</ModalHeader>
+								<ModalCloseButton 
+									className='absolute top-4 right-4 text-white hover:bg-white/20 rounded-full p-2'
+									size='lg'
+								/>
+							</div>
+
+							<ModalBody className='p-8'>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+									<div className='space-y-4'>
+										<h3 className="text-lg font-semibold text-gray-400">Descripción</h3>
+										<p className={`text-lg leading-relaxed ${
+											colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'
+										}`}>
+											{selectedLocationData.description}
+										</p>
+									</div>
+									
+									<div className='space-y-4'>
+										<h3 className="text-lg font-semibold text-gray-400">Ubicación</h3>
+										<div className='h-[300px] rounded-xl overflow-hidden shadow-lg border border-gray-200/10'>
+											<iframe
+												title={selectedLocationData.title}
+												src={selectedLocationData.mapSrc}
+												className='w-full h-full border-0'
+												loading='lazy'
+											/>
+										</div>
+									</div>
 								</div>
-								<p
-									className={`text-lg ${
-										colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'
-									}`}
-								>
-									{selectedLocationData.description}
-								</p>
 							</ModalBody>
-							<ModalFooter className='space-x-3'>
-								{selectedLocationData.path && (
-									<a
-										href={selectedLocationData.path}
-										target='_blank'
-										rel='noopener noreferrer'
-										className='inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg border border-teal-500 text-teal-500 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors'
-									>
-										<FaInfoCircle className='mr-2' />
-										Más Info
-									</a>
-								)}
-								<button
-									onClick={handleCloseModal}
-									className={`px-4 py-2 text-sm font-medium rounded-lg ${
-										colorMode === 'dark'
-											? 'bg-gray-700 hover:bg-gray-600'
-											: 'bg-gray-200 hover:bg-gray-300'
-									} transition-colors`}
-								>
-									Cerrar
-								</button>
+
+							<ModalFooter 
+								className={`px-8 py-6 border-t ${
+									colorMode === 'dark' ? 'border-gray-700' : 'border-gray-200'
+								}`}
+							>
+								<div className="flex items-center justify-between w-full">
+									<div className="flex items-center space-x-2">
+										<FaInfoCircle className="text-gray-400" />
+										<span className={`text-sm ${
+											colorMode === 'dark' ? 'text-gray-400' : 'text-gray-600'
+										}`}>
+											Información actualizada
+										</span>
+									</div>
+									
+									<div className="space-x-3">
+										{selectedLocationData.path && (
+											<a
+												href={selectedLocationData.path}
+												target='_blank'
+												rel='noopener noreferrer'
+												className={`
+													inline-flex items-center px-6 py-2.5 text-sm font-medium 
+													rounded-lg border-2 border-amber-500 text-amber-500 
+													hover:bg-amber-500 hover:text-white
+													transition-all duration-300
+												`}
+											>
+												<FaInfoCircle className='mr-2' />
+												Más Información
+											</a>
+										)}
+										<button
+											onClick={handleCloseModal}
+											className={`
+												px-6 py-2.5 text-sm font-medium rounded-lg
+												${colorMode === 'dark' 
+													? 'bg-gray-700 hover:bg-gray-600' 
+													: 'bg-gray-100 hover:bg-gray-200'
+												}
+												transition-colors duration-300
+											`}
+										>
+											Cerrar
+										</button>
+									</div>
+								</div>
 							</ModalFooter>
 						</>
 					)}
 				</ModalContent>
 			</Modal>
-		</div>
+		</motion.div>
 	);
 };
 

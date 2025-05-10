@@ -108,82 +108,63 @@ const Footer = memo(() => {
   ];
 
   return (
-    <footer className={`relative z-10 ${
-      colorMode === "dark" ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-200"
-    } border-t`}>
-      <div className="container mx-auto max-w-8xl py-10 px-4">
-        <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,1fr] gap-8 md:gap-12">
-          {/* Logo y Descripción */}
-          <div className="space-y-6">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <RouterLink to="/">
-                <img
-                  src="/logo.webp"
-                  alt="Logo de Catamarca Turismo"
-                  className="h-[60px] object-contain"
-                  loading="lazy"
-                />
-              </RouterLink>
-            </motion.div>
-
-            <p className={`text-sm max-w-md leading-relaxed ${
-              colorMode === "dark" ? "text-gray-400" : "text-gray-600"
-            }`}>
-              Descubre la magia de Catamarca con nosotros. Tu guía definitiva
-              para explorar los tesoros ocultos de esta hermosa provincia
-              argentina.
+    <footer className={`w-full border-t transition-colors duration-300 ${
+      colorMode === "dark" ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200"
+    }`}>
+      <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col gap-10">
+        <div className="flex flex-col md:flex-row md:justify-between gap-10">
+          {/* Logo y descripción */}
+          <div className="flex-1 flex flex-col gap-5 items-start">
+            <RouterLink to="/" className="mb-2">
+              <motion.img
+                src="/logo.webp"
+                alt="Logo Catamarca Turismo"
+                className="h-14 object-contain"
+                whileHover={{ scale: 1.06 }}
+                transition={{ duration: 0.2 }}
+                loading="lazy"
+              />
+            </RouterLink>
+            <p className={`text-base leading-relaxed max-w-md ${colorMode === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+              Descubre la magia de Catamarca. Tu guía para explorar los tesoros de esta provincia argentina.
             </p>
-
-            <div className="flex space-x-4 flex-wrap">
+            <div className="flex gap-4 mt-2">
               {socialLinks.map((link) => (
                 <SocialLink key={link.href} {...link} />
               ))}
             </div>
-
             <a
               href="https://www.visitcatamarca.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-teal-500 transition-colors"
+              className="flex items-center gap-1 text-sm mt-2 text-teal-600 dark:text-teal-300 hover:underline"
             >
-              <span>Sitio Oficial</span>
-              <FaExternalLinkAlt className="w-3 h-3" />
+              Sitio Oficial <FaExternalLinkAlt className="w-3 h-3" />
             </a>
           </div>
 
-          {/* Enlaces Rápidos */}
-          <div className="space-y-4">
-            <h3 className={`text-lg font-semibold border-b-2 border-teal-500 pb-2 inline-block ${
-              colorMode === "dark" ? "text-gray-200" : "text-gray-700"
-            }`}>
+          {/* Enlaces rápidos */}
+          <div className="flex-1 flex flex-col gap-4">
+            <h3 className={`text-lg font-semibold mb-2 ${colorMode === "dark" ? "text-gray-200" : "text-gray-700"}`}>
               Enlaces Rápidos
             </h3>
-            <div className="space-y-2">
+            <nav className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <NavLink key={link.to} {...link} />
               ))}
-            </div>
+            </nav>
           </div>
 
           {/* Desarrollador */}
-          <div className="space-y-4">
-            <h3 className={`text-lg font-semibold border-b-2 border-teal-500 pb-2 inline-block ${
-              colorMode === "dark" ? "text-gray-200" : "text-gray-700"
-            }`}>
-              Desarrollado Por
+          <div className="flex-1 flex flex-col gap-4">
+            <h3 className={`text-lg font-semibold mb-2 ${colorMode === "dark" ? "text-gray-200" : "text-gray-700"}`}>
+              Desarrollado por
             </h3>
-            <p className={`text-md ${
-              colorMode === "dark" ? "text-gray-400" : "text-gray-600"
-            }`}>
+            <p className={`text-base font-medium ${colorMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>
               Mauricio Sierra
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Redes Sociales y Contacto:
-            </p>
-            <div className="flex space-x-4 flex-wrap">
+            <span className="text-sm text-gray-500 dark:text-gray-400">Redes y contacto:</span>
+            <div className="flex gap-4">
               {developerLink.map((link) => (
                 <SocialLink key={link.href} {...link} />
               ))}
@@ -191,22 +172,22 @@ const Footer = memo(() => {
           </div>
         </div>
 
-        <hr className={`my-8 ${
-          colorMode === "dark" ? "border-gray-700" : "border-gray-200"
-        }`} />
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2 text-sm text-gray-600 dark:text-gray-400"
-        >
-          <span>© {new Date().getFullYear()} Catamarca Turismo.</span>
-          <div className="flex items-center space-x-1">
-            <span>Hecho con</span>
-            <FaHeart className="w-4 h-4 text-red-400 animate-pulse" />
-            <span>en Argentina</span>
-          </div>
-        </motion.div>
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t pt-6 mt-6 border-gray-200 dark:border-gray-700">
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-sm text-gray-500 dark:text-gray-400"
+          >
+            © {new Date().getFullYear()} Catamarca Turismo.
+          </motion.span>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
+          >
+            Hecho con <FaHeart className="w-4 h-4 text-red-400 animate-pulse" /> en Argentina
+          </motion.div>
+        </div>
       </div>
     </footer>
   );

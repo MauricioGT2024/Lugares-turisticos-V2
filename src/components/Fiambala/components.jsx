@@ -54,55 +54,87 @@ export const ImageHoverCard = memo(({ location, onShowDetails }) => {
   const config = CATEGORY_CONFIG[location.category] || {};
 
   return (
-    <article
-      className="relative h-[400px] rounded-xl overflow-hidden cursor-pointer group"
+    <motion.article
+      whileHover="hover"
+      initial="initial"
+      animate="animate"
+      variants={{
+        hover: {
+          y: -8,
+          transition: {
+            duration: 0.3,
+            ease: "easeOut"
+          }
+        }
+      }}
+      className="relative h-[450px] rounded-2xl overflow-hidden cursor-pointer group shadow-xl"
       onClick={() => onShowDetails(location)}
     >
-      {/* Imagen */}
       <motion.div
         className="absolute inset-0"
-        whileHover={{ scale: 1.02 }}
-        transition={{ duration: 0.3 }}
+        variants={{
+          hover: {
+            scale: 1.05,
+            transition: {
+              duration: 0.6,
+              ease: "easeOut"
+            }
+          }
+        }}
       >
         <img
           src={location.imgSrc}
           alt={`Imagen de ${location.title}`}
-          className="w-full h-full object-cover transition-transform duration-700"
+          className="w-full h-full object-cover"
         />
       </motion.div>
 
-      {/* Superposición con Gradiente */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+      {/* Overlay con gradiente mejorado */}
+      <motion.div
+        variants={{
+          initial: { opacity: 0.3 },
+          hover: { opacity: 0.8 }
+        }}
+        className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent transition-opacity duration-300"
+      />
 
-      {/* Insignia de Categoría */}
-      <div className="absolute top-4 right-4">
-        <span
-          className={`
-            inline-block px-4 py-1.5 rounded-full
-            text-white text-sm font-medium
-            shadow-lg backdrop-blur-md
-            ${config.bgClass}
-            transition-transform duration-300 group-hover:scale-105
-          `}
+      {/* Contenido con nueva disposición */}
+      <div className="absolute inset-x-0 bottom-0 p-8">
+        <motion.div
+          variants={{
+            initial: { y: 20, opacity: 0 },
+            animate: { y: 0, opacity: 1 },
+            hover: { y: -10 }
+          }}
+          className="space-y-4"
         >
-          {location.category}
-        </span>
-      </div>
+          <div className="flex items-center space-x-2">
+            {config.icon && (
+              <config.icon className="w-5 h-5 text-white opacity-75" />
+            )}
+            <span className={`
+              px-3 py-1 rounded-full text-sm font-medium
+              ${config.bgClass} text-white/90
+              shadow-lg backdrop-blur-sm
+            `}>
+              {location.category}
+            </span>
+          </div>
 
-      {/* Contenido */}
-      <div className="absolute inset-x-0 bottom-0 p-6 translate-y-10 group-hover:translate-y-0 transition-transform duration-500">
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-white">{location.title}</h2>
+          <h2 className="text-3xl font-bold text-white">{location.title}</h2>
+          
           <motion.p
-            className="text-gray-200 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"
-            initial={{ opacity: 0 }}
-            whileHover={{ opacity: 1 }}
+            variants={{
+              initial: { opacity: 0, y: 20 },
+              hover: { opacity: 1, y: 0 }
+            }}
+            className="text-gray-200 line-clamp-2"
           >
             {location.description}
           </motion.p>
-        </div>
+        </motion.div>
       </div>
-    </article>
+    </motion.article>
   );
 });
 
@@ -186,4 +218,4 @@ LocationCard.propTypes = {
 
 export default memo(LocationCard);
 
- 
+

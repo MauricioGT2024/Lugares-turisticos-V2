@@ -132,7 +132,8 @@ const TinogastaAreaFilterComponent = ({ filters, setFilters }) => {
 	return (
 		<AreaFilter
 			areaFilter={filters.areaFilter || ""}
-			setAreaFilter={(filter) => handleAreaFilterChange(filter)}
+			setAreaFilter={handleAreaFilterChange}
+			areas={[...new Set(locations.map(loc => loc.area))]}
 		/>
 	);
 };
@@ -146,7 +147,7 @@ TinogastaAreaFilterComponent.propTypes = {
 
 const filterTinogastaLocations = (locations, filters) => {
 	return locations.filter(
-		(loc) => !filters.areaFilter || loc.category === filters.areaFilter
+		(loc) => !filters.areaFilter || loc.area === filters.areaFilter
 	);
 };
 
