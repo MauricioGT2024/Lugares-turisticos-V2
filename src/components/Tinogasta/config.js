@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { locations } from '../../data/tinogasta';
+import { locations } from '@/data/tinogasta';
 
 export const useTinogastaCategories = () => {
   const categories = useMemo(() => {

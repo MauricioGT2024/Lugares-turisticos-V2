@@ -1,30 +1,33 @@
-import React from 'react';
+// 1. React & Third-party
+import React, { Suspense, useMemo, useCallback, useState } from 'react';
+import PropTypes from 'prop-types';
 import { m } from 'framer-motion';
 import { FaMapMarkerAlt, FaInfoCircle } from 'react-icons/fa';
-import { locations } from '../data/catamarca';
-import {
-	ANIMATIONS,
-	AreaFilter as CatamarcaAreaFilter,
-	LocationCard,
-	getAreaTheme,
-} from '../components/Catamarca';
 
+// 2. Chakra UI
 import {
+	Box,
+	Text,
+	Link,
 	IconButton,
+	CloseButton,
 	ModalHeader,
 	ModalBody,
 	ModalFooter,
 	useColorMode,
-	Box,
-	Text,
-	Link,
-	CloseButton,
 } from '@chakra-ui/react';
-import PropTypes from 'prop-types';
-import ModalContent from '../components/UI/ModalContent';
-import { useMemo, useCallback } from 'react'; // Import useCallback
-import { Suspense } from 'react';
-import LoadingSpinner from '../components/Screen/LoadingSpinner';
+
+// 3. Internal
+import { locations } from '@/data/catamarca';
+import {
+	ANIMATIONS,
+	AreaFilter as CatamarcaAreaFilter,
+	getAreaTheme,
+} from '@/components/Catamarca';
+import ModalContent from '@/components/common/ModalContent';
+import LocationCard from '@/components/common/LocationCard';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import CustomModal from '@/components/common/CustomModal';
 
 const CatamarcaModalHeader = React.memo(
 	({ location: { title, area }, onClose }) => {
@@ -139,9 +142,9 @@ CatamarcaModalFooter.propTypes = {
 };
 
 const CatamarcaAreaFilterComponent = ({ filters, setFilters }) => {
-	const areas = useMemo(() => {
-		return [...new Set(locations.map((loc) => loc.area))].sort();
-	}, []);
+	const getUniqueAreas = () =>
+		[...new Set(locations.map((loc) => loc.area))].sort();
+	const areas = useMemo(getUniqueAreas, []);
 
 	const selectedArea = filters.area || 'all';
 
@@ -188,9 +191,162 @@ const filterCatamarcaLocations = (locations, filters) => {
 		: locations.filter((loc) => loc.area === selectedArea);
 };
 
+
+const CatamarcaLocationCard = (props) => {
+	const { location, ...rest } = props;
+	const config = getAreaTheme(location.area);
+	const [isOpen, setIsOpen] = useState(false);
+
+	const handleOpen = () => setIsOpen(true);
+	const handleClose = () => setIsOpen(false);
+
+	return (
+		<>
+			<LocationCard
+				location={location}
+				config={config}
+				{...rest}
+				onClick={handleOpen}
+			/>
+			<CustomModal
+				isOpen={isOpen}
+				onClose={handleClose}
+				title={location.title || location.name}
+				headerGradient={config.gradient}
+				size='xl'
+				footer={
+					<div
+						style={{
+							display: 'flex',
+							gap: 12,
+							flexWrap: 'wrap',
+							justifyContent: 'flex-end',
+							width: '100%',
+						}}
+					>
+						{location.path && (
+							<a
+								href={location.path}
+								target='_blank'
+								rel='noopener noreferrer'
+								className='px-6 py-2 rounded-full bg-gradient-to-r from-teal-500 to-amber-500 text-white font-semibold shadow hover:scale-105 hover:shadow-lg transition-all duration-300'
+							>
+								Ver en mapa
+							</a>
+						)}
+						{location.wiki && (
+							<a
+								href={location.wiki}
+								target='_blank'
+								rel='noopener noreferrer'
+								className='px-6 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold shadow hover:scale-105 hover:shadow-lg transition-all duration-300'
+							>
+								Más información
+							</a>
+						)}
+					</div>
+				}
+			>
+				<div
+					style={{
+						display: 'grid',
+						gridTemplateRows: 'auto 1fr',
+						gridTemplateColumns: '1fr 1fr',
+						gap: 0,
+						minHeight: 400,
+					}}
+				>
+					{/* Header: Imagen */}
+					<div style={{ gridColumn: '1 / 3', gridRow: 1 }}>
+						<img
+							src={location.imgSrc}
+							alt={location.title || location.name}
+							style={{
+								width: '100%',
+								borderRadius: 12,
+								maxHeight: 320,
+								objectFit: 'cover',
+								marginBottom: 0,
+							}}
+						/>
+					</div>
+					{/* Izquierda: Descripción */}
+					<div
+						style={{
+							gridColumn: 1,
+							gridRow: 2,
+							padding: 24,
+							display: 'flex',
+							alignItems: 'flex-start',
+						}}
+					>
+						<p style={{ fontSize: 18, color: '#444', margin: 0 }}>
+							{location.description}
+						</p>
+					</div>
+					{/* Derecha: Iframe */}
+					<Box
+						as='iframe'
+						title={location.title}
+						src={location.mapSrc}
+						loading='lazy'
+						allowFullScreen
+						w='full'
+						h='300px'
+						border='none'
+						borderRadius='12px'
+						boxShadow='md'
+						overflow='hidden'
+						style={{
+							gridColumn: 2,
+							gridRow: 2,
+							padding: 24,
+							display: 'flex',
+							alignItems: 'flex-start',
+						}}
+						_dark={{ backgroundColor: 'gray.800' }}
+					>
+						{location.mapSrc && (
+							<div
+								style={{
+									borderRadius: 12,
+									overflow: 'hidden',
+									width: '100%',
+									minHeight: 240,
+								}}
+							>
+								<iframe
+									src={location.mapSrc}
+									title={location.title || location.name}
+									style={{ width: '100%', height: 240, border: 0 }}
+									loading='lazy'
+									allowFullScreen
+								/>
+							</div>
+						)}
+					</Box>
+				</div>
+			</CustomModal>
+		</>
+	);
+};
+
+CatamarcaLocationCard.propTypes = {
+	location: PropTypes.shape({
+		title: PropTypes.string,
+		name: PropTypes.string,
+		imgSrc: PropTypes.string,
+		description: PropTypes.string,
+		mapSrc: PropTypes.string,
+		path: PropTypes.string,
+		wiki: PropTypes.string,
+		area: PropTypes.string,
+	}).isRequired,
+};
+
 const Catamarca = () => {
 	const LocationPage = React.lazy(() =>
-		import('../components/UI/LocationPage')
+		import('@/components/common/LocationPage')
 	);
 	return (
 		<Suspense fallback={<LoadingSpinner />}>
@@ -198,7 +354,7 @@ const Catamarca = () => {
 				title='San Fernando del Valle'
 				locations={locations}
 				filterComponent={CatamarcaAreaFilterComponent}
-				locationCardComponent={LocationCard}
+				locationCardComponent={CatamarcaLocationCard}
 				modalContent={({ location, onClose }) => (
 					<ModalContent
 						size='sm'

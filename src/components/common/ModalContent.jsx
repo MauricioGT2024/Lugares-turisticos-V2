@@ -11,9 +11,7 @@ const ModalContent = ({
 	body,
 	footer,
 	isOpen = true,
-	onClose = () => {
-		
-	},
+	onClose = () => {},
 }) => {
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} size='xl' isCentered>

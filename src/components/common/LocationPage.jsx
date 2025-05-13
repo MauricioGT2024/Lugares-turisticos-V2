@@ -3,20 +3,23 @@ import {
 	Modal,
 	ModalOverlay,
 	useColorMode,
-	ModalContent,
+	ModalContent as ChakraModalContent,
 } from '@chakra-ui/react';
-import useLocationPage from '../../hooks/useLocationPage';
 import PropTypes from 'prop-types';
+import useLocationPage from '@/hooks/useLocationPage';
+
+// Extra fallback si usás íconos por categoría
+import { CATEGORY_CONFIG } from '@/components/Fiambala/components'; // o donde esté tu config
 
 const LocationPage = ({
 	title,
+	description,
 	locations,
 	filterComponent: FilterComponent,
 	locationCardComponent: LocationCardComponent,
 	modalContent: ModalContentComponent,
 	pageVariants,
 	filterFunction,
-	description,
 }) => {
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === 'dark';
@@ -41,29 +44,32 @@ const LocationPage = ({
 				isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'
 			}`}
 		>
-			<div className='container mx-auto px-4 md:px-8 max-w-7xl'>
-				<div className='flex flex-col space-y-8'>
-					<motion.header className='text-center space-y-6'>
-						<span className='inline-block px-6 py-2 rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white text-md uppercase tracking-wider shadow-lg'>
-							Explora
-						</span>
-						<h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-400 via-yellow-400 to-red-400 bg-clip-text text-transparent'>
-							{title}
-						</h1>
+			<section className='container mx-auto px-4 md:px-8 max-w-7xl'>
+				<header className='text-center space-y-6 mb-12'>
+					<span className='inline-block px-6 py-2 rounded-full bg-gradient-to-r from-orange-400 to-red-400 text-white text-md uppercase tracking-wider shadow'>
+						Explora
+					</span>
+					<h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-orange-400 via-yellow-400 to-red-400 bg-clip-text text-transparent'>
+						{title}
+					</h1>
+					{description && (
 						<p className='text-xl md:text-2xl max-w-3xl mx-auto opacity-90'>
 							{description}
 						</p>
-					</motion.header>
-
-					{FilterComponent && (
-						<FilterComponent filters={filters} setFilters={setFilters} />
 					)}
+				</header>
 
-					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8'>
-						<AnimatePresence mode='popLayout'>
-							{filteredLocations.map((location) => (
+				{FilterComponent && (
+					<FilterComponent filters={filters} setFilters={setFilters} />
+				)}
+
+				<section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-12'>
+					<AnimatePresence mode='popLayout'>
+						{filteredLocations.map((location) => {
+							const config = CATEGORY_CONFIG?.[location.category] || {};
+							return (
 								<motion.div
-									key={location.id} // Asegúrate de que 'location.id' sea único
+									key={location.id}
 									layout
 									initial={{ opacity: 0, y: 20 }}
 									animate={{ opacity: 1, y: 0 }}
@@ -73,13 +79,15 @@ const LocationPage = ({
 									<LocationCardComponent
 										location={location}
 										onShowDetails={() => handleShowDetails(location)}
+										Icon={config.icon}
+										gradientClass={config.bgClass}
 									/>
 								</motion.div>
-							))}
-						</AnimatePresence>
-					</div>
-				</div>
-			</div>
+							);
+						})}
+					</AnimatePresence>
+				</section>
+			</section>
 
 			<Modal
 				isOpen={isOpen}
@@ -89,7 +97,7 @@ const LocationPage = ({
 				isCentered
 			>
 				<ModalOverlay backdropFilter='blur(10px)' bg='blackAlpha.600' />
-				<ModalContent
+				<ChakraModalContent
 					bg={isDark ? 'gray.800' : 'white'}
 					borderRadius='xl'
 					mx={4}
@@ -100,7 +108,7 @@ const LocationPage = ({
 							onClose={handleCloseModal}
 						/>
 					)}
-				</ModalContent>
+				</ChakraModalContent>
 			</Modal>
 		</motion.div>
 	);
@@ -108,13 +116,13 @@ const LocationPage = ({
 
 LocationPage.propTypes = {
 	title: PropTypes.string.isRequired,
-	locations: PropTypes.array.isRequired,
+	description: PropTypes.string,
+	locations: PropTypes.arrayOf(PropTypes.object).isRequired,
 	filterComponent: PropTypes.elementType,
 	locationCardComponent: PropTypes.elementType.isRequired,
 	modalContent: PropTypes.elementType.isRequired,
 	pageVariants: PropTypes.object.isRequired,
 	filterFunction: PropTypes.func,
-	description: PropTypes.string.isRequired,
 };
 
 export default LocationPage;

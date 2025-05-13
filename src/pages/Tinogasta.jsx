@@ -1,172 +1,73 @@
-import { useCallback } from "react";
-import { locations } from "../data/tinogasta";
-import { LocationCard, AreaFilter } from "../components/Tinogasta/components";
-import { TINOGASTA_ANIMATIONS } from "../components/Tinogasta/config";
-import LocationPage from "../components/UI/LocationPage";
-import {
-	ModalBody,
-	ModalFooter,
-	ModalHeader,
-	useColorMode,
-	IconButton,
-} from "@chakra-ui/react";
-import PropTypes from "prop-types";
-import { FaMapMarkerAlt, FaWikipediaW, FaTimes } from "react-icons/fa";
-import ModalContent from "../components/UI/ModalContent";
-import { motion } from 'framer-motion';
+import { useState, useMemo } from 'react';
+import { locations } from '../data/tinogasta';
+import LocationCard from '../components/Tinogasta/LocationCard';
+import RichMediaModal from '../components/Tinogasta/RichMediaModal';
 
+const Tinogasta = () => {
+	const [selectedLocation, setSelectedLocation] = useState(null);
+	const [filter, setFilter] = useState('');
 
+	const categories = useMemo(() => {
+		const cats = locations.map((l) => l.category).filter(Boolean);
+		return ['Todos', ...new Set(cats)];
+	}, []);
 
+	const filteredLocations =
+		filter && filter !== 'Todos'
+			? locations.filter((loc) => loc.category === filter)
+			: locations;
 
-const TinogastaModalHeader = ({ location }) => (
-	<ModalHeader className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-		<h2 className="text-xl font-bold">{location.name}</h2>
-	</ModalHeader>
-);
-
-TinogastaModalHeader.propTypes = {
-	location: PropTypes.shape({
-		name: PropTypes.string.isRequired,
-		area: PropTypes.string.isRequired,
-	}).isRequired,
-};
-
-const TinogastaModalBody = ({ location }) => {
-
-	const MotionBody = motion.create(ModalBody);
-	const { colorMode } = useColorMode();
 	return (
-		<MotionBody
-			className='p-6 space-y-6'
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: 0.4 }}
-		>
-			<img
-				src={location.imgSrc}
-				alt={location.name}
-				className='w-full h-64 object-cover rounded-lg shadow-lg'
-			/>
-			<p
-				className={`text-lg ${
-					colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'
-				}`}
-			>
-				{location.descriptionLong || location.description}
-			</p>
-			<div className='rounded-lg overflow-hidden shadow-lg'>
-				<iframe
-					src={location.iframe}
-					className='w-full h-[300px] border-0'
-					allowFullScreen
-					title={location.name}
+		<main className='min-h-screen bg-gradient-to-br  text-white px-4 py-12'>
+			<section className='max-w-6xl mx-auto'>
+				<header className='mb-12 text-center'>
+					<h1 className='text-4xl font-extrabold mb-2'>Tinogasta</h1>
+					<p className='text-lg text-white/80'>
+						Tierra de historia, termas y paisajes entre volcanes y valles.
+					</p>
+				</header>
+
+				<section
+					aria-label='Filtro de categorías'
+					className='mb-8 flex flex-wrap justify-center gap-3'
+				>
+					{categories.map((cat) => (
+						<button
+							key={cat}
+							onClick={() => setFilter(cat)}
+							className={`px-5 py-2 rounded-full font-semibold transition-all border ${
+								filter === cat
+									? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-transparent'
+									: 'bg-white/10 text-white border-white/20 hover:bg-white/20'
+							}`}
+						>
+							{cat}
+						</button>
+					))}
+				</section>
+
+				<section
+					aria-label='Lista de lugares'
+					className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
+				>
+					{filteredLocations.map((loc) => (
+						<LocationCard
+							key={loc.id}
+							location={loc}
+							onClick={() => setSelectedLocation(loc)}
+						/>
+					))}
+				</section>
+			</section>
+
+			{selectedLocation && (
+				<RichMediaModal
+					location={selectedLocation}
+					onClose={() => setSelectedLocation(null)}
 				/>
-			</div>
-		</MotionBody>
+			)}
+		</main>
 	);
 };
-
-TinogastaModalBody.propTypes = {
-	location: PropTypes.shape({
-		name: PropTypes.string.isRequired,
-		imgSrc: PropTypes.string.isRequired,
-		description: PropTypes.string.isRequired,
-		iframe: PropTypes.string.isRequired,
-		descriptionLong: PropTypes.string,
-		area: PropTypes.string,
-	}).isRequired,
-};
-
-const TinogastaModalFooter = ({ location, onClose }) => (
-	<ModalFooter className="space-x-3">
-		{location.wiki && (
-			<IconButton
-				as="a"
-				href={location.wiki}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="Ver en Wikipedia"
-				icon={<FaWikipediaW />}
-				colorScheme="purple"
-				variant="ghost"
-			/>
-		)}
-		{location.mapUrl && (
-			<IconButton
-				as="a"
-				href={location.mapUrl}
-				target="_blank"
-				rel="noopener noreferrer"
-				aria-label="Ver en Google Maps"
-				icon={<FaMapMarkerAlt />}
-				colorScheme="blue"
-				variant="ghost"
-			/>
-		)}
-		<IconButton
-			onClick={onClose}
-			aria-label="Cerrar"
-			icon={<FaTimes />}
-			colorScheme="red"
-			variant="ghost"
-		/>
-	</ModalFooter>
-);
-
-TinogastaModalFooter.propTypes = {
-	location: PropTypes.shape({
-		wiki: PropTypes.string,
-		mapUrl: PropTypes.string,
-	}).isRequired,
-	onClose: PropTypes.func.isRequired,
-};
-
-const TinogastaAreaFilterComponent = ({ filters, setFilters }) => {
-	const handleAreaFilterChange = useCallback(
-		(filter) => {
-			setFilters({ areaFilter: filter });
-		},
-		[setFilters]
-	);
-
-	return (
-		<AreaFilter
-			areaFilter={filters.areaFilter || ""}
-			setAreaFilter={handleAreaFilterChange}
-			areas={[...new Set(locations.map(loc => loc.area))]}
-		/>
-	);
-};
-
-TinogastaAreaFilterComponent.propTypes = {
-	filters: PropTypes.shape({
-		areaFilter: PropTypes.string,
-	}).isRequired,
-	setFilters: PropTypes.func.isRequired,
-};
-
-const filterTinogastaLocations = (locations, filters) => {
-	return locations.filter(
-		(loc) => !filters.areaFilter || loc.area === filters.areaFilter
-	);
-};
-
-const Tinogasta = () => (
-	<LocationPage
-		title="Tinogasta"
-		locations={locations}
-		filterComponent={TinogastaAreaFilterComponent}
-		locationCardComponent={LocationCard}
-		modalContent={({ location, onClose }) => (
-			<ModalContent
-				header={<TinogastaModalHeader location={location} />}
-				body={<TinogastaModalBody location={location} />}
-				footer={<TinogastaModalFooter location={location} onClose={onClose} />}
-			/>
-		)}
-		pageVariants={TINOGASTA_ANIMATIONS.pageVariants}
-		filterFunction={filterTinogastaLocations}
-	/>
-);
 
 export default Tinogasta;

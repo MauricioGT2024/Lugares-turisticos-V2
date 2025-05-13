@@ -1,7 +1,7 @@
 import { useState, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { departamentos } from '../data/departamentos';
+import { departamentos } from '@/data/departamentos';
 import { useColorMode } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
@@ -113,7 +113,7 @@ const DepartamentoCard = memo(
 							<p className='text-center text-white/90'>{description}</p>
 							<motion.button
 								className='mt-4 px-6 py-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 
-                         transition-colors duration-300 text-white font-medium'
+						 transition-colors duration-300 text-white font-medium'
 								whileHover={{ scale: 1.05 }}
 								whileTap={{ scale: 0.95 }}
 							>

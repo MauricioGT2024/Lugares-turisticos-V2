@@ -1,8 +1,8 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
 import { useColorMode } from "@chakra-ui/react";
-import HospedajeList from "../components/Hospedaje/HospedajeList";
-import { hospedajes } from "../data/hospedaje";
+import HospedajeList from '@/components/Hospedaje/HospedajeList';
+import { hospedajes } from '@/data/hospedaje';
 
 const useTheme = (colorMode) => ({
   bg: colorMode === "dark" ? "bg-gray-900" : "bg-white",

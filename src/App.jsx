@@ -5,24 +5,26 @@ import {
 	Routes,
 	useLocation,
 } from 'react-router-dom';
-import Navbar from './components/Navigation/Navbar';
+import Navbar from '@/components/layout/Navbar';
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { Suspense, lazy, useEffect, useState } from 'react';
-import LoadingSpinner from './components/Screen/LoadingSpinner';
-import Error404 from './pages/Error404';
-import Footer from './pages/Footer';
-import About from './pages/About';
-import SplashScreen from './components/Screen/SplashScreen';
-import { pageTransition } from './config/transitions';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import Error404 from '@/pages/Error404';
+import Footer from '@/pages/Footer';
+import About from '@/pages/About';
+import SplashScreen from '@/components/common/SplashScreen';
+import { pageTransition } from '@/config/transitions';
 import PropTypes from 'prop-types';
+import ColorModeSwitcher from '@/components/common/ColorModeSwitcher';
+
 
 // Lazy imports
-const LazyTinogasta = lazy(() => import('./pages/Tinogasta'));
-const LazyAntofagasta = lazy(() => import('./pages/Antofagasta'));
-const LazyHome = lazy(() => import('./pages/Home'));
-const LazyProvincia = lazy(() => import('./pages/Provincia'));
-const LazyCatamarca = lazy(() => import('./pages/Catamarca'));
-const LazyHospedaje = lazy(() => import('./pages/Hospedaje'));
+const LazyTinogasta = lazy(() => import('@/pages/Tinogasta'));
+const LazyAntofagasta = lazy(() => import('@/pages/Antofagasta'));
+const LazyHome = lazy(() => import('@/pages/Home'));
+const LazyProvincia = lazy(() => import('@/pages/Provincia'));
+const LazyCatamarca = lazy(() => import('@/pages/Catamarca'));
+const LazyHospedaje = lazy(() => import('@/pages/Hospedaje'));
 const LazyFiambala = lazy(() => import('./pages/Fiambala'));
 
 // Error Boundary Component
@@ -154,6 +156,9 @@ function App() {
 	return (
 		<Router>
 			<AnimatePresence mode='wait'>
+				<div className='px-4 pb-6 fixed z-40 top-4 right-4'>
+					<ColorModeSwitcher />
+				</div>
 				{showSplash ? (
 					<SplashScreen onComplete={() => setShowSplash(false)} />
 				) : (
