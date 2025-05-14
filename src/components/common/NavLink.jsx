@@ -1,49 +1,52 @@
-import { Link as RouterLink, useLocation } from "react-router-dom";
-import { useColorMode } from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import PropTypes from "prop-types";
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useColorMode } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
+import React from 'react';
 
 /**
- * NavLink reutilizable para Navbar y Footer
- * Props:
- * - to: string (ruta)
- * - label: string (texto)
- * - icon: componente de ícono
- * - onClick: función opcional
- * - sidebar (opcional): si es true, aplica estilos de sidebar
+ * Componente reutilizable NavLink para navegación (Navbar, Sidebar, Footer)
  */
-const NavLink = ({ to, label, icon: Icon, onClick, sidebar }) => {
-  const location = useLocation();
-  const { colorMode } = useColorMode();
-  const isActive = location.pathname === to;
+const NavLink = ({ to, label, icon: Icon, onClick, sidebar = false }) => {
+	const { pathname } = useLocation();
+	const { colorMode } = useColorMode();
+	const isActive = pathname === to;
 
-  // Estilos base
-  const baseClass = sidebar
-    ? `flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium transition-colors
-      ${isActive
-        ? "bg-teal-500 text-white"
-        : colorMode === "light"
-          ? "text-gray-700 hover:bg-teal-100"
-          : "text-gray-200 hover:bg-teal-800"
-      }`
-    : `flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-300 py-2 px-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all ${isActive ? "font-bold text-teal-600 dark:text-teal-300" : ""}`;
+	const baseClasses = sidebar
+		? clsx(
+				'flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium transition-colors',
+				{
+					'bg-teal-500 text-white': isActive,
+					'text-gray-700 hover:bg-teal-100': !isActive && colorMode === 'light',
+					'text-gray-200 hover:bg-teal-800': !isActive && colorMode === 'dark',
+				}
+		  )
+		: clsx(
+				'flex items-center space-x-2 py-2 px-4 rounded-lg transition-all',
+				'text-gray-600 dark:text-gray-400 hover:text-teal-500 dark:hover:text-teal-300',
+				'hover:bg-gray-100 dark:hover:bg-gray-700',
+				{
+					'font-bold text-teal-600 dark:text-teal-300': isActive,
+				}
+		  );
 
-  return (
-    <motion.div whileHover={sidebar ? undefined : { x: 4 }} className="w-full">
-      <RouterLink to={to} onClick={onClick} className={baseClass}>
-        {Icon && <Icon className="w-5 h-5" />}
-        <span>{label}</span>
-      </RouterLink>
-    </motion.div>
-  );
+	return (
+		<motion.div whileHover={!sidebar ? { x: 4 } : false} className='w-full'>
+			<RouterLink to={to} onClick={onClick} className={baseClasses}>
+				{Icon && <Icon className='w-5 h-5' />}
+				<span>{label}</span>
+			</RouterLink>
+		</motion.div>
+	);
 };
 
 NavLink.propTypes = {
-  to: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  icon: PropTypes.elementType.isRequired,
-  onClick: PropTypes.func,
-  sidebar: PropTypes.bool,
+	to: PropTypes.string.isRequired,
+	label: PropTypes.string.isRequired,
+	icon: PropTypes.elementType.isRequired,
+	onClick: PropTypes.func,
+	sidebar: PropTypes.bool,
 };
 
-export default NavLink;
+export default React.memo(NavLink);

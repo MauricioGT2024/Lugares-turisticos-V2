@@ -1,245 +1,158 @@
+import { motion } from 'framer-motion';
 import {
-  Box,
-  Heading,
-  Text,
-  VStack,
-  Image,
-  SimpleGrid,
-  Link,
-  Button,
-  useColorModeValue,
-  Icon,
-  Container,
-  Divider,
-  Badge,
-  HStack,
-  Tooltip,
-} from "@chakra-ui/react";
-import { motion } from "framer-motion";
-import {
-  FaMapMarkedAlt,
-  FaBook,
-  FaHiking,
-  FaHotel,
-  FaCalendarAlt,
-  FaInfoCircle,
-  FaExternalLinkAlt,
-} from "react-icons/fa";
-import PropTypes from "prop-types";
+	FaMapMarkedAlt,
+	FaBook,
+	FaHiking,
+	FaHotel,
+	FaCalendarAlt,
+	FaInfoCircle,
+	FaExternalLinkAlt,
+} from 'react-icons/fa';
+import PropTypes from 'prop-types';
 
-const FeatureCard = ({ icon, title, description }) => {
-  const cardBg = useColorModeValue("white", "gray.800");
-  const iconBg = useColorModeValue("teal.100", "teal.900");
+const FeatureCard = ({ icon: Icon, title, description }) => (
+	<motion.div whileHover={{ y: -5 }} whileTap={{ scale: 0.95 }}>
+		<div className=' dark:bg-gray-800 p-6 rounded-xl shadow-lg relative overflow-hidden'>
+			<div className='bg-teal-100 dark:bg-teal-900 w-12 h-12 rounded-full flex items-center justify-center mb-4'>
+				<Icon className='w-6 h-6 text-teal-500' />
+			</div>
+			<h3 className='text-teal-500 text-lg font-semibold mb-3'>{title}</h3>
+			<p className='text-gray-600 dark:text-gray-300'>{description}</p>
+		</div>
+	</motion.div>
+);
 
-  return (
-    <motion.div whileHover={{ y: -5 }} whileTap={{ scale: 0.95 }}>
-      <Box
-        bg={cardBg}
-        p={6}
-        borderRadius="xl"
-        boxShadow="lg"
-        position="relative"
-        overflow="hidden"
-      >
-        <Box
-          bg={iconBg}
-          w={12}
-          h={12}
-          borderRadius="full"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          mb={4}
-        >
-          <Icon as={icon} w={6} h={6} color="teal.500" />
-        </Box>
-        <Heading size="md" mb={3} color="teal.500">
-          {title}
-        </Heading>
-        <Text fontSize="md" color={useColorModeValue("gray.600", "gray.300")}>
-          {description}
-        </Text>
-      </Box>
-    </motion.div>
-  );
-};
-// Corregido: propTypes en minúscula y tipo de 'icon'
 FeatureCard.propTypes = {
-  icon: PropTypes.elementType.isRequired,
-  description: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+	icon: PropTypes.elementType.isRequired,
+	title: PropTypes.string.isRequired,
+	description: PropTypes.string.isRequired,
 };
 
-const ImageCard = ({ image, title, description }) => {
-  const cardBg = useColorModeValue("white", "gray.800");
+const ImageCard = ({ image, title, description }) => (
+	<motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
+		<div className=' dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg'>
+			<div className='relative h-64'>
+				<img
+					src={image}
+					alt={title}
+					className='object-cover w-full h-full transition-transform duration-300 hover:scale-110'
+				/>
+				<span className='absolute top-4 right-4 bg-teal-500 text-white text-xs px-3 py-1 rounded-full'>
+					Explorar
+				</span>
+			</div>
+			<div className='p-6'>
+				<h3 className='text-lg font-semibold mb-2'>{title}</h3>
+				<p className='text-gray-600 dark:text-gray-300'>{description}</p>
+			</div>
+		</div>
+	</motion.div>
+);
 
-  return (
-    <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
-      <Box bg={cardBg} borderRadius="2xl" overflow="hidden" boxShadow="lg">
-        <Box position="relative" height="250px">
-          <Image
-            src={image}
-            alt={title}
-            objectFit="cover"
-            w="100%"
-            h="100%"
-            transition="transform 0.3s"
-            _hover={{ transform: "scale(1.1)" }}
-          />
-          <Badge
-            position="absolute"
-            top="4"
-            right="4"
-            colorScheme="teal"
-            fontSize="sm"
-            px="3"
-            py="1"
-            borderRadius="full"
-          >
-            Explorar
-          </Badge>
-        </Box>
-        <Box p={6}>
-          <Heading size="md" mb={2}>
-            {title}
-          </Heading>
-          <Text color={useColorModeValue("gray.600", "gray.300")}>
-            {description}
-          </Text>
-        </Box>
-      </Box>
-    </motion.div>
-  );
-};
-
-// Corregido: propTypes en minúscula y 'image' en lugar de 'icon'
 ImageCard.propTypes = {
-  image: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+	image: PropTypes.string.isRequired,
+	title: PropTypes.string.isRequired,
+	description: PropTypes.string.isRequired,
 };
 
 const About = () => {
-  const bgColor = useColorModeValue("gray.50", "gray.900");
-  const textColor = useColorModeValue("gray.600", "gray.300");
+	const features = [
+		{
+			icon: FaBook,
+			title: 'Guías Completas',
+			description:
+				'Información detallada y actualizada sobre destinos turísticos.',
+		},
+		{
+			icon: FaMapMarkedAlt,
+			title: 'Mapas Interactivos',
+			description: 'Ubicaciones precisas y rutas recomendadas para tu viaje.',
+		},
+		{
+			icon: FaHotel,
+			title: 'Alojamiento',
+			description: 'Las mejores opciones de hospedaje para cada presupuesto.',
+		},
+		{
+			icon: FaCalendarAlt,
+			title: 'Eventos Locales',
+			description: 'Calendario actualizado de festivales y eventos culturales.',
+		},
+		{
+			icon: FaHiking,
+			title: 'Actividades',
+			description: 'Experiencias únicas y aventuras al aire libre.',
+		},
+		{
+			icon: FaInfoCircle,
+			title: 'Información Cultural',
+			description: 'Historia, tradiciones y consejos para viajeros.',
+		},
+	];
 
-  const features = [
-    {
-      icon: FaBook,
-      title: "Guías Completas",
-      description:
-        "Información detallada y actualizada sobre destinos turísticos.",
-    },
-    {
-      icon: FaMapMarkedAlt,
-      title: "Mapas Interactivos",
-      description: "Ubicaciones precisas y rutas recomendadas para tu viaje.",
-    },
-    {
-      icon: FaHotel,
-      title: "Alojamiento",
-      description: "Las mejores opciones de hospedaje para cada presupuesto.",
-    },
-    {
-      icon: FaCalendarAlt,
-      title: "Eventos Locales",
-      description: "Calendario actualizado de festivales y eventos culturales.",
-    },
-    {
-      icon: FaHiking,
-      title: "Actividades",
-      description: "Experiencias únicas y aventuras al aire libre.",
-    },
-    {
-      icon: FaInfoCircle,
-      title: "Información Cultural",
-      description: "Historia, tradiciones y consejos para viajeros.",
-    },
-  ];
+	return (
+		<div className=' dark:bg-gray-900 min-h-screen py-12'>
+			<div className='max-w-7xl mx-auto px-4'>
+				<div className='text-center mb-12'>
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						transition={{ duration: 0.5 }}
+					>
+						<h1 className='text-4xl font-extrabold text-teal-500 mb-4'>
+							Acerca de Catamarca Turismo
+						</h1>
+						<p className='text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto'>
+							Tu guía definitiva para explorar las maravillas de Catamarca.
+							Descubre paisajes impresionantes, rica cultura y experiencias
+							únicas.
+						</p>
+					</motion.div>
+				</div>
 
-  return (
-    <Box bg={bgColor} minH="100vh" py={12}>
-      <Container maxW="7xl">
-        <VStack spacing={12}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <VStack spacing={4} textAlign="center" mb={8}>
-              <Heading
-                as="h1"
-                size="2xl"
-                bgGradient="linear(to-r, teal.400, blue.500)"
-                bgClip="text"
-                letterSpacing="tight"
-              >
-                Acerca de Catamarca Turismo
-              </Heading>
-              <Text fontSize="xl" color={textColor} maxW="2xl">
-                Tu guía definitiva para explorar las maravillas de Catamarca.
-                Descubre paisajes impresionantes, rica cultura y experiencias
-                únicas.
-              </Text>
-            </VStack>
-          </motion.div>
+				<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+					{features.map((feature, index) => (
+						<motion.div
+							key={feature.title}
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{ duration: 0.5, delay: index * 0.1 }}
+						>
+							<FeatureCard {...feature} />
+						</motion.div>
+					))}
+				</div>
 
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} w="full">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <FeatureCard {...feature} />
-              </motion.div>
-            ))}
-          </SimpleGrid>
+				<div className='my-8'>
+					<div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+						<ImageCard
+							image='https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d'
+							title='Paisajes Majestuosos'
+							description='Explora las impresionantes montañas de los Andes y descubre maravillas naturales únicas.'
+						/>
+						<ImageCard
+							image='https://images.unsplash.com/photo-1503220317375-aaad61436b1b'
+							title='Aventuras Sin Límites'
+							description='Vive experiencias inolvidables con actividades al aire libre y deportes de aventura.'
+						/>
+					</div>
+				</div>
 
-          <Divider my={8} />
-
-          <SimpleGrid columns={{ base: 1, md: 2 }} spacing={8} w="full">
-            <ImageCard
-              image="https://images.unsplash.com/photo-1604537529428-15bcbeecfe4d"
-              title="Paisajes Majestuosos"
-              description="Explora las impresionantes montañas de los Andes y descubre maravillas naturales únicas."
-            />
-            <ImageCard
-              image="https://images.unsplash.com/photo-1503220317375-aaad61436b1b"
-              title="Aventuras Sin Límites"
-              description="Vive experiencias inolvidables con actividades al aire libre y deportes de aventura."
-            />
-          </SimpleGrid>
-
-          <Box textAlign="center" mt={8}>
-            <Heading as="h3" size="lg" mb={6} color="teal.500">
-              ¿Listo para explorar?
-            </Heading>
-            <HStack spacing={4} justify="center">
-              <Tooltip label="Visita el sitio oficial">
-                <Button
-                  as={Link}
-                  href="https://turismo.catamarca.gob.ar/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  colorScheme="teal"
-                  size="lg"
-                  rightIcon={<FaExternalLinkAlt />}
-                  _hover={{
-                    transform: "translateY(-2px)",
-                    boxShadow: "lg",
-                  }}
-                >
-                  Sitio Oficial
-                </Button>
-              </Tooltip>
-            </HStack>
-          </Box>
-        </VStack>
-      </Container>
-    </Box>
-  );
+				<div className='text-center mt-8'>
+					<h3 className='text-2xl text-teal-500 mb-6'>¿Listo para explorar?</h3>
+					<a
+						href='https://turismo.catamarca.gob.ar/'
+						target='_blank'
+						rel='noopener noreferrer'
+						className='inline-flex items-center px-6 py-3 bg-teal-500 text-white text-lg rounded-full hover:bg-teal-600 transition-transform transform hover:scale-105'
+					>
+						Sitio Oficial
+						<FaExternalLinkAlt className='ml-2' />
+					</a>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default About;

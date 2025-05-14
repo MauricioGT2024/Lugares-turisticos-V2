@@ -1,17 +1,24 @@
 import { useMemo } from 'react';
 import { locations } from '@/data/tinogasta';
 
+/**
+ * Hook que devuelve las categorías únicas de Tinogasta, ordenadas alfabéticamente.
+ */
 export const useTinogastaCategories = () => {
-  const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(locations.map(loc => loc.category))];
-    return uniqueCategories.sort();
-  }, []);
+	const categories = useMemo(() => {
+		const allCategories = locations.map((loc) => loc.category).filter(Boolean);
+		const unique = [...new Set(allCategories)];
+		return unique.sort();
+	}, []);
 
-  return { categories };
+	return { categories };
 };
 
+/**
+ * Animaciones definidas para componentes de Tinogasta.
+ */
 export const TINOGASTA_ANIMATIONS = {
-	pageVariants: {
+	page: {
 		initial: { opacity: 0, y: 20 },
 		animate: {
 			opacity: 1,
@@ -29,12 +36,8 @@ export const TINOGASTA_ANIMATIONS = {
 		},
 	},
 
-	cardVariants: {
-		initial: {
-			opacity: 0,
-			y: 20,
-			scale: 0.95,
-		},
+	card: {
+		initial: { opacity: 0, y: 20, scale: 0.95 },
 		animate: {
 			opacity: 1,
 			y: 0,
@@ -56,18 +59,18 @@ export const TINOGASTA_ANIMATIONS = {
 		},
 		tap: {
 			scale: 0.98,
-			transition: {
-				duration: 0.1,
-			},
+			transition: { duration: 0.1 },
+		},
+		exit: {
+			opacity: 0,
+			y: -20,
+			scale: 0.95,
+			transition: { duration: 0.2 },
 		},
 	},
 
-	filterVariants: {
-		initial: {
-			opacity: 0,
-			x: -20,
-			scale: 0.8,
-		},
+	filter: {
+		initial: { opacity: 0, x: -20, scale: 0.8 },
 		animate: {
 			opacity: 1,
 			x: 0,
@@ -89,12 +92,8 @@ export const TINOGASTA_ANIMATIONS = {
 		},
 	},
 
-	modalVariants: {
-		initial: {
-			opacity: 0,
-			y: 50,
-			scale: 0.9,
-		},
+	modal: {
+		initial: { opacity: 0, y: 50, scale: 0.9 },
 		animate: {
 			opacity: 1,
 			y: 0,
@@ -109,13 +108,11 @@ export const TINOGASTA_ANIMATIONS = {
 			opacity: 0,
 			y: -50,
 			scale: 0.9,
-			transition: {
-				duration: 0.2,
-			},
+			transition: { duration: 0.2 },
 		},
 	},
 
-	imageVariants: {
+	image: {
 		hover: {
 			scale: 1.1,
 			transition: {
@@ -125,52 +122,3 @@ export const TINOGASTA_ANIMATIONS = {
 		},
 	},
 };
-
-export const filterAnimations = {
-	hidden: {
-		opacity: 0,
-		y: 20,
-		scale: 0.95,
-	},
-	visible: {
-		opacity: 1,
-		y: 0,
-		scale: 1,
-		transition: {
-			type: 'spring',
-			stiffness: 300,
-			damping: 25,
-		},
-	},
-	exit: {
-		opacity: 0,
-		y: -20,
-		scale: 0.95,
-		transition: { duration: 0.2 },
-	},
-};
-
-export const cardAnimation = {
-	initial: {
-		opacity: 0,
-		y: 20,
-		scale: 0.95,
-	},
-	animate: {
-		opacity: 1,
-		y: 0,
-		scale: 1,
-		transition: {
-			type: 'spring',
-			stiffness: 260,
-			damping: 20,
-		},
-	},
-	exit: {
-		opacity: 0,
-		y: -20,
-		scale: 0.95,
-		transition: { duration: 0.2 },
-	},
-};
-

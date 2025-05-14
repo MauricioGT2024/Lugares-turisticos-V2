@@ -1,7 +1,4 @@
-// components/Antofagasta/AntofagastaModal.jsx
-// 1. React & Third-party
 import PropTypes from 'prop-types';
-// 2. Chakra UI
 import {
 	Modal,
 	ModalOverlay,
@@ -13,9 +10,9 @@ import {
 	IconButton,
 	useColorMode,
 } from '@chakra-ui/react';
-// 3. Internal
 import { motion } from 'framer-motion';
 import { FaMapMarkedAlt, FaInfoCircle, FaTimes } from 'react-icons/fa';
+import { modalVariants } from '@/components/Antofagasta/animations'; // Asegurate que esté definido ahí
 
 const AntofagastaModal = ({ isOpen, onClose, location }) => {
 	const { colorMode } = useColorMode();
@@ -34,10 +31,10 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
 			<ModalOverlay backdropFilter='blur(12px)' bg='blackAlpha.700' />
 			<ModalContent
 				as={motion.div}
-				initial={{ scale: 0.95, opacity: 0, y: 40 }}
-				animate={{ scale: 1, opacity: 1, y: 0 }}
-				exit={{ scale: 0.95, opacity: 0, y: 40 }}
-				transition={{ duration: 0.4, type: 'spring', bounce: 0.2 }}
+				initial='initial'
+				animate='animate'
+				exit='exit'
+				variants={modalVariants}
 				bg={isDark ? 'gray.900' : 'white'}
 				borderRadius='2xl'
 				boxShadow='2xl'
@@ -46,7 +43,7 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
 				p={0}
 			>
 				{/* Imagen de cabecera */}
-				<Box position='relative' w='100%' h='220px' overflow='hidden'>
+				<Box position='relative' w='100%' h={{ base: '180px', md: '220px' }} overflow='hidden'>
 					<motion.img
 						src={location.imgSrc}
 						alt={location.title}
@@ -88,10 +85,12 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
 
 				{/* Contenido */}
 				<Box
-					display='grid'
-					gridTemplateColumns={{ base: '1fr', md: '1fr 1fr' }}
+					display='flex'
+					flexDirection={{ base: 'column', md: 'row' }}
+					gap={0}
+					bg={isDark ? 'gray.900' : 'white'}
 				>
-					<Box p={8} bg={isDark ? 'gray.900' : 'white'}>
+					<Box flex='1' p={{ base: 4, md: 8 }} bg='transparent'>
 						<Box
 							as='h3'
 							fontSize='xl'
@@ -111,27 +110,45 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
 						</Box>
 					</Box>
 
-					<Box p={8} bg={isDark ? 'gray.950' : 'gray.50'}>
+					{/* Iframe */}
+						<Box
+						flex='1'
+						p={{ base: 4, md: 8 }}
+						bg={isDark ? 'gray.950' : 'gray.50'}
+						display='flex'
+						alignItems='flex-start'
+						justifyContent='center'
+					>
 						{location.mapSrc && (
 							<Box
-								borderRadius='xl'
-								overflow='hidden'
 								w='100%'
-								minH='220px'
+								maxW='400px'
+								h={{ base: '180px', md: '260px' }}
+								overflow='hidden'
+								borderRadius='lg'
 								boxShadow='md'
+								bg='white'
 							>
-								<iframe
+								<Box
+									as='iframe'
 									src={location.mapSrc}
 									title={location.title}
-									style={{ width: '100%', height: 220, border: 0 }}
+									width='100%'
+									height='100%'
 									loading='lazy'
-									allowFullScreen
+									border='0'
+									style={{
+										borderRadius: '12px',
+										width: '100%',
+										height: '100%',
+										minHeight: '180px',
+										background: 'white',
+									}}
 								/>
 							</Box>
 						)}
 					</Box>
 				</Box>
-
 				{/* Footer */}
 				<ModalFooter
 					display='flex'
@@ -181,17 +198,18 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
 		</Modal>
 	);
 };
+
 AntofagastaModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  location: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    imgSrc: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    mapSrc: PropTypes.string,
-    mapUrl: PropTypes.string,
-    path: PropTypes.string,
-  }).isRequired,
+	isOpen: PropTypes.bool.isRequired,
+	onClose: PropTypes.func.isRequired,
+	location: PropTypes.shape({
+		title: PropTypes.string.isRequired,
+		imgSrc: PropTypes.string.isRequired,
+		description: PropTypes.string.isRequired,
+		mapSrc: PropTypes.string,
+		mapUrl: PropTypes.string,
+		path: PropTypes.string,
+	}).isRequired,
 };
 
 export default AntofagastaModal;

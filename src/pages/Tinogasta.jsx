@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { locations } from '../data/tinogasta';
-import LocationCard from '../components/Tinogasta/LocationCard';
-import RichMediaModal from '../components/Tinogasta/RichMediaModal';
+import TinogastaLocationCard from '../components/Tinogasta/LocationCard';
+import TinogastaModal from '../components/Tinogasta/TinogastaModal';
 
 const Tinogasta = () => {
 	const [selectedLocation, setSelectedLocation] = useState(null);
@@ -51,17 +51,17 @@ const Tinogasta = () => {
 					className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
 				>
 					{filteredLocations.map((loc) => (
-						<LocationCard
+						<TinogastaLocationCard
 							key={loc.id}
 							location={loc}
-							onClick={() => setSelectedLocation(loc)}
+							onShowDetails={setSelectedLocation}
 						/>
 					))}
 				</section>
 			</section>
 
 			{selectedLocation && (
-				<RichMediaModal
+				<TinogastaModal
 					location={selectedLocation}
 					onClose={() => setSelectedLocation(null)}
 				/>

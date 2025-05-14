@@ -10,6 +10,7 @@ import {
 	FaTimes,
 } from 'react-icons/fa';
 import { useColorMode } from '@chakra-ui/react';
+import clsx from 'clsx';
 import NavLink from '@/components/common/NavLink';
 
 const navItems = [
@@ -22,26 +23,37 @@ const navItems = [
 export default function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
 	const { colorMode } = useColorMode();
-	const toggleSidebar = useCallback(() => setIsOpen((v) => !v), []);
+
+	const toggleSidebar = useCallback(() => {
+		setIsOpen((prev) => !prev);
+	}, []);
+
+	const overlayBg =
+		colorMode === 'dark' ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.4)';
+	const sidebarBg = colorMode === 'dark' ? '#1a202c' : '#f7fafc';
 
 	return (
 		<>
-			{/* Hamburger Button */}
+			{/* Botón hamburguesa */}
 			<button
 				onClick={toggleSidebar}
-				className={`fixed top-4 left-4 z-[100] p-2 rounded-md shadow-md bg-white/80 dark:bg-gray-800/80
-          ${isOpen ? 'pointer-events-none opacity-0' : ''}
-          transition-all`}
+				className={clsx(
+					'fixed top-4 left-4 z-[100] p-2 rounded-md shadow-md transition-all',
+					'bg-white/80 dark:bg-gray-800/80',
+					{
+						'pointer-events-none opacity-0': isOpen,
+					}
+				)}
 				aria-label='Abrir menú lateral'
 			>
 				<FaBars className='h-7 w-7 text-teal-600 dark:text-teal-300' />
 			</button>
 
-			{/* Sidebar Overlay */}
+			{/* Sidebar y fondo */}
 			<AnimatePresence>
 				{isOpen && (
 					<>
-						{/* Overlay */}
+						{/* Fondo desenfocado */}
 						<motion.div
 							key='overlay'
 							initial={{ opacity: 0 }}
@@ -49,13 +61,11 @@ export default function Navbar() {
 							exit={{ opacity: 0 }}
 							transition={{ duration: 0.3 }}
 							className='fixed inset-0 z-40'
-							style={{
-								backgroundColor:
-									colorMode === 'dark' ? 'rgba(0,0,0,0.7)' : 'rgba(0,0,0,0.4)',
-							}}
+							style={{ backgroundColor: overlayBg }}
 							onClick={toggleSidebar}
 							aria-label='Cerrar menú lateral'
 						/>
+
 						{/* Sidebar */}
 						<motion.aside
 							key='sidebar'
@@ -64,11 +74,10 @@ export default function Navbar() {
 							exit={{ x: -320 }}
 							transition={{ type: 'spring', stiffness: 300, damping: 30 }}
 							className='fixed top-0 left-0 h-full w-72 max-w-[90vw] z-50 flex flex-col'
+							style={{ backgroundColor: sidebarBg }}
 							aria-label='Menú lateral'
-							style={{
-								backgroundColor: colorMode === 'dark' ? '#1a202c' : '#f7fafc',
-							}}
 						>
+							{/* Encabezado */}
 							<div className='flex items-center justify-between px-4 py-4 border-b border-gray-200 dark:border-gray-700'>
 								<Link
 									to='/'
@@ -90,6 +99,8 @@ export default function Navbar() {
 									<FaTimes className='h-6 w-6 text-gray-700 dark:text-gray-200' />
 								</button>
 							</div>
+
+							{/* Navegación */}
 							<nav className='flex-1 flex flex-col gap-1 px-2 py-6'>
 								{navItems.map((item) => (
 									<NavLink
@@ -102,7 +113,6 @@ export default function Navbar() {
 									/>
 								))}
 							</nav>
-							
 						</motion.aside>
 					</>
 				)}

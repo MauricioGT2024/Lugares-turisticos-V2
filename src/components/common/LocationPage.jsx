@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import useLocationPage from '@/hooks/useLocationPage';
 
 // Extra fallback si usás íconos por categoría
-import { CATEGORY_CONFIG } from '@/components/Fiambala/components'; // o donde esté tu config
 
 const LocationPage = ({
 	title,
@@ -66,7 +65,6 @@ const LocationPage = ({
 				<section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-12'>
 					<AnimatePresence mode='popLayout'>
 						{filteredLocations.map((location) => {
-							const config = CATEGORY_CONFIG?.[location.category] || {};
 							return (
 								<motion.div
 									key={location.id}
@@ -79,8 +77,6 @@ const LocationPage = ({
 									<LocationCardComponent
 										location={location}
 										onShowDetails={() => handleShowDetails(location)}
-										Icon={config.icon}
-										gradientClass={config.bgClass}
 									/>
 								</motion.div>
 							);
