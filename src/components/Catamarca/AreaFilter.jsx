@@ -1,17 +1,20 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { useAreaFilterStyle } from '@/components/Catamarca/areaThemes';
 
 const filterVariants = {
 	initial: { opacity: 0, y: 20 },
-	animate: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+	animate: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
 	hover: { scale: 1.05, transition: { duration: 0.2 } },
 	tap: { scale: 0.95 },
 };
 
 export const AreaFilter = memo(({ area, isSelected, onClick }) => {
-	const { Icon, buttonClasses } = useAreaFilterStyle(area, isSelected);
+	const { Icon, buttonClasses } = useMemo(
+		() => useAreaFilterStyle(area, isSelected),
+		[area, isSelected]
+	);
 
 	return (
 		<motion.button
@@ -22,6 +25,8 @@ export const AreaFilter = memo(({ area, isSelected, onClick }) => {
 			whileTap='tap'
 			onClick={onClick}
 			className={buttonClasses}
+			aria-pressed={isSelected}
+			aria-label={`Filtrar por ${area}`}
 		>
 			<Icon className='w-4 h-4' />
 			<span>{area}</span>
@@ -36,6 +41,7 @@ AreaFilter.propTypes = {
 	isSelected: PropTypes.bool.isRequired,
 	onClick: PropTypes.func.isRequired,
 };
+
 AreaFilter.defaultProps = {
 	area: 'Todos',
 	isSelected: false,

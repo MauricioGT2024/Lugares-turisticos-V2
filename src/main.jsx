@@ -4,6 +4,7 @@ import { ChakraProvider, CSSReset } from "@chakra-ui/react";
 import App from "./App";
 import { extendTheme } from "@chakra-ui/react";
 import { createRoot } from "react-dom/client";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 const theme = extendTheme({
   config: {
@@ -21,9 +22,11 @@ const theme = extendTheme({
   }
 });
 
-createRoot(document.getElementById("root")).render(
-  <ChakraProvider theme={theme}>
-    <CSSReset />
-    <App />
-  </ChakraProvider>,
+createRoot(document.getElementById('root')).render(
+	<ChakraProvider theme={theme}>
+		<TooltipProvider>
+			<CSSReset />
+			<App />
+		</TooltipProvider>
+	</ChakraProvider>
 );

@@ -1,6 +1,13 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { useColorMode } from '@chakra-ui/react';
+import {
+	useColorMode,
+	Box,
+	Text,
+	Heading,
+	Flex,
+} from '@chakra-ui/react'; // Chakra solo para UI base
+
 import DestinationCard from '@/components/Home/DestinationCard';
 
 const destinations = [
@@ -34,8 +41,15 @@ const Home = () => {
 	const { colorMode } = useColorMode();
 	const isDark = colorMode === 'dark';
 
+
+	// Estado para controlar el modal
+
+	// Función para abrir el modal
+
+	// Función para cerrar el modal
+
 	return (
-		<div
+		<Box
 			className={`min-h-screen w-full transition-colors duration-300 ${
 				isDark ? 'bg-gray-950' : 'bg-white'
 			}`}
@@ -54,14 +68,20 @@ const Home = () => {
 					transition={{ duration: 1 }}
 					className='relative z-20 text-center px-6 max-w-4xl'
 				>
-					<h1 className='text-4xl md:text-6xl font-extrabold tracking-tight text-white drop-shadow-xl leading-tight'>
+					<Heading
+						as='h1'
+						size='2xl'
+						fontWeight='extrabold'
+						textColor='white'
+						textShadow='2px 2px 5px black'
+					>
 						Catamarca, tierra de{' '}
 						<span className='text-amber-400'>maravillas</span>
-					</h1>
-					<p className='mt-4 text-lg md:text-xl font-light text-white/90'>
+					</Heading>
+					<Text mt={4} fontSize='xl' color='whiteAlpha.900'>
 						Descubre paisajes, cultura y aventura en el corazón del NOA
 						argentino.
-					</p>
+					</Text>
 				</motion.div>
 			</section>
 
@@ -74,15 +94,23 @@ const Home = () => {
 					transition={{ duration: 0.6 }}
 					className='text-center mb-14'
 				>
-					<h2 className='text-3xl md:text-5xl font-bold bg-gradient-to-r from-amber-500 via-orange-400 to-amber-700 bg-clip-text text-transparent drop-shadow-lg'>
+					<Heading
+						as='h2'
+						size='xl'
+						fontWeight='bold'
+						bgGradient='linear(to-r, amber.500, orange.400, amber.700)'
+						bgClip='text'
+						textShadow='2px 2px 5px rgba(0, 0, 0, 0.3)'
+						color={isDark}
+					>
 						Destinos Destacados
-					</h2>
-					<p className='mt-2 text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-xl mx-auto'>
+					</Heading>
+					<Text mt={2} fontSize='lg' color='gray.600'>
 						Explora los lugares más fascinantes de Catamarca
-					</p>
+					</Text>
 				</motion.div>
 
-				<div className='grid gap-12 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'>
+				<Flex wrap='wrap' justify='center' gap={12}>
 					{destinations.map((dest, idx) => (
 						<motion.div
 							key={dest.to}
@@ -90,14 +118,13 @@ const Home = () => {
 							whileInView={{ opacity: 1, y: 0 }}
 							viewport={{ once: true }}
 							transition={{ duration: 0.6, delay: idx * 0.1 }}
-							className='flex'
 						>
 							<DestinationCard {...dest} />
 						</motion.div>
 					))}
-				</div>
+				</Flex>
 			</section>
-		</div>
+		</Box>
 	);
 };
 

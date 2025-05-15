@@ -1,4 +1,4 @@
-export const location = [
+export const locations = [
   {
     id: 1,
     imgSrc: "/img/Antofagasta-de-la-Sierra/Capital.webp",

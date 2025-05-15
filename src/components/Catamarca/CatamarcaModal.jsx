@@ -1,160 +1,160 @@
-// src/components/Catamarca/CatamarcaModal.jsx
+import * as Dialog from '@radix-ui/react-dialog';
+import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalCloseButton,
-} from '@chakra-ui/react';
-import { FaInfoCircle, FaMapMarkerAlt } from 'react-icons/fa';
-import { useColorMode } from '@chakra-ui/react';
+import { FaInfoCircle, FaMapMarkerAlt, FaTimes } from 'react-icons/fa';
+import { useColorModeValue } from '@chakra-ui/react';
 
-export const CatamarcaModal = ({ location, isOpen, setIsOpen }) => {
-  const { colorMode } = useColorMode();
-  const handleClose = () => setIsOpen(false);
+const CatamarcaModal = ({ location, isOpen, setIsOpen }) => {
+	const bgColor = useColorModeValue('white', '#1A202C'); // Chakra fallback: light/dark
+	const borderColor = useColorModeValue('#E2E8F0', '#2D3748');
+	const textPrimary = useColorModeValue('#1A202C', '#F7FAFC');
+	const textSecondary = useColorModeValue('#4A5568', '#A0AEC0');
+	const badgeBg = 'linear-gradient(to right, #34D399, #2DD4BF)';
 
-  return (
-    <Modal
-      isOpen={isOpen}
-      onClose={handleClose}
-      size='4xl'
-      isCentered
-      motionPreset='slideInBottom'
-    >
-      <ModalOverlay bg='blackAlpha.800' backdropFilter='blur(8px)' />
-      <ModalContent
-        bg={colorMode === 'dark' ? 'gray.800' : 'white'}
-        className='rounded-2xl overflow-hidden shadow-2xl border border-white/10'
-      >
-        {location ? (
-          <>
-            {/* Imagen Header */}
-            <div className='relative h-[200px] overflow-hidden'>
-              <img
-                src={location.imgSrc}
-                alt={`Imagen de ${location.title || location.name}`}
-                className='w-full h-full object-cover'
-              />
-              <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent' />
-              <ModalHeader className='absolute bottom-0 left-0 right-0 text-white bg-transparent'>
-                <div className='container px-6'>
-                  <span
-                    className='inline-block px-3 py-1 rounded-full text-sm font-medium mb-2 bg-gradient-to-r from-emerald-500 to-teal-500'
-                  >
-                    {location.area}
-                  </span>
-                  <h2 className="text-2xl font-bold font-['JetBrains_Mono']">
-                    {location.title || location.name}
-                  </h2>
-                </div>
-              </ModalHeader>
-              <ModalCloseButton
-                className='absolute top-4 right-4 text-white hover:bg-white/20 rounded-full p-2'
-                size='lg'
-              />
-            </div>
+	const { title, name, imgSrc, description, mapSrc, area, path } =
+		location || {};
 
-            <ModalBody className='p-8'>
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-                <div>
-                  <h3 className='text-lg font-semibold text-gray-400 mb-2'>
-                    Descripción
-                  </h3>
-                  <p
-                    className={`text-lg leading-relaxed ${
-                      colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'
-                    }`}
-                  >
-                    {location.description}
-                  </p>
-                </div>
-                <div>
-                  <h3 className='text-lg font-semibold text-gray-400 mb-2'>
-                    Ubicación
-                  </h3>
-                  <div className='h-[300px] rounded-xl overflow-hidden shadow-lg border border-gray-200/10'>
-                    <iframe
-                      title={location.title || location.name}
-                      src={location.mapSrc}
-                      className='w-full h-full border-0'
-                      loading='lazy'
-                    />
-                  </div>
-                </div>
-              </div>
-            </ModalBody>
+	return (
+		<Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+			<Dialog.Portal>
+				<Dialog.Overlay className='fixed inset-0 bg-black/70 backdrop-blur-sm z-40' />
+				<motion.div
+					initial={{ opacity: 0, y: -50 }}
+					animate={{ opacity: 1, y: 0 }}
+					exit={{ opacity: 0, y: 50 }}
+					transition={{ duration: 0.3 }}
+				>
+					<Dialog.Content
+						style={{
+							backgroundColor: bgColor,
+							borderColor,
+						}}
+						className='fixed top-1/2 left-1/2 z-50 w-[95vw] max-w-5xl max-h-[90vh] -translate-x-1/2 -translate-y-1/2 rounded-2xl shadow-xl border overflow-hidden transition-all'
+					>
+						{location ? (
+							<>
+								{/* Imagen de Encabezado */}
+								<div className='relative h-[200px] overflow-hidden'>
+									<img
+										src={imgSrc}
+										alt={`Imagen de ${title || name}`}
+										className='w-full h-full object-cover'
+									/>
+									<div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent' />
+									<div className='absolute bottom-4 left-6 text-white z-10'>
+										{area && (
+											<span
+												style={{ background: badgeBg }}
+												className='inline-block px-3 py-1 rounded-full text-xs font-medium'
+											>
+												{area}
+											</span>
+										)}
+										<h2 className="text-2xl font-bold font-['JetBrains_Mono'] mt-1">
+											{title || name}
+										</h2>
+									</div>
+									<Dialog.Close asChild>
+										<button
+											className='absolute top-4 right-4 text-white hover:bg-white/20 p-2 rounded-full transition'
+											aria-label='Cerrar'
+										>
+											<FaTimes size={18} />
+										</button>
+									</Dialog.Close>
+								</div>
 
-            <ModalFooter
-              className={`px-8 py-6 border-t ${
-                colorMode === 'dark' ? 'border-gray-700' : 'border-gray-200'
-              }`}
-            >
-              <div className='flex items-center justify-between w-full'>
-                <div className='flex items-center space-x-2'>
-                  <FaInfoCircle className='text-gray-400' />
-                  <span
-                    className={`text-sm ${
-                      colorMode === 'dark' ? 'text-gray-400' : 'text-gray-600'
-                    }`}
-                  >
-                    Información actualizada
-                  </span>
-                </div>
-                <div className='space-x-3'>
-                  {location.path && (
-                    <a
-                      href={location.path}
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg border-2 border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-all duration-300'
-                    >
-                      <FaMapMarkerAlt className='mr-2' />
-                      Más Información
-                    </a>
-                  )}
-                  <button
-                    onClick={handleClose}
-                    className={`px-6 py-2.5 text-sm font-medium rounded-lg ${
-                      colorMode === 'dark'
-                        ? 'bg-gray-700 hover:bg-gray-600'
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    } transition-colors duration-300`}
-                  >
-                    Cerrar
-                  </button>
-                </div>
-              </div>
-            </ModalFooter>
-          </>
-        ) : (
-          <ModalBody className='p-8'>
-            <p className='text-center text-gray-400'>Cargando...</p>
-          </ModalBody>
-        )}
-      </ModalContent>
-    </Modal>
-  );
+								{/* Cuerpo */}
+								<div className='p-8 grid grid-cols-1 md:grid-cols-2 gap-8'>
+									<div>
+										<h3
+											style={{ color: textSecondary }}
+											className='text-lg font-semibold mb-2'
+										>
+											Descripción
+										</h3>
+										<p
+											style={{ color: textPrimary }}
+											className='leading-relaxed text-base'
+										>
+											{description || 'Sin descripción disponible.'}
+										</p>
+									</div>
+									<div>
+										<h3
+											style={{ color: textSecondary }}
+											className='text-lg font-semibold mb-2'
+										>
+											Ubicación
+										</h3>
+										<div
+											style={{ borderColor }}
+											className='h-[300px] rounded-xl overflow-hidden shadow-lg border'
+										>
+											<iframe
+												title={title || name}
+												src={mapSrc}
+												className='w-full h-full border-0'
+												loading='lazy'
+											/>
+										</div>
+									</div>
+								</div>
+
+								{/* Footer */}
+								<div
+									style={{ borderTop: `1px solid ${borderColor}` }}
+									className='px-8 py-6 flex justify-between items-center'
+								>
+									<div
+										className='flex items-center text-sm gap-2'
+										style={{ color: textSecondary }}
+									>
+										<FaInfoCircle />
+										<span>Información actualizada</span>
+									</div>
+									<div className='space-x-3'>
+										{path && (
+											<a
+												href={path}
+												target='_blank'
+												rel='noopener noreferrer'
+												className='inline-flex items-center px-5 py-2 text-sm font-medium rounded-lg border border-emerald-500 text-emerald-600 hover:bg-emerald-500 hover:text-white transition'
+											>
+												<FaMapMarkerAlt className='mr-2' />
+												Más Información
+											</a>
+										)}
+										<Dialog.Close asChild>
+											<button className='px-5 py-2 text-sm font-medium rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition'>
+												Cerrar
+											</button>
+										</Dialog.Close>
+									</div>
+								</div>
+							</>
+						) : (
+							<div className='p-8 text-center text-gray-400'>Cargando...</div>
+						)}
+					</Dialog.Content>
+				</motion.div>
+			</Dialog.Portal>
+		</Dialog.Root>
+	);
+};
+
+CatamarcaModal.propTypes = {
+	isOpen: PropTypes.bool.isRequired,
+	setIsOpen: PropTypes.func.isRequired,
+	location: PropTypes.shape({
+		title: PropTypes.string,
+		name: PropTypes.string,
+		imgSrc: PropTypes.string,
+		description: PropTypes.string,
+		mapSrc: PropTypes.string,
+		area: PropTypes.string,
+		path: PropTypes.string,
+	}),
 };
 
 export default CatamarcaModal;
-
-CatamarcaModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  setIsOpen: PropTypes.func.isRequired,
-  location: PropTypes.shape({
-    title: PropTypes.string,
-    name: PropTypes.string,
-    imgSrc: PropTypes.string,
-    description: PropTypes.string,
-    mapSrc: PropTypes.string,
-    area: PropTypes.string,
-    path: PropTypes.string,
-    wiki: PropTypes.string,
-  }),
-  config: PropTypes.shape({
-    gradient: PropTypes.string,
-  }).isRequired,
-};

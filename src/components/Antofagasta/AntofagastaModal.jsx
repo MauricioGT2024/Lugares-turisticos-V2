@@ -111,7 +111,7 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
 					</Box>
 
 					{/* Iframe */}
-						<Box
+					<Box
 						flex='1'
 						p={{ base: 4, md: 8 }}
 						bg={isDark ? 'gray.950' : 'gray.50'}
@@ -119,7 +119,7 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
 						alignItems='flex-start'
 						justifyContent='center'
 					>
-						{location.mapSrc && (
+							{(location.mapSrc || location.iframe) && (
 							<Box
 								w='100%'
 								maxW='400px'
@@ -131,7 +131,7 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
 							>
 								<Box
 									as='iframe'
-									src={location.mapSrc}
+									src={location.mapSrc || location.iframe}
 									title={location.title}
 									width='100%'
 									height='100%'
@@ -209,6 +209,7 @@ AntofagastaModal.propTypes = {
 		mapSrc: PropTypes.string,
 		mapUrl: PropTypes.string,
 		path: PropTypes.string,
+		iframe: PropTypes.string,
 	}).isRequired,
 };
 

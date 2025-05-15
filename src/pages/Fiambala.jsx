@@ -1,14 +1,10 @@
 import { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {
-	useColorMode,
-
-	useDisclosure,
-} from '@chakra-ui/react';
+import { useColorMode, useDisclosure } from '@chakra-ui/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { locations } from '@/data/fiambala';
 import { CATEGORY_CONFIG } from '@/components/Fiambala/config';
-import {LocationModal} from '@/components/Fiambala/LocationModal';
+import { LocationModal } from '@/components/Fiambala/LocationModal';
 import FiambalaLocationCard from '@/components/Fiambala/LocationCard';
 
 // =========================
@@ -60,7 +56,11 @@ const Fiambala = () => {
 				/>
 				<motion.div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4'>
 					<AnimatePresence mode='popLayout'>
-						{filteredLocations.map((loc) => (
+						{filteredLocations.length === 0 ? (
+							<p className='text-center col-span-full text-gray-500'>
+								No hay lugares disponibles en esta categoría.
+							</p>
+						) : filteredLocations.map((loc) => (
 							<motion.div
 								key={loc.id}
 								layout
@@ -157,6 +157,10 @@ const CategoryFilter = ({
 					const isActive = selectedCategory === cat;
 					return (
 						<motion.button
+							aria-pressed={isActive}
+							aria-label={`Filtrar por ${
+								cat ? CATEGORY_CONFIG[cat]?.label || cat : 'todos'
+							}`}
 							key={cat || 'all'}
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
@@ -189,8 +193,6 @@ CategoryFilter.displayName = 'CategoryFilter';
 // =========================
 // Modal de Detalle
 // =========================
-
-
 
 CategoryFilter.defaultProps = {
 	colorMode: 'light', // Valor por defecto para el modo de color

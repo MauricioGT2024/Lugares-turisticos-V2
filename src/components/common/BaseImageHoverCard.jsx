@@ -1,7 +1,7 @@
-// src/components/common/BaseImageHoverCard.jsx
 import PropTypes from 'prop-types';
 import { Box, Badge, Text, Image, useColorModeValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
+import * as Tooltip from '@radix-ui/react-tooltip'; // Importamos Radix UI Tooltip
 
 const MotionBox = motion(Box);
 
@@ -23,8 +23,8 @@ const BaseImageHoverCard = ({
 		<MotionBox
 			whileHover={{
 				y: -10,
-				scale: 1.02,
-				boxShadow: '0 12px 28px rgba(0,0,0,0.2)',
+				scale: 1.05, // Un poco más de escala en hover para darle más dinamismo
+				boxShadow: '0 12px 28px rgba(0,0,0,0.2)', // Sombras más profundas
 			}}
 			whileTap={{ scale: 0.97 }}
 			onClick={onClick}
@@ -90,9 +90,24 @@ const BaseImageHoverCard = ({
 				textAlign='left'
 				transition='all 0.3s'
 			>
-				<Text fontSize='lg' fontWeight='bold'>
-					{title}
-				</Text>
+				{/* Usamos Radix UI Tooltip para la descripción */}
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						<Text fontSize='lg' fontWeight='bold' _hover={{ opacity: 0.9 }}>
+							{title}
+						</Text>
+					</Tooltip.Trigger>
+					<Tooltip.Content
+						side='top'
+						align='center'
+						className='bg-black text-white text-xs rounded-lg p-2 shadow-lg max-w-xs'
+					>
+						{description}
+						<Tooltip.Arrow className='fill-black' />
+					</Tooltip.Content>
+				</Tooltip.Root>
+
+				{/* Descripción con recorte */}
 				<Text fontSize='sm' noOfLines={2} opacity={0.85}>
 					{description}
 				</Text>
@@ -106,9 +121,7 @@ BaseImageHoverCard.propTypes = {
 	title: PropTypes.string.isRequired,
 	description: PropTypes.string,
 	badge: PropTypes.string,
-	icon: PropTypes.elementType,
 	onClick: PropTypes.func,
-	variant: PropTypes.string,
 	styleConfig: PropTypes.object,
 };
 
