@@ -1,3 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
 /* Unused styles removed */
+html {
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+body {
+  background-color: #ffffff; /* Fondo claro por defecto */
+}
+
+body.dark {
+  background-color: #1a202c; /* Fondo oscuro en modo oscuro */
+}

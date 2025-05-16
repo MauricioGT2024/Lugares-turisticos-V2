@@ -39,6 +39,7 @@ const CatamarcaAreaFilterComponent = ({ filters, setFilters }) => {
         {areas.map((area) => (
           <RadioGroup.Item key={area} value={area}>
             <AreaFilter
+              key={area}
               area={area}
               isSelected={selectedArea === area}
               gradient={getAreaTheme(area).gradient}
