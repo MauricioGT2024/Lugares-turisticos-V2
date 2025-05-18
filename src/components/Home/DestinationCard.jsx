@@ -1,117 +1,44 @@
-import { memo } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { FaArrowRight } from 'react-icons/fa';
-import * as Tooltip from '@radix-ui/react-tooltip';
+import React from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaArrowRight } from "react-icons/fa"; // Ejemplo de un icono
 
-const cardVariants = {
-	initial: { opacity: 0, y: 20 },
-	animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-	exit: { opacity: 0, y: 20, transition: { duration: 0.3, ease: 'easeIn' } },
-	hover: {
-		scale: 1.05,
-		rotate: 2,
-		transition: { type: 'spring', stiffness: 300, damping: 20 },
-	},
+const DestinationCard = ({ title, subtitle, image, description, path }) => {
+  return (
+    <motion.div
+      className="w-full max-w-sm bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+      whileHover={{ scale: 1.03 }}
+    >
+      <div className="relative">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-60 object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <FaArrowRight className="text-white text-2xl" />
+        </div>
+      </div>
+      <div className="p-6">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          {title}
+        </h3>
+        <p className="text-sm text-gray-500 dark:text-gray-300 mb-3">
+          {subtitle}
+        </p>
+        <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-3 mb-4">
+          {description}
+        </p>
+        <Link
+          to={path}
+          className="inline-flex items-center text-blue-500 hover:text-blue-700 font-medium transition-colors duration-200"
+        >
+          Descubrir más
+          <FaArrowRight className="ml-2 text-sm" />
+        </Link>
+      </div>
+    </motion.div>
+  );
 };
-
-const DestinationCard = memo(({ image, title, subtitle, description, to }) => {
-	// Colores dinámicos usando Tailwind para tema claro/oscuro
-	const textColor = 'text-gray-800 dark:text-gray-100';
-	const subTextColor = 'text-gray-600 dark:text-gray-300';
-	const borderColor = 'border-white/20 dark:border-gray-800/40';
-	const tagColor = 'text-amber-600 dark:text-amber-300';
-
-	return (
-		<motion.article
-			variants={cardVariants}
-			initial='initial'
-			animate='animate'
-			exit='exit'
-			whileHover='hover'
-			className={`group relative flex flex-col rounded-2xl overflow-hidden bg-white/50 dark:bg-gray-900/50 backdrop-blur-md border ${borderColor} shadow-xl transition-all min-h-[420px]`}
-			role='article'
-			aria-label={`Destino: ${title}`}
-		>
-			{/* Imagen */}
-			<div className='relative h-60 w-full overflow-hidden rounded-t-2xl'>
-				<img
-					src={image}
-					alt={`Imagen del destino ${title}`}
-					className='w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-110'
-					loading='lazy'
-				/>
-				<div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-90 transition-opacity duration-500 group-hover:opacity-95' />
-			</div>
-
-			{/* Contenido */}
-			<div className={`flex flex-col flex-1 p-6 gap-3 ${textColor}`}>
-				{/* Titulo y Tooltip */}
-				<Tooltip.Root>
-					<Tooltip.Trigger>
-						<h3 className='text-2xl font-bold tracking-tight mb-1'>{title}</h3>
-					</Tooltip.Trigger>
-					<Tooltip.Content
-						side='top'
-						align='center'
-						className='bg-black text-white text-xs rounded-lg p-2 shadow-lg max-w-xs'
-					>
-						{description}
-						<Tooltip.Arrow className='fill-black' />
-					</Tooltip.Content>
-				</Tooltip.Root>
-
-				{/* Subtítulo */}
-				{subtitle && (
-					<span
-						className={`text-xs uppercase tracking-wider font-medium ${tagColor}`}
-					>
-						{subtitle}
-					</span>
-				)}
-
-				{/* Descripción */}
-				<p
-					className={`text-sm leading-relaxed line-clamp-3 flex-1 ${subTextColor}`}
-				>
-					{description}
-				</p>
-
-				{/* Botón */}
-				<div className='flex justify-end mt-auto pt-4'>
-					<Link
-						to={to}
-						className={`inline-flex items-center gap-2 font-semibold text-sm hover:underline transition-all ${tagColor}`}
-						aria-label={`Explorar ${title}`}
-					>
-						<span>Explorar</span>
-						<motion.span
-							whileHover={{ x: 5 }}
-							transition={{ type: 'tween', duration: 0.3 }}
-							className='inline-block'
-						>
-							<FaArrowRight className='w-4 h-4' />
-						</motion.span>
-					</Link>
-				</div>
-			</div>
-		</motion.article>
-	);
-});
-
-DestinationCard.propTypes = {
-	image: PropTypes.string.isRequired,
-	title: PropTypes.string.isRequired,
-	subtitle: PropTypes.string,
-	description: PropTypes.string.isRequired,
-	to: PropTypes.string.isRequired,
-};
-
-DestinationCard.defaultProps = {
-	subtitle: '',
-};
-
-DestinationCard.displayName = 'DestinationCard';
 
 export default DestinationCard;

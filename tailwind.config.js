@@ -3,16 +3,19 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  darkMode: "class", // Activa el soporte para Dark Mode usando la clase 'dark'
+  darkMode: "class", // o 'media' si prefieres detección automática
+  // tailwind.config.js
+
   theme: {
     extend: {
       colors: {
-        primary: {
-          100: "#E2E8F0", // Color claro
-          900: "#2D3748", // Color oscuro
+        dark: {
+          background: "#181818",
+          text: "#f5f5f5",
         },
-        secondary: {
-          500: "#38B2AC", // Teal color
+        light: {
+          background: "#ffffff",
+          text: "#333333",
         },
       },
     },

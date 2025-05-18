@@ -1,4 +1,3 @@
-// src/components/common/NavLink.jsx
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import React from "react";
 import { motion } from "framer-motion";
@@ -15,11 +14,9 @@ const NavLink = ({ to, label, icon: Icon, onClick, sidebar = false }) => {
   const baseClasses = sidebar
     ? clsx(
         "flex items-center gap-3 px-4 py-3 rounded-lg text-lg font-medium transition-colors",
-        {
-          "bg-teal-500 text-white": isActive,
-          "text-gray-700 hover:bg-teal-100": !isActive,
-          "text-gray-200 hover:bg-teal-800": !isActive && "dark",
-        }
+        isActive
+          ? "bg-teal-500 text-white" // Active state
+          : "text-gray-700 hover:bg-teal-100 dark:text-gray-300 dark:hover:bg-teal-800" // Non-active state (light and dark combined)
       )
     : clsx(
         "flex items-center space-x-2 py-2 px-4 rounded-lg transition-all",

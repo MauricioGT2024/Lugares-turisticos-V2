@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
-import { useColorMode } from "@chakra-ui/react";
+// Removed useColorMode import
+// import { useColorMode } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import {
   FaFacebook,
@@ -18,7 +19,7 @@ import {
 import { DiGithubBadge } from "react-icons/di";
 import PropTypes from "prop-types";
 
-// Componentes Memorizados
+// Reusable Components (Keeping these as they are already Tailwind/Framer Motion)
 const SocialLink = memo(({ icon: Icon, href, label }) => (
   <motion.a
     href={href}
@@ -32,8 +33,6 @@ const SocialLink = memo(({ icon: Icon, href, label }) => (
     <Icon className="w-6 h-6" />
   </motion.a>
 ));
-
-SocialLink.displayName = "SocialLink";
 
 SocialLink.propTypes = {
   icon: PropTypes.elementType.isRequired,
@@ -53,16 +52,17 @@ const NavLink = memo(({ icon: Icon, label, to }) => (
   </motion.div>
 ));
 
-NavLink.displayName = "NavLink";
-
 NavLink.propTypes = {
   icon: PropTypes.elementType.isRequired,
   label: PropTypes.string.isRequired,
   to: PropTypes.string.isRequired,
 };
 
+// Footer Component
 const Footer = memo(() => {
-  const { colorMode } = useColorMode();
+  // Removed useColorMode
+  // const { colorMode } = useColorMode();
+  // const isDark = colorMode === "dark";
 
   const socialLinks = [
     {
@@ -82,7 +82,7 @@ const Footer = memo(() => {
     },
   ];
 
-  const developerLink = [
+  const developerLinks = [
     {
       icon: DiGithubBadge,
       href: "https://github.com/MauricioGT2024",
@@ -91,7 +91,7 @@ const Footer = memo(() => {
     {
       icon: FaLinkedin,
       href: "https://www.linkedin.com/in/mauricio-sierra/",
-      label: "Linkedin",
+      label: "LinkedIn",
     },
     {
       icon: FaDiscord,
@@ -108,14 +108,13 @@ const Footer = memo(() => {
   ];
 
   return (
-    <footer className={`w-full border-t transition-colors duration-300 ${
-      colorMode === "dark" ? "bg-gray-900 border-gray-700" : "bg-white border-gray-200"
-    }`}>
+    // Use Tailwind classes for background, border, and dark mode
+    <footer className="w-full border-t bg-gray-100 border-gray-200 dark:bg-gray-900 dark:border-gray-700 text-gray-900 dark:text-white">
       <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col gap-10">
         <div className="flex flex-col md:flex-row md:justify-between gap-10">
-          {/* Logo y descripción */}
+          {/* Branding & Social */}
           <div className="flex-1 flex flex-col gap-5 items-start">
-            <RouterLink to="/" className="mb-2">
+            <RouterLink to="/" aria-label="Inicio - Turismo Catamarca">
               <motion.img
                 src="/logo.webp"
                 alt="Logo Catamarca Turismo"
@@ -125,14 +124,21 @@ const Footer = memo(() => {
                 loading="lazy"
               />
             </RouterLink>
-            <p className={`text-base leading-relaxed max-w-md ${colorMode === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-              Descubre la magia de Catamarca. Tu guía para explorar los tesoros de esta provincia argentina.
+
+            <p
+              // Use Tailwind dark classes directly
+              className="text-base max-w-md leading-relaxed text-gray-600 dark:text-gray-400"
+            >
+              Descubre la magia de Catamarca. Tu guía para explorar los tesoros
+              de esta provincia argentina.
             </p>
+
             <div className="flex gap-4 mt-2">
               {socialLinks.map((link) => (
                 <SocialLink key={link.href} {...link} />
               ))}
             </div>
+
             <a
               href="https://www.visitcatamarca.com/"
               target="_blank"
@@ -143,9 +149,12 @@ const Footer = memo(() => {
             </a>
           </div>
 
-          {/* Enlaces rápidos */}
+          {/* Navigation */}
           <div className="flex-1 flex flex-col gap-4">
-            <h3 className={`text-lg font-semibold mb-2 ${colorMode === "dark" ? "text-gray-200" : "text-gray-700"}`}>
+            <h3
+              // Use Tailwind dark classes directly
+              className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200"
+            >
               Enlaces Rápidos
             </h3>
             <nav className="flex flex-col gap-2">
@@ -155,23 +164,32 @@ const Footer = memo(() => {
             </nav>
           </div>
 
-          {/* Desarrollador */}
+          {/* Developer Info */}
           <div className="flex-1 flex flex-col gap-4">
-            <h3 className={`text-lg font-semibold mb-2 ${colorMode === "dark" ? "text-gray-200" : "text-gray-700"}`}>
+            <h3
+              // Use Tailwind dark classes directly
+              className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200"
+            >
               Desarrollado por
             </h3>
-            <p className={`text-base font-medium ${colorMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+            <p
+              // Use Tailwind dark classes directly
+              className="text-base font-medium text-gray-700 dark:text-gray-300"
+            >
               Mauricio Sierra
             </p>
-            <span className="text-sm text-gray-500 dark:text-gray-400">Redes y contacto:</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              Redes y contacto:
+            </span>
             <div className="flex gap-4">
-              {developerLink.map((link) => (
+              {developerLinks.map((link) => (
                 <SocialLink key={link.href} {...link} />
               ))}
             </div>
           </div>
         </div>
 
+        {/* Footer Base (Copyright) */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 border-t pt-6 mt-6 border-gray-200 dark:border-gray-700">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
@@ -185,7 +203,8 @@ const Footer = memo(() => {
             animate={{ opacity: 1, y: 0 }}
             className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
           >
-            Hecho con <FaHeart className="w-4 h-4 text-red-400 animate-pulse" /> en Argentina
+            Hecho con <FaHeart className="w-4 h-4 text-red-400 animate-pulse" />{" "}
+            en Argentina
           </motion.div>
         </div>
       </div>

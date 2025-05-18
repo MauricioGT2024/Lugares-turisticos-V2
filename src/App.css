@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
 
 /* Unused styles removed */
 html {
@@ -9,6 +9,17 @@ body {
   background-color: #ffffff; /* Fondo claro por defecto */
 }
 
+
 body.dark {
   background-color: #1a202c; /* Fondo oscuro en modo oscuro */
+}
+
+@media (prefers-color-scheme: dark) {
+  #root {
+    background-color: #1a202c; /* Fondo oscuro en modo oscuro */
+  }
+}
+
+#root {
+  color-scheme: dark;
 }

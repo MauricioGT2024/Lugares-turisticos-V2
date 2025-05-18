@@ -1,132 +1,119 @@
-import { memo } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import {
-	useColorMode,
-	Box,
-	Text,
-	Heading,
-	Flex,
-} from '@chakra-ui/react'; // Chakra solo para UI base
-
+import { places } from '@/data/home';
 import DestinationCard from '@/components/Home/DestinationCard';
-
-const destinations = [
-	{
-		title: 'Valle Viejo',
-		subtitle: 'Historia y Tradición',
-		image: '/img/Valle-Chico/Capital.webp',
-		description:
-			'Un rincón de Catamarca donde la historia y la cultura se funden con paisajes únicos. Ideal para quienes buscan tradición y naturaleza.',
-		to: '/catamarca',
-	},
-	{
-		title: 'Américan Catamarca Park Hotel',
-		subtitle: 'Hospedaje Premium',
-		image: '/img/Hospedaje/Américan Catamarca Park Hotel.webp',
-		description:
-			'Hotel de lujo en el corazón de Catamarca. Habitaciones elegantes, restaurante gourmet y piscina panorámica.',
-		to: '/hospedaje',
-	},
-	{
-		title: 'Quebrada Las Angosturas',
-		subtitle: 'Aventura Natural',
-		image: '/img/Tinogasta/Quebrada Las Angosturas.webp',
-		description:
-			'Un cañón impresionante con formaciones rocosas y paisajes desérticos. Perfecto para los amantes de la aventura.',
-		to: '/tinogasta',
-	},
-];
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-	const { colorMode } = useColorMode();
-	const isDark = colorMode === 'dark';
+  const containerVariants = {
+    hidden: {
+      opacity: 0,
+    },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
 
+  const itemVariants = {
+    hidden: {
+      opacity: 0,
+      y: 50,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: 'easeOut',
+      },
+    },
+  };
 
-	// Estado para controlar el modal
+  // Variants for Hero Section text
+  const heroTextVariants = {
+    initial: { opacity: 0, y: 30 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: 'easeOut' } },
+  };
 
-	// Función para abrir el modal
+  return (
+    <main className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+      {/* Hero Section */}
+      <section
+        className="relative h-[60vh] md:h-[70vh] lg:h-[80vh] flex items-center justify-center text-center text-white overflow-hidden"
+        style={{
+          backgroundImage: 'url(\/hero-catamarca.webp)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black/40"></div>
 
-	// Función para cerrar el modal
+        {/* Text Content */}
+        <div className="relative z-10 p-4">
+          <motion.h1
+            variants={heroTextVariants}
+            initial="initial"
+            animate="animate"
+            className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg"
+          >
+            Descubre Catamarca
+          </motion.h1>
+          <motion.p
+            variants={heroTextVariants}
+            initial="initial"
+            animate="animate"
+            transition={{...heroTextVariants.animate.transition, delay: 0.3}}
+            className="text-xl md:text-2xl max-w-3xl mx-auto opacity-95 drop-shadow-md"
+          >
+            Explora paisajes asombrosos, rica historia y cultura vibrante en el corazón de Argentina.
+          </motion.p>
+        </div>
+      </section>
 
-	return (
-		<Box
-			className={`min-h-screen w-full transition-colors duration-300 ${
-				isDark ? 'bg-gray-950' : 'bg-white'
-			}`}
-		>
-			{/* Hero Section */}
-			<section className='relative flex items-center justify-center h-[60vh] md:h-[70vh] overflow-hidden'>
-				<img
-					src='/hero-catamarca.webp'
-					alt='Paisaje Catamarca'
-					className='absolute inset-0 w-full h-full object-cover object-center scale-105 blur-sm brightness-80'
-				/>
-				<div className='absolute inset-0 bg-gradient-to-tr from-black/90 via-black/60 to-transparent z-10' />
-				<motion.div
-					initial={{ opacity: 0, y: 50 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 1 }}
-					className='relative z-20 text-center px-6 max-w-4xl'
-				>
-					<Heading
-						as='h1'
-						size='2xl'
-						fontWeight='extrabold'
-						textColor='white'
-						textShadow='2px 2px 5px black'
-					>
-						Catamarca, tierra de{' '}
-						<span className='text-amber-400'>maravillas</span>
-					</Heading>
-					<Text mt={4} fontSize='xl' color='whiteAlpha.900'>
-						Descubre paisajes, cultura y aventura en el corazón del NOA
-						argentino.
-					</Text>
-				</motion.div>
-			</section>
+      {/* Existing content below Hero Section */}
+      <section className="container mx-auto px-4 py-12 md:py-16 max-w-7xl">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible" // Use whileInView to trigger animation when section comes into view
+          viewport={{ once: true, amount: 0.2 }} // Configure viewport to trigger once
+        >
+          <section className="mb-10">
+            <motion.h2
+              variants={itemVariants} // Apply itemVariants for animation
+              className="text-3xl font-semibold mb-6 text-center"
+            >
+              Destinos Principales
+            </motion.h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {places.map((dest, index) => (
+                <motion.div
+                  key={dest.path}
+                  variants={itemVariants} // Apply itemVariants for animation
+                >
+                  <DestinationCard {...dest} />
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-10 text-center">
+              <Link
+                to="/provincia"
+                className="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-full transition-colors duration-300"
+              >
+                Ver Todos los Departamentos
+              </Link>
+            </div>
+          </section>
 
-			{/* Destinos Destacados */}
-			<section className='w-full max-w-7xl mx-auto py-20 px-4 md:px-8'>
-				<motion.div
-					initial={{ opacity: 0, y: 30 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					viewport={{ once: true }}
-					transition={{ duration: 0.6 }}
-					className='text-center mb-14'
-				>
-					<Heading
-						as='h2'
-						size='xl'
-						fontWeight='bold'
-						bgGradient='linear(to-r, amber.500, orange.400, amber.700)'
-						bgClip='text'
-						textShadow='2px 2px 5px rgba(0, 0, 0, 0.3)'
-						color={isDark}
-					>
-						Destinos Destacados
-					</Heading>
-					<Text mt={2} fontSize='lg' color='gray.600'>
-						Explora los lugares más fascinantes de Catamarca
-					</Text>
-				</motion.div>
-
-				<Flex wrap='wrap' justify='center' gap={12}>
-					{destinations.map((dest, idx) => (
-						<motion.div
-							key={dest.to}
-							initial={{ opacity: 0, y: 40 }}
-							whileInView={{ opacity: 1, y: 0 }}
-							viewport={{ once: true }}
-							transition={{ duration: 0.6, delay: idx * 0.1 }}
-						>
-							<DestinationCard {...dest} />
-						</motion.div>
-					))}
-				</Flex>
-			</section>
-		</Box>
-	);
+          {/* Puedes añadir más secciones aquí si es necesario */}
+        </motion.div>
+      </section>
+    </main>
+  );
 };
 
-Home.displayName = 'Home';
-export default memo(Home);
+export default Home;

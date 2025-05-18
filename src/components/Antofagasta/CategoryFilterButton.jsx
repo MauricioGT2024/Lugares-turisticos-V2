@@ -1,29 +1,22 @@
-import { Button } from '@chakra-ui/react';
+// components/Antofagasta/CategoryFilterButton.jsx
+// Removed Chakra UI Button import
+// import { Button } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
 const CategoryFilterButton = ({ item, selected, onClick }) => {
 	return (
-		<Button
+		<button
 			onClick={onClick}
 			aria-pressed={selected}
-			variant={selected ? 'solid' : 'outline'}
-			colorScheme={selected ? 'orange' : 'gray'}
-			px={5}
-			py={2}
-			borderRadius='full'
-			fontWeight='medium'
-			fontSize='sm'
-			boxShadow={selected ? 'md' : 'sm'}
-			transition='transform 0.2s ease'
-			_hover={{
-				transform: 'scale(1.05)',
-			}}
-			_focus={{
-				boxShadow: 'outline',
-			}}
+			// Using Tailwind CSS classes for styling
+			className={`px-5 py-2 rounded-full font-medium text-sm shadow transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2
+            ${selected
+					? 'bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-md border border-transparent focus:ring-orange-500'
+					: 'bg-gray-200 text-gray-700 border border-gray-300 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600 focus:ring-gray-500'
+			}`}
 		>
 			{item}
-		</Button>
+		</button>
 	);
 };
 

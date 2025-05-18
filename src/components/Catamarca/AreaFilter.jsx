@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import React, { memo, forwardRef } from "react"; // Import forwardRef
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
 import clsx from "clsx";
@@ -11,45 +11,44 @@ const filterVariants = {
   tap: { scale: 0.95 },
 };
 
-export const AreaFilter = memo(({ area, isSelected, onClick }) => {
+// Wrap the component with forwardRef
+const AreaFilter = memo(forwardRef(({ area, isSelected, onClick }, ref) => { // Added ref here
   const { icon: Icon, gradient } = getAreaTheme(area);
 
-  const buttonClasses = clsx(
-    "inline-flex items-center gap-2 px-5 py-2 rounded-full font-semibold shadow-sm transition-colors duration-300 border border-transparent group",
-    {
-      // Estilo seleccionado
-      [`bg-gradient-to-r ${gradient} text-white`]: isSelected,
+  const baseClasses =
+    "inline-flex items-center gap-2 px-5 lg:mx-3 md:m-5 sm:flex-row py-2 rounded-full font-semibold shadow-sm transition-colors duration-300 border border-transparent group";
 
-      // Estilo no seleccionado
-      "dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 hover:text-white":
-        !isSelected,
-      "bg-white text-gray-700 hover:bg-gray-100": !isSelected,
-    }
-  );
+  const selectedClasses = isSelected
+    ? `bg-gradient-to-r ${gradient} text-white`
+    : "bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 hover:text-white";
 
   return (
     <motion.button
+      ref={ref} // Pass the ref to the motion.button
+      type="button"
       variants={filterVariants}
       initial="initial"
       animate="animate"
       whileHover="hover"
       whileTap="tap"
-      onClick={onClick}
-      className={buttonClasses}
+      onClick={onClick} // Keep onClick here so Radix UI can use it
+      className={clsx(baseClasses, selectedClasses)}
       aria-pressed={isSelected}
       role="radio"
       aria-label={`Filtrar por ${area}`}
     >
-      <Icon className="w-4 h-4 opacity-70 group-hover:opacity-100" />
+      {Icon && <Icon className="w-4 h-4 opacity-70 group-hover:opacity-100" />} {/* Conditionally render Icon */}
       <span>{area}</span>
     </motion.button>
   );
-});
+})); // Close forwardRef and memo
 
 AreaFilter.displayName = "AreaFilter";
 
 AreaFilter.propTypes = {
   area: PropTypes.string.isRequired,
   isSelected: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func, // onClick remains optional as per previous fix
 };
+
+export default AreaFilter;

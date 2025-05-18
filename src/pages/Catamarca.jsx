@@ -1,56 +1,17 @@
-// React & Third-party
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import React, { Suspense, useMemo, useState } from "react";
-import { m } from "framer-motion";
-import PropTypes from "prop-types";
+// React
+import React from "react";
 
 // Internal
 import { locations } from "@/data/catamarca";
-import { AreaFilter } from "@/components/Catamarca/AreaFilter";
-import { ANIMATIONS } from "@/components/Catamarca/animations";
-import { getAreaTheme } from "@/components/Catamarca/areaThemes";
+import { ANIMATIONS } from "@/components/Catamarca/animations"; // Import ANIMATIONS
+
+// Import common and Catamarca-specific components
+import LocationPage from "@/components/common/LocationPage";
+import CatamarcaFilter from "@/components/Catamarca/CatamarcaFilter";
 import CatamarcaLocationCard from "@/components/Catamarca/LocationCard";
-import CatamarcaModal from "@/components/Catamarca/CatamarcaModal";
+import CatamarcaModalContent from "@/components/Catamarca/CatamarcaModalContent";
 
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-
-const CatamarcaAreaFilterComponent = ({ filters, setFilters }) => {
-  const areas = useMemo(
-    () => [...new Set(locations.map((loc) => loc.area))].sort(),
-    []
-  );
-
-  const selectedArea = filters.area || "all";
-
-  const handleAreaChange = (area) => {
-    setFilters((prev) => ({ ...prev, area }));
-  };
-
-  return (
-    <m.div
-      variants={ANIMATIONS.container}
-      className="flex flex-wrap justify-center gap-4 py-4"
-    >
-      <RadioGroup.Root value={selectedArea} onValueChange={handleAreaChange}>
-        <RadioGroup.Item value="all">
-          {/* Aquí puedes personalizar tu diseño */}
-          <AreaFilter area="Todos" isSelected={selectedArea === "all"} />
-        </RadioGroup.Item>
-        {areas.map((area) => (
-          <RadioGroup.Item key={area} value={area}>
-            <AreaFilter
-              key={area}
-              area={area}
-              isSelected={selectedArea === area}
-              gradient={getAreaTheme(area).gradient}
-              icon={getAreaTheme(area).icon}
-            />
-          </RadioGroup.Item>
-        ))}
-      </RadioGroup.Root>
-    </m.div>
-  );
-};
+// Filter function
 const filterCatamarcaLocations = (locations, filters) => {
   const selectedArea = filters.area || "all";
   return selectedArea === "all"
@@ -58,61 +19,21 @@ const filterCatamarcaLocations = (locations, filters) => {
     : locations.filter((loc) => loc.area === selectedArea);
 };
 
-const LocationCard = ({ location }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const config = getAreaTheme(location.area);
-
-  return (
-    <>
-      <CatamarcaLocationCard
-        location={location}
-        config={config}
-        onClick={() => setIsOpen(true)}
-      />
-
-      <CatamarcaModal
-        location={location}
-        title={location.title}
-        description={location.description}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        config={config}
-      />
-    </>
-  );
-};
-
 const Catamarca = () => {
-  const LocationPage = React.lazy(() =>
-    import("@/components/common/LocationPage")
-  );
 
   return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <LocationPage
-        title="San Fernando del Valle"
-        locations={locations}
-        filterComponent={CatamarcaAreaFilterComponent}
-        locationCardComponent={LocationCard}
-        pageVariants={ANIMATIONS.fadeInDown}
-        filterFunction={filterCatamarcaLocations}
-      />
-    </Suspense>
+    <LocationPage
+      title="San Fernando del Valle"
+      description="Una ciudad con historia, cultura y naturaleza, rodeada de paisajes imponentes ideales para la aventura y el descanso."
+      locations={locations}
+      filterComponent={CatamarcaFilter}
+      locationCardComponent={CatamarcaLocationCard}
+      modalContent={CatamarcaModalContent}
+      pageVariants={ANIMATIONS.page} // Corrected: Use ANIMATIONS.page instead of ANIMATIONS.fadeInDown
+      filterFunction={filterCatamarcaLocations}
+    />
   );
 };
 
 export default React.memo(Catamarca);
 Catamarca.displayName = "Catamarca";
-CatamarcaAreaFilterComponent.displayName = "CatamarcaAreaFilterComponent";
-CatamarcaLocationCard.displayName = "CatamarcaLocationCard";
-
-CatamarcaAreaFilterComponent.propTypes = {
-  filters: PropTypes.object.isRequired,
-  setFilters: PropTypes.func.isRequired,
-};
-LocationCard.propTypes = {
-  location: PropTypes.object.isRequired,
-};
-LocationCard.defaultProps = {
-  onClick: () => {},
-};

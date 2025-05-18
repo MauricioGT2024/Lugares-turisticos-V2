@@ -8,18 +8,17 @@ const MotionCard = motion.div;
 const BaseImageHoverCard = ({
   imgSrc,
   title,
-  description,
+  description = "",
   badge,
   onClick,
   styleConfig = {},
 }) => {
-  const overlayGradient =
-    styleConfig?.overlayGradient ||
-    "bg-gradient-to-t from-black/70 via-black/30 to-transparent";
-
-  const badgeBg = styleConfig?.badgeBg || "bg-emerald-500 text-white";
-
-  const height = styleConfig?.height || "300px";
+  // Desestructurando las configuraciones para mayor claridad
+  const {
+    overlayGradient = "bg-gradient-to-t from-black/70 via-black/30 to-transparent",
+    badgeBg = "bg-emerald-500 text-white",
+    height = "300px",
+  } = styleConfig;
 
   return (
     <MotionCard
@@ -38,8 +37,8 @@ const BaseImageHoverCard = ({
       {/* Imagen */}
       <img
         src={imgSrc}
-        alt={title}
-        className="w-full h-full object-cover brightness-[0.95] saturate-[1.05]"
+        alt={title || "Imagen del producto"}
+        className="w-full h-48 object-cover brightness-[0.95] saturate-[1.05]"
       />
 
       {/* Gradiente superpuesto */}
@@ -63,19 +62,24 @@ const BaseImageHoverCard = ({
           <Tooltip.Trigger asChild>
             <h3 className="text-lg font-bold line-clamp-1">{title}</h3>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content
-              side="top"
-              align="center"
-              className="bg-black text-white text-xs rounded-md px-3 py-2 shadow-xl max-w-xs z-50"
-            >
-              {description}
-              <Tooltip.Arrow className="fill-black" />
-            </Tooltip.Content>
-          </Tooltip.Portal>
+          {description && (
+            <Tooltip.Portal>
+              <Tooltip.Content
+                side="top"
+                align="center"
+                className="bg-black text-white text-xs rounded-md px-3 py-2 shadow-xl max-w-xs z-50"
+              >
+                {description}
+                <Tooltip.Arrow className="fill-black" />
+              </Tooltip.Content>
+            </Tooltip.Portal>
+          )}
         </Tooltip.Root>
 
-        <p className="text-sm opacity-85 line-clamp-2">{description}</p>
+        {/* Solo mostrar el párrafo si la descripción está disponible */}
+        {description && (
+          <p className="text-sm opacity-85 line-clamp-2">{description}</p>
+        )}
       </div>
     </MotionCard>
   );

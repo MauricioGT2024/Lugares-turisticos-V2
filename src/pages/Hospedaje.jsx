@@ -1,27 +1,13 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
-import { useColorMode } from "@chakra-ui/react";
 import HospedajeList from '@/components/Hospedaje/HospedajeList';
 import { hospedajes } from '@/data/hospedaje';
 
-const useTheme = (colorMode) => {
-	const isDarkMode = colorMode === 'dark';
-	return {
-		bg: isDarkMode ? 'bg-gray-900' : 'bg-white',
-		text: {
-			primary: isDarkMode ? 'text-white' : 'text-gray-900',
-			secondary: isDarkMode ? 'text-gray-400' : 'text-gray-600',
-		},
-	};
-};
-
 const Hospedaje = () => {
-  const { colorMode } = useColorMode();
-  const theme = useTheme(colorMode);
 
   return (
 		<div
-			className={`min-h-screen w-full flex flex-col ${theme.bg} transition-colors duration-300`}
+			className={`min-h-screen w-full flex flex-col items-center justify-center dark:bg-gray-900 transition-colors duration-300`}
 		>
 			<section className='flex-1 w-full max-w-7xl mx-auto py-12 px-4 md:px-8'>
 				<motion.div
@@ -31,11 +17,11 @@ const Hospedaje = () => {
 					className='text-center mb-14'
 				>
 					<h2
-						className={`text-2xl md:text-4xl font-semibold mb-3 ${theme.text.primary}`}
+						className={`text-2xl md:text-4xl font-semibold mb-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500`}
 					>
 						Hospedajes en Catamarca
 					</h2>
-					<p className={`text-base md:text-lg ${theme.text.secondary}`}>
+					<p className={`text-base md:text-lg text-gray-600 dark:text-gray-300`}>
 						Explora las opciones de hospedaje en la hermosa provincia de
 						Catamarca y encuentra el lugar perfecto para tu próxima aventura.
 					</p>

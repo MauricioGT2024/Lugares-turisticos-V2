@@ -16,13 +16,20 @@ import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 // App
 import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 
+// Apply theme from localStorage as early as possible
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+  document.documentElement.classList.add("dark");
+} else {
+  document.documentElement.classList.remove("dark");
+}
 
-
-createRoot(document.getElementById('root')).render(
-	<ChakraProvider>
-		<TooltipProvider>
-			<App />
-		</TooltipProvider>
-	</ChakraProvider>
+createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <TooltipProvider>
+      <App />
+    </TooltipProvider>
+  </BrowserRouter>
 );

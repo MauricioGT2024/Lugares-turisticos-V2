@@ -1,73 +1,36 @@
-import { useState, useMemo } from 'react';
-import { locations } from '../data/tinogasta';
-import TinogastaLocationCard from '../components/Tinogasta/LocationCard';
-import TinogastaModal from '../components/Tinogasta/TinogastaModal';
+import React from "react";
 
-const Tinogasta = () => {
-	const [selectedLocation, setSelectedLocation] = useState(null);
-	const [filter, setFilter] = useState('');
+import { locations } from "@data/tinogasta"; // Datos de localizaciones de Tinogasta
+import LocationPage from "@/components/common/LocationPage"; // Componente que gestiona el diseño y estado de la página
+import TinogastaFilter from "@/components/Tinogasta/TinogastaFilter"; // Filtro específico de Tinogasta
+import TinogastaLocationCard from "@/components/Tinogasta/LocationCard"; // Componente para mostrar cada localización
+import TinogastaModalContent from "@/components/Tinogasta/TinogastaModalContent";
 
-	const categories = useMemo(() => {
-		const cats = locations.map((l) => l.category).filter(Boolean);
-		return ['Todos', ...new Set(cats)];
-	}, []);
-
-	const filteredLocations =
-		filter && filter !== 'Todos'
-			? locations.filter((loc) => loc.category === filter)
-			: locations;
-
-	return (
-		<main className='min-h-screen bg-gradient-to-br  text-white px-4 py-12'>
-			<section className='max-w-6xl mx-auto'>
-				<header className='mb-12 text-center'>
-					<h1 className='text-4xl font-extrabold mb-2'>Tinogasta</h1>
-					<p className='text-lg text-white/80'>
-						Tierra de historia, termas y paisajes entre volcanes y valles.
-					</p>
-				</header>
-
-				<section
-					aria-label='Filtro de categorías'
-					className='mb-8 flex flex-wrap justify-center gap-3'
-				>
-					{categories.map((cat) => (
-						<button
-							key={cat}
-							onClick={() => setFilter(cat)}
-							className={`px-5 py-2 rounded-full font-semibold transition-all border ${
-								filter === cat
-									? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white border-transparent'
-									: 'bg-white/10 text-white border-white/20 hover:bg-white/20'
-							}`}
-						>
-							{cat}
-						</button>
-					))}
-				</section>
-
-				<section
-					aria-label='Lista de lugares'
-					className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
-				>
-					{filteredLocations.map((loc) => (
-						<TinogastaLocationCard
-							key={loc.id}
-							location={loc}
-							onShowDetails={setSelectedLocation}
-						/>
-					))}
-				</section>
-			</section>
-
-			{selectedLocation && (
-				<TinogastaModal
-					location={selectedLocation}
-					onClose={() => setSelectedLocation(null)}
-				/>
-			)}
-		</main>
-	);
+// Función de filtro para Tinogasta, filtra por 'category' si está definido
+const filterTinogastaLocations = (locations, { category = "" }) => {
+  // Filtra las ubicaciones por categoría si se ha seleccionado alguna
+  return category
+    ? locations.filter((loc) => loc.category === category)
+    : locations;
 };
 
-export default Tinogasta;
+const Tinogasta = () => {
+  return (
+    <LocationPage
+      title="Tinogasta"
+      description="Tierra de historia, termas y paisajes entre volcanes y valles."
+      locations={locations}
+      filterComponent={TinogastaFilter} // Componente del filtro
+      locationCardComponent={TinogastaLocationCard} // Componente de la tarjeta de localización
+      modalContent={TinogastaModalContent} // Contenido del modal
+      pageVariants={{
+        initial: { opacity: 0 },
+        animate: { opacity: 1, transition: { duration: 0.5 } },
+        exit: { opacity: 0, transition: { duration: 0.3 } },
+      }} // Animaciones de fade para la página
+      filterFunction={filterTinogastaLocations} // Función de filtrado
+    />
+  );
+};
+
+export default React.memo(Tinogasta);

@@ -1,34 +1,38 @@
-// src/components/ThemeSwitcher.jsx
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { FaMoon, FaSun } from "react-icons/fa";
 
 const ThemeSwitcher = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setIsDarkMode(savedTheme === "dark");
+    if (savedTheme === "dark") {
+      setIsDark(true);
+      document.documentElement.classList.add("dark");
     } else {
-      setIsDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+      setIsDark(false);
+      document.documentElement.classList.remove("dark");
     }
   }, []);
 
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
+  const toggleDarkMode = () => {
+    setIsDark(!isDark);
+    if (isDark) {
       document.documentElement.classList.remove("dark");
       localStorage.setItem("theme", "light");
+    } else {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
     }
-  }, [isDarkMode]);
+  };
 
   return (
     <button
-      onClick={() => setIsDarkMode(!isDarkMode)}
-      className="p-2 bg-gray-200 dark:bg-gray-700 rounded-full"
+      onClick={toggleDarkMode}
+      aria-label="Toggle Theme"
+      className="p-2 rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
     >
-      {isDarkMode ? "🌙" : "☀️"}
+      {isDark ? <FaSun className="w-5 h-5" /> : <FaMoon className="w-5 h-5" />}
     </button>
   );
 };
