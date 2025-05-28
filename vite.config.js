@@ -7,5 +7,8 @@ export default defineConfig({
     alias: {
       '@': '/src'
     }
+  },
+  server:{
+    allowedHosts: true
   }
 })
