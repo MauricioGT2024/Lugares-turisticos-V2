@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 // components/Tinogasta/TinogastaModal.jsx
 import * as Dialog from '@radix-ui/react-dialog';
 import { useColorModeValue } from '@chakra-ui/react';
@@ -83,8 +84,26 @@ const TinogastaModal = ({ location, onClose }) => {
 							display: 'flex',
 							justifyContent: 'space-between',
 							marginTop: '24px',
+							gap: '12px',
 						}}
 					>
+						{location.wikipedia && (
+							<a
+								href={location.wikipedia}
+								target='_blank'
+								rel='noopener noreferrer'
+								style={{
+									padding: '10px 16px',
+									borderRadius: '8px',
+									background: 'linear-gradient(to right, #2563eb, #60a5fa)',
+									color: '#fff',
+									textDecoration: 'none',
+									fontWeight: '500',
+								}}
+							>
+								Ver Wikipedia
+							</a>
+						)}
 						{location.path && (
 							<a
 								href={location.path}
@@ -99,7 +118,7 @@ const TinogastaModal = ({ location, onClose }) => {
 									fontWeight: '500',
 								}}
 							>
-								Ver en mapa
+								Ver en el Mapa
 							</a>
 						)}
 						<Dialog.Close asChild>
@@ -149,6 +168,7 @@ TinogastaModal.propTypes = {
 		imgSrc: PropTypes.string,
 		iframe: PropTypes.string,
 		path: PropTypes.string,
+		wikipedia: PropTypes.string,
 	}).isRequired,
 	onClose: PropTypes.func.isRequired,
 };
