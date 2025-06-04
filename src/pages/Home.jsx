@@ -1,20 +1,18 @@
-import { memo } from 'react';
+import React, { memo } from 'react';
 import { motion } from 'framer-motion';
 import { useColorMode } from '@chakra-ui/react';
-import { places } from '../data/home';
-import DestinationCard from '../components/Home/DestinationCard';
 import { FaChevronDown } from 'react-icons/fa';
+import DestinationCard from '../components/Home/DestinationCard';
+import { places } from '../data/home';
 
-const useTheme = (colorMode) => ({
-	bg: colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50',
+// Hook para definir el tema y los colores según el modo (oscuro/claro)
+const useTheme = (mode) => ({
+	bg: mode === 'dark' ? 'bg-gray-900' : 'bg-gray-50',
+	overlay: mode === 'dark' ? 'bg-gray-900/60' : 'bg-gray-50/60',
 	text: {
-		primary: colorMode === 'dark' ? 'text-white' : 'text-gray-900',
-		secondary: colorMode === 'dark' ? 'text-gray-400' : 'text-gray-600',
+		primary: mode === 'dark' ? 'text-white' : 'text-gray-900',
+		secondary: mode === 'dark' ? 'text-gray-300' : 'text-gray-600',
 	},
-	card: colorMode === 'dark' ? 'bg-gray-800' : 'bg-white',
-	border: colorMode === 'dark' ? 'border-gray-700' : 'border-gray-200',
-	shadow:
-		colorMode === 'dark' ? 'shadow-[0_0_15px_rgba(0,0,0,0.3)]' : 'shadow-lg',
 });
 
 const Home = () => {
@@ -22,91 +20,81 @@ const Home = () => {
 	const theme = useTheme(colorMode);
 
 	return (
-		<div className={`min-h-screen ${theme.bg} transition-colors duration-300`}>
-			{/* Hero Section */}
+		<main className={`min-h-screen ${theme.bg} transition-colors duration-300`}>
+			{/* Sección de héroe */}
 			<section className='relative h-screen'>
+				{/* Imagen fija que cubre todo el viewport */}
+				<img
+					src='/hero-catamarca.webp'
+					alt='Paisaje de Catamarca'
+					className='fixed top-0 left-0 z-0 h-screen w-screen object-cover brightness-50'
+				/>
+				{/* Overlay con degradado para mejorar el contraste */}
+				
 				<motion.div
-					initial={{ opacity: 0, y: 20 }}
+					initial={{ opacity: 0, y: 30 }}
 					animate={{ opacity: 1, y: 0 }}
-					className='relative z-10 h-full flex flex-col justify-center items-center text-center px-4'
+					className='relative z-20 flex flex-col items-center justify-center px-4 text-center h-screen'
 				>
-					<div>
-						<img
-							src='/hero-catamarca.webp'
-							alt='Hero'
-							className='absolute inset-0 w-full h-full object-cover opacity-50'
-						/>
-					</div>
 					<h1
-						className={`text-4xl md:text-6xl font-bold mb-6 ${
-							colorMode === 'dark' ? 'text-white' : 'text-gray-900'
-						}`}
+						className={`mb-6 text-4xl font-extrabold drop-shadow-2xl md:text-6xl ${theme.text.primary}`}
 					>
 						Descubre Catamarca
 					</h1>
 					<p
-						className={`text-lg md:text-xl max-w-2xl ${
-							colorMode === 'dark' ? 'text-gray-200' : 'text-gray-700'
-						}`}
+						className={`max-w-2xl text-lg drop-shadow-md md:text-xl ${theme.text.secondary}`}
 					>
-						Explora la magia de nuestra tierra, donde las montañas tocan el
-						cielo y la historia cobra vida.
+						Explora la magia de nuestra tierra, donde las montañas se elevan y
+						la historia cobra vida.
 					</p>
-
-					{/* Indicador de Scroll */}
 					<motion.div
-						className='absolute bottom-10 ' 
-						animate={{
-							y: [0, 10, 0],
-						}}
-						transition={{
-							duration: 2,
-							repeat: Infinity,
-							ease: 'easeInOut',
-						}}
+						className='absolute bottom-10 flex flex-col items-center'
+						animate={{ y: [0, 15, 0] }}
+						transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
 					>
-						<span
-							className={`text-sm mb-2 ${
-								colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
-							}`}
-						>
-							Scrollea para descubrir más
+						<span className={`mb-2 text-sm ${theme.text.secondary}`}>
+							Desplázate para descubrir más
 						</span>
-						<FaChevronDown
-							className={`w-6 h-6  justify-center mx-auto ${
-								colorMode === 'dark' ? 'text-gray-300' : 'text-gray-600'
-							}`}
-						/>
+						<FaChevronDown className={`w-6 h-6 ${theme.text.secondary}`} />
 					</motion.div>
 				</motion.div>
 			</section>
 
-			<section className={`py-20 px-4 ${theme.bg}`}>
+			{/* Sección de Destinos */}
+			<section className='py-20 px-4'>
 				<div className='max-w-7xl mx-auto'>
 					<motion.div
 						initial={{ opacity: 0 }}
 						whileInView={{ opacity: 1 }}
 						viewport={{ once: true }}
-						className='text-center mb-16'
+						className='mb-16 text-center'
 					>
-						<h2 className={`text-4xl font-bold mb-4 ${theme.text.primary}`}>
+						<h2
+							className={`mb-4 text-4xl font-bold drop-shadow-md ${theme.text.primary}`}
+						>
 							Destinos Destacados
 						</h2>
-						<p className={`text-xl ${theme.text.secondary}`}>
-							Explora los lugares más fascinantes de Catamarca
+						<p className={`text-xl drop-shadow-sm ${theme.text.secondary}`}>
+							Los lugares más fascinantes para explorar en Catamarca
 						</p>
 					</motion.div>
 
-					<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+					<motion.div
+						initial='hidden'
+						whileInView='visible'
+						viewport={{ once: true }}
+						className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'
+					>
 						{places.map((place) => (
 							<DestinationCard key={place.path} place={place} />
 						))}
-					</div>
+					</motion.div>
 				</div>
 			</section>
-		</div>
+		</main>
 	);
 };
 
 Home.displayName = 'Home';
+
 export default memo(Home);
