@@ -1,14 +1,14 @@
-import { Button, useColorModeValue } from "@chakra-ui/react";
+import { Button, useThemeValue } from "../context/ThemeContext";
 import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 
 const MotionButton = motion(Button);
 
 const FilterButton = ({ label, isSelected, onClick }) => {
-  const bgColor = useColorModeValue("gray.100", "gray.700");
-  const selectedBg = useColorModeValue("teal.500", "teal.200");
-  const textColor = useColorModeValue("gray.700", "white");
-  const selectedTextColor = useColorModeValue("white", "gray.800");
+  const bgColor = useThemeValue("gray.100", "gray.700");
+  const selectedBg = useThemeValue("teal.500", "teal.200");
+  const textColor = useThemeValue("gray.700", "white");
+  const selectedTextColor = useThemeValue("white", "gray.800");
 
   return (
     <MotionButton

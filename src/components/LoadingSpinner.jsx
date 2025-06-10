@@ -1,8 +1,8 @@
-import { useColorMode } from "@chakra-ui/react";
+import { useTheme } from "../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 
 const LoadingSpinner = () => {
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
 
   const containerVariants = {
     hidden: { opacity: 0 },

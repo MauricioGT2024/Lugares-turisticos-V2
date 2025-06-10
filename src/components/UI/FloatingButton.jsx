@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { useColorMode } from '@chakra-ui/react';
+import { useTheme } from '../context/ThemeContext';
 import { FaFilter } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 const FloatingButton = ({ onClick }) => {
-	const { colorMode } = useColorMode();
+	const { colorMode } = useTheme();
 
 	return (
 		<motion.button

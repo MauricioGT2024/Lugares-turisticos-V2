@@ -8,7 +8,6 @@ import Footer from '../pages/Footer';
 import Error404 from '../pages/Error404';
 import About from '../pages/About';
 import ScrollToTop from './ScrollToTop';
-import ColorModeSwitcher from '../components/Sidebar/ColorModeSwitcher';
 
 // Lazy imports de páginas
 const LazyTinogasta = lazy(() => import('../pages/Tinogasta'));
@@ -59,9 +58,6 @@ function AppRoutes() {
 
 			{/* Barra de navegación */}
 
-			<div className='fixed top-4 right-4 z-50'>
-				<ColorModeSwitcher />
-			</div>
 
 			{/* Suspense para el lazy loading */}
 			<Suspense fallback={<LoadingSpinner />}>

@@ -1,73 +1,86 @@
 // Tinogasta.jsx
-import { useState, useMemo, useCallback } from 'react';
-import { useColorMode, useDisclosure } from '@chakra-ui/react';
-import { motion, } from 'framer-motion';
-
+import React, { useState, useMemo } from 'react';
+import { useTheme } from '../context/ThemeContext';
 import { locations } from '../data/tinogasta';
-import LocationModal from '../components/Tinogasta/LocationModal';
-import LocationGrid from '../components/Tinogasta/LocationGrid';
-import FilterBar from '../components/Tinogasta/FilterBar';
+import TinogastaHero from '../components/Tinogasta/TinogastaHero';
+import TinogastaGrid from '../components/Tinogasta/TinogastaGrid';
+import TinogastaModal from '../components/Tinogasta/TinogastaModal';
+import TinogastaFilter from '../components/Tinogasta/TinogastaFilter';
+import { pageStyles } from '../styles/pageStyles';
 
 const Tinogasta = () => {
-  const { colorMode } = useColorMode();
-  const isDark = colorMode === 'dark';
+	const [categoryFilter, setCategoryFilter] = useState('Todos');
+	const [selectedLocationData, setSelectedLocationData] = useState(null);
+	const [isOpen, setIsOpen] = useState(false);
+	const { colorMode } = useTheme();
+	const isDark = colorMode === 'dark';
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [filter, setFilter] = useState('');
+	// Obtener categorías únicas
+	const categories = useMemo(() => {
+		return [...new Set(locations.map((loc) => loc.category))].sort();
+	}, []);
 
-  const filteredLocations = useMemo(
-    () => locations.filter((loc) => !filter || loc.category === filter),
-    [filter]
-  );
+	// Filtrar ubicaciones según la categoría seleccionada
+	const filteredLocations = useMemo(() => {
+		return categoryFilter === 'Todos'
+			? locations
+			: locations.filter((loc) => loc.category === categoryFilter);
+	}, [categoryFilter]);
 
-  const openModal = useCallback((location) => {
-    setSelectedLocation(location);
-    onOpen();
-  }, [onOpen]);
+	// Manejadores de eventos
+	const handleLocationClick = (id) => {
+		const location = locations.find((loc) => loc.id === id);
+		if (location) {
+			setSelectedLocationData(location);
+			setIsOpen(true);
+		}
+	};
 
-  const closeModal = useCallback(() => {
-    onClose();
-    setSelectedLocation(null);
-  }, [onClose]);
+	const handleCloseModal = () => {
+		setIsOpen(false);
+		setTimeout(() => setSelectedLocationData(null), 300);
+	};
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -10 }}
-      className={`min-h-screen py-12 transition-colors duration-300 ${
-        isDark ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'
-      }`}
-    >
-      <div className="container mx-auto max-w-7xl px-4 md:px-8">
-        <header className="text-center mb-16 space-y-6">
-          <span className="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-semibold uppercase tracking-wider shadow-lg">
-            Explora Tinogasta
-          </span>
-          <h1 className="text-5xl md:text-6xl font-bold font-mono bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
-            Tinogasta
-          </h1>
-          <p className="max-w-3xl mx-auto text-xl leading-relaxed">
-            Descubre Tinogasta, donde la tradición vitivinícola se une con paisajes impresionantes y una rica historia cultural.
-          </p>
-        </header>
+	const mainBg = isDark
+		? 'bg-gradient-to-b from-gray-900 to-gray-800'
+		: 'bg-gradient-to-b from-gray-50 to-white';
 
-        <FilterBar filter={filter} setFilter={setFilter} />
+	return (
+		<main
+			className={`min-h-screen py-12 ${mainBg} transition-colors duration-300`}
+		>
+			<div className='container mx-auto px-4 md:px-8 max-w-7xl'>
+				<div className='space-y-10'>
+					<TinogastaHero
+						badge='Descubre Tinogasta'
+						title='Tinogasta'
+						subtitle='Un rincón mágico donde la historia y la naturaleza se entrelazan con la tradición vitivinícola.'
+						isDark={isDark}
+					/>
 
-        <LocationGrid locations={filteredLocations} onLocationClick={openModal} />
+					<TinogastaFilter
+						title='Categorías'
+						items={categories}
+						selected={categoryFilter}
+						onSelect={setCategoryFilter}
+					/>
 
-        {selectedLocation && (
-          <LocationModal
-            location={selectedLocation}
-            isOpen={isOpen}
-            onClose={closeModal}
-            isDark={isDark}
-          />
-        )}
-      </div>
-    </motion.div>
-  );
+					<TinogastaGrid
+						locations={filteredLocations}
+						onLocationClick={handleLocationClick}
+					/>
+
+					<TinogastaModal
+						isOpen={isOpen}
+						onClose={handleCloseModal}
+						location={selectedLocationData}
+						isDark={isDark}
+						gradient={pageStyles.tinogasta.modal.gradient}
+					/>
+				</div>
+			</div>
+		</main>
+	);
 };
 
 export default Tinogasta;

@@ -1,10 +1,10 @@
 import { memo } from "react";
 import { motion } from "framer-motion";
-import { useColorMode } from "@chakra-ui/react";
+import { useTheme } from "../../context/ThemeContext";
 import PropTypes from "prop-types";
 
 const FilterButton = memo(({ label, isSelected, onClick, icon: Icon }) => {
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
   
   return (
     <motion.button

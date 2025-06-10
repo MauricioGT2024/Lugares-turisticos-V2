@@ -1,4 +1,4 @@
-import { useColorMode } from '@chakra-ui/react';
+import { useTheme } from '../../context/ThemeContext';
 import { motion } from 'framer-motion';
 import PropTypes from 'prop-types';
 import { memo } from 'react';
@@ -168,7 +168,7 @@ ImageHoverCard.propTypes = {
 // CategoryButton
 
 const CategoryButton = memo(({ category, isSelected, onClick }) => {
-	const { colorMode } = useColorMode();
+	const { colorMode } = useTheme();
 	const config = CATEGORY_CONFIG[category] || {};
 	const Icon = config.icon;
 
@@ -220,7 +220,7 @@ CategoryButton.propTypes = {
 
 const CategoryFilter = memo(
 	({ categories, categoryFilter, setCategoryFilter }) => {
-		const { colorMode } = useColorMode();
+		const { colorMode } = useTheme();
 
 		{
 			/* filtro de categorias */

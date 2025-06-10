@@ -1,57 +1,62 @@
-import { Box, useColorModeValue } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
 const Path = (props) => (
 	<motion.path
 		fill='transparent'
-		strokeWidth='3'
+		strokeWidth='2'
 		strokeLinecap='round'
-		strokeLinejoin='round'
 		{...props}
 	/>
 );
 
 const SidebarToggle = ({ isOpen, toggle }) => {
-	const stroke = useColorModeValue('#1A202C', '#E2E8F0');
+	const bgColor = isOpen ? 'bg-purple-600' : 'bg-gray-200';
+	const stroke = isOpen ? 'white' : 'black';
 
 	return (
-		<Box
-			as='button'
+		<motion.button
 			onClick={toggle}
 			aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
-			className='p-2 rounded-md bg-gray-800 hover:bg-gray-500 dark:bg-gray-800 shadow-md'
+			className={`
+        p-2 rounded-full ${bgColor}
+        transition-all duration-200 ease-in-out
+        focus:outline-none focus:ring-1 focus:ring-purple-400
+        hover:bg-gray-100/10
+      `}
+			whileHover={{ scale: 1.05 }}
+			whileTap={{ scale: 0.95 }}
 		>
 			<motion.svg
-				width='24'
-				height='24'
-				viewBox='0 0 24 24'
+				width='22'
+				height='22'
+				viewBox='0 0 22 22'
 				initial={false}
 				animate={isOpen ? 'open' : 'closed'}
 			>
 				<Path
 					stroke={stroke}
 					variants={{
-						closed: { d: 'M 3 6 L 21 6' },
-						open: { d: 'M 4 4 L 20 20' },
+						closed: { d: 'M 2 6 L 20 6' },
+						open: { d: 'M 3 3 L 19 19' },
 					}}
 				/>
 				<Path
 					stroke={stroke}
 					variants={{
-						closed: { d: 'M 3 12 L 21 12', opacity: 1 },
-						open: { d: 'M 12 12 L 12 12', opacity: 0 },
+						closed: { d: 'M 2 11 L 20 11', opacity: 1 },
+						open: { opacity: 0 },
 					}}
 					transition={{ duration: 0.1 }}
 				/>
 				<Path
 					stroke={stroke}
 					variants={{
-						closed: { d: 'M 3 18 L 21 18' },
-						open: { d: 'M 4 20 L 20 4' },
+						closed: { d: 'M 2 16 L 20 16' },
+						open: { d: 'M 3 19 L 19 3' },
 					}}
 				/>
 			</motion.svg>
-		</Box>
+		</motion.button>
 	);
 };
 

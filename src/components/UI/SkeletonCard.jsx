@@ -1,8 +1,8 @@
-import { useColorMode } from "@chakra-ui/react";
+import { useTheme } from "../../context/ThemeContext";
 import { motion } from "framer-motion";
 
 const SkeletonCard = () => {
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
   
   return (
     <motion.div

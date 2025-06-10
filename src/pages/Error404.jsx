@@ -1,10 +1,10 @@
-import { useColorMode } from "@chakra-ui/react";
+import { useTheme } from "../context/ThemeContext";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaHome, FaExclamationTriangle } from "react-icons/fa";
 
 const Error404 = () => {
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
 
   return (
     <div className={`

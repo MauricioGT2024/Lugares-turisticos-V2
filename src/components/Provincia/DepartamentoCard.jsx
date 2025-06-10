@@ -1,8 +1,8 @@
 import { useState, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from "react-router-dom";
-import { useColorMode } from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import { useTheme } from '../../context/ThemeContext';
 
 const gradientConfigs = {
   "Antofagasta de la Sierra": {
@@ -39,7 +39,7 @@ const gradientConfigs = {
 
 const DepartamentoCard = memo(({ loc }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
   const config = gradientConfigs[loc.name] || gradientConfigs.default;
 
   return (

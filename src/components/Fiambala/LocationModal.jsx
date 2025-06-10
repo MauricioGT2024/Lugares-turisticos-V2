@@ -6,7 +6,7 @@ import {
   ModalBody,
   ModalFooter,
   ModalCloseButton,
-  useColorMode,
+  useTheme,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 import { FaInfoCircle } from "react-icons/fa";
@@ -14,7 +14,7 @@ import { motion } from "framer-motion";
 import { CATEGORY_CONFIG } from "./components";
 
 const LocationModal = ({ location, isOpen, onClose }) => {
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
   if (!location) return null;
 
   return (

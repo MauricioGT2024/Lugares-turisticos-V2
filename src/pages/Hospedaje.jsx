@@ -1,151 +1,105 @@
 import { useState } from 'react';
-import { useColorMode, Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton, ModalFooter, IconButton } from '@chakra-ui/react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { FaMapMarkedAlt, FaTimes } from 'react-icons/fa';
-import { hospedajes } from '../data/hospedajes';
-import HospedajeHeader from '../components/Hospedaje/HospedajeHeader';
-import HotelCard from '../components/Hospedaje/HotelCard';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
+import { Hero } from '../components/Hospedaje/Hero';
+import { Filter } from '../components/Hospedaje/Filter';
+import { LocationGrid } from '../components/Hospedaje/LocationGrid';
+import { useHospedajes } from '../hooks/useHospedaje';
+import Modal from '../components/Hospedaje/Modal';
 
 const Hospedaje = () => {
-  const [selectedLocation, setSelectedLocation] = useState('all');
-  const { colorMode } = useColorMode();
-  const locations = ['all', ...new Set(hospedajes.map(h => h.location))];
-  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
-  const [selectedHotel, setSelectedHotel] = useState(null);
-  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+	const { colorMode } = useTheme();
+	const isDark = colorMode === 'dark';
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [selectedLocation, setSelectedLocation] = useState(null);
 
-  const handleCloseFilterModal = () => setIsFilterModalOpen(false);
-  const handleOpenFilterModal = () => setIsFilterModalOpen(true);
+	const { locations, locationFilter, setLocationFilter, filteredHospedajes } =
+		useHospedajes();
 
-  const handleOpenMap = (hotel) => {
-    setSelectedHotel(hotel);
-    setIsMapModalOpen(true);
-  };
+	// Estilos dinámicos basados en el tema
+	const styles = {
+		mainBg: 'bg-gray-50 dark:bg-gray-900',
+		textColor: 'text-gray-900 dark:text-gray-100',
+		sectionBg: 'bg-white dark:bg-gray-800',
+		borderColor: 'border-gray-200 dark:border-gray-700',
+	};
 
-  const handleCloseMap = () => {
-    setIsMapModalOpen(false);
-    setSelectedHotel(null);
-  };
+	const handleLocationClick = (id) => {
+		const location = filteredHospedajes.find((loc) => loc.id === id);
+		if (location) {
+			// Sanitizar la URL del iframe antes de establecer la ubicación
+			const sanitizedLocation = {
+				...location,
+				iframe: location.iframe?.replace(/&amp;/g, '&'),
+			};
+			setSelectedLocation(sanitizedLocation);
+			setIsModalOpen(true);
+		}
+	};
 
-  const filteredHospedajes = selectedLocation === 'all'
-    ? hospedajes
-    : hospedajes.filter(h => h.location === selectedLocation);
+	const handleCloseModal = () => {
+		setIsModalOpen(false);
+		setSelectedLocation(null);
+	};
 
-  return (
-    <div className={`min-h-screen ${colorMode === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <HospedajeHeader onOpenFilter={handleOpenFilterModal} />
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Filtros */}
-       
+	return (
+		<main
+			className={`min-h-screen transition-colors duration-300 ${styles.mainBg}`}
+		>
+			<div className='container mx-auto max-w-7xl px-4 py-12 md:px-8'>
+				<div className='space-y-10'>
+					{/* Hero Section */}
+					<Hero
+						badge='Alojamiento'
+						title={
+							<h1
+								className={`text-4xl font-bold ${styles.textColor} md:text-5xl`}
+							>
+								Hospedajes en Catamarca
+							</h1>
+						}
+						subtitle={
+							<p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+								Encuentra el lugar perfecto para tu estadía
+							</p>
+						}
+					/>
 
-        {/* Grid de hoteles */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <AnimatePresence mode="popLayout">
-            {filteredHospedajes.map(hotel => (
-              <motion.div
-                key={hotel.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-              >
-                <HotelCard hotel={hotel} onOpenMap={handleOpenMap} />
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </div>
+					{/* Filtros */}
+					<motion.section
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						className={`rounded-xl border p-6 ${styles.sectionBg} ${styles.borderColor}`}
+					>
+						<Filter
+							title='Ubicaciones'
+							items={locations}
+							selected={locationFilter}
+							onSelect={setLocationFilter}
+							isDark={isDark}
+						/>
+					</motion.section>
 
-        {/* Modal del Mapa */}
-        <Modal isOpen={isMapModalOpen} onClose={handleCloseMap} size="xl" isCentered>
-          <ModalOverlay backdropFilter="blur(5px)" />
-          <ModalContent>
-            <ModalHeader>{selectedHotel?.title}</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              {selectedHotel && (
-                <iframe
-                  src={selectedHotel.iframe}
-                  width="100%"
-                  height="450"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              )}
-            </ModalBody>
-            <ModalFooter>
-              <IconButton
-                as="a"
-                href={selectedHotel?.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Ver en Google Maps"
-                icon={<FaMapMarkedAlt />}
-                colorScheme="blue"
-                variant="ghost"
-                mr={3}
-              />
-              <IconButton
-                onClick={handleCloseMap}
-                aria-label="Cerrar"
-                icon={<FaTimes />}
-                colorScheme="red"
-              />
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
+					{/* Grid de Hospedajes */}
+					<AnimatePresence mode='wait'>
+						<LocationGrid
+							locations={filteredHospedajes}
+							onLocationClick={handleLocationClick}
+							isDark={isDark}
+						/>
+					</AnimatePresence>
+				</div>
+			</div>
 
-        {/* Modal de filtros que sigue al scroll */}
-        <Modal 
-          isOpen={isFilterModalOpen} 
-          onClose={handleCloseFilterModal}
-          motionPreset="slideInBottom"
-          scrollBehavior="inside"
-        >
-          <ModalOverlay backdropFilter="blur(8px)" bg="blackAlpha.600" />
-          <ModalContent
-            position="fixed"
-            bottom="0"
-            mb="0"
-            borderRadius="24px 24px 0 0"
-            bg={colorMode === 'dark' ? 'gray.800' : 'white'}
-          >
-            <ModalHeader>Filtros</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody pb={6}>
-              <div className="space-y-4">
-                {locations.map((loc) => (
-                  <button
-                    key={loc}
-                    onClick={() => {
-                      setSelectedLocation(loc);
-                      handleCloseFilterModal();
-                    }}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-colors ${
-                      selectedLocation === loc
-                        ? colorMode === 'dark' 
-                          ? 'bg-teal-600 text-white' 
-                          : 'bg-teal-500 text-white'
-                        : colorMode === 'dark'
-                        ? 'text-gray-300 hover:bg-gray-700'
-                        : 'text-gray-600 hover:bg-gray-100'
-                    }`}
-                  >
-                    {loc === 'all' ? 'Todas las ubicaciones' : loc}
-                  </button>
-                ))}
-              </div>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-
-       
-      </main>
-    </div>
-  );
+			{/* Modal de detalles */}
+			<Modal
+				isOpen={isModalOpen}
+				onClose={handleCloseModal}
+				location={selectedLocation}
+				isDark={isDark}
+			/>
+		</main>
+	);
 };
 
 export default Hospedaje;

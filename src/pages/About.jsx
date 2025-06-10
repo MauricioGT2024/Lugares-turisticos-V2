@@ -1,20 +1,4 @@
-import {
-  Box,
-  Heading,
-  Text,
-  VStack,
-  Image,
-  SimpleGrid,
-  Link,
-  Button,
-  useColorModeValue,
-  Icon,
-  Container,
-  Divider,
-  Badge,
-  HStack,
-  Tooltip,
-} from "@chakra-ui/react";
+import { useTheme } from "../context/ThemeContext";
 import { motion } from "framer-motion";
 import {
   FaMapMarkedAlt,
@@ -27,39 +11,35 @@ import {
 } from "react-icons/fa";
 import PropTypes from "prop-types";
 
-const FeatureCard = ({ icon, title, description }) => {
-  const cardBg = useColorModeValue("white", "gray.800");
-  const iconBg = useColorModeValue("teal.100", "teal.900");
+const FeatureCard = ({ icon: Icon, title, description }) => {
+  const { colorMode } = useTheme();
 
   return (
-    <motion.div whileHover={{ y: -5 }} whileTap={{ scale: 0.95 }}>
-      <Box
-        bg={cardBg}
-        p={6}
-        borderRadius="xl"
-        boxShadow="lg"
-        position="relative"
-        overflow="hidden"
-      >
-        <Box
-          bg={iconBg}
-          w={12}
-          h={12}
-          borderRadius="full"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          mb={4}
-        >
-          <Icon as={icon} w={6} h={6} color="teal.500" />
-        </Box>
-        <Heading size="md" mb={3} color="teal.500">
+    <motion.div 
+      whileHover={{ y: -5 }} 
+      whileTap={{ scale: 0.95 }}
+      className="h-full"
+    >
+      <div className={`
+        p-6 rounded-xl shadow-lg relative overflow-hidden
+        ${colorMode === "dark" ? "bg-gray-800" : "bg-white"}
+      `}>
+        <div className={`
+          w-12 h-12 rounded-full flex items-center justify-center mb-4
+          ${colorMode === "dark" ? "bg-teal-900" : "bg-teal-100"}
+        `}>
+          <Icon className="w-6 h-6 text-teal-500" />
+        </div>
+        <h3 className="text-xl font-bold mb-3 text-teal-500">
           {title}
-        </Heading>
-        <Text fontSize="md" color={useColorModeValue("gray.600", "gray.300")}>
+        </h3>
+        <p className={`
+          text-base
+          ${colorMode === "dark" ? "text-gray-300" : "text-gray-600"}
+        `}>
           {description}
-        </Text>
-      </Box>
+        </p>
+      </div>
     </motion.div>
   );
 };
@@ -71,7 +51,7 @@ FeatureCard.propTypes = {
 };
 
 const ImageCard = ({ image, title, description }) => {
-  const cardBg = useColorModeValue("white", "gray.800");
+  const cardBg = useThemeValue("white", "gray.800");
 
   return (
     <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.2 }}>
@@ -103,7 +83,7 @@ const ImageCard = ({ image, title, description }) => {
           <Heading size="md" mb={2}>
             {title}
           </Heading>
-          <Text color={useColorModeValue("gray.600", "gray.300")}>
+          <Text color={useThemeValue("gray.600", "gray.300")}>
             {description}
           </Text>
         </Box>
@@ -120,8 +100,8 @@ ImageCard.propTypes = {
 };
 
 const About = () => {
-  const bgColor = useColorModeValue("gray.50", "gray.900");
-  const textColor = useColorModeValue("gray.600", "gray.300");
+  const bgColor = useThemeValue("gray.50", "gray.900");
+  const textColor = useThemeValue("gray.600", "gray.300");
 
   const features = [
     {

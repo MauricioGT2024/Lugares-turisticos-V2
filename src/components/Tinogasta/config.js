@@ -2,12 +2,17 @@ import { useMemo } from 'react';
 import { locations } from '../../data/tinogasta';
 
 export const useTinogastaCategories = () => {
-  const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(locations.map(loc => loc.category))];
-    return uniqueCategories.sort();
-  }, []);
+	const categories = useMemo(() => {
+		const uniqueCategories = [...new Set(locations.map((loc) => loc.category))];
+		return uniqueCategories.sort((a, b) => {
+			// Ordenar primero Naturaleza y luego alfabéticamente
+			if (a === 'Naturaleza') return -1;
+			if (b === 'Naturaleza') return 1;
+			return a.localeCompare(b, 'es');
+		});
+	}, []);
 
-  return { categories };
+	return { categories };
 };
 
 export const TINOGASTA_ANIMATIONS = {
@@ -127,7 +132,23 @@ export const TINOGASTA_ANIMATIONS = {
 };
 
 export const filterAnimations = {
-	hidden: {
+	enter: {
+		opacity: 1,
+		y: 0,
+		transition: {
+			duration: 0.5,
+			ease: [0.48, 0.15, 0.25, 0.96],
+		},
+	},
+	exit: {
+		opacity: 0,
+		y: -20,
+		scale: 0.95,
+		transition: {
+			duration: 0.2,
+		},
+	},
+	initial: {
 		opacity: 0,
 		y: 20,
 		scale: 0.95,
@@ -141,12 +162,6 @@ export const filterAnimations = {
 			stiffness: 300,
 			damping: 25,
 		},
-	},
-	exit: {
-		opacity: 0,
-		y: -20,
-		scale: 0.95,
-		transition: { duration: 0.2 },
 	},
 };
 
@@ -173,4 +188,3 @@ export const cardAnimation = {
 		transition: { duration: 0.2 },
 	},
 };
-

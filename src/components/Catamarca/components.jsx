@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
-import { useColorMode } from "@chakra-ui/react";
+import { useTheme } from "../../context/ThemeContext";
 import { getAreaTheme, getIconByArea, ANIMATIONS } from "./config";
 
 // Componente de Tarjeta para mostrar cada ubicación
@@ -78,7 +78,7 @@ LocationCard.displayName = "LocationCard";
 
 // Componente para el filtro de áreas
 const AreaFilter = ({ area, isSelected, onClick }) => {
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
   const { icon: Icon } = getAreaTheme(area);
 
   const baseClasses =

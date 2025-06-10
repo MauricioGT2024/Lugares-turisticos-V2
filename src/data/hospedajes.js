@@ -8,7 +8,7 @@ export const hospedajes = [
 		mapUrl:
 			'https://www.google.com/maps?ll=-28.459153,-65.781097&z=16&t=m&hl=es-419&gl=AR&mapclient=embed&cid=15324027729572442859',
 		iframe:
-			'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.670844416298!2d-65.7836073250111!3d-28.459337159594!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94242996f2625703%3A0xd4a9e207a566b2eb!2sApart%20Hotel%20Salvador!5e0!3m2!1ses-419!2sar!4v1728574367634!5m2!1ses-419!2sar',
+			'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d7015.353911001936!2d-65.781097!3d-28.459153!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94242996f2625703%3A0xd4a9e207a566b2eb!2sApart%20Hotel%20Salvador!5e0!3m2!1ses-419!2sar!4v1749572349900!5m2!1ses-419!2sar',
 	},
 	{
 		id: 2,

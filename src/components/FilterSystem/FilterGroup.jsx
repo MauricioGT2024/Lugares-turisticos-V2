@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { useColorMode } from "@chakra-ui/react";
+import { useTheme } from "../../context/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import FilterButton from "./FilterButton";
@@ -12,7 +12,7 @@ const FilterGroup = memo(({
   onSelect = () => {}, 
   showIcons = true 
 }) => {
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
   const safeItems = Array.isArray(items) ? items : [];
 
   return (

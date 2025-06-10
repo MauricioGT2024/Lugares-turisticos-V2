@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
-import { useColorMode } from '@chakra-ui/react';
+import { useTheme } from "../context/ThemeContext";
 import PropTypes from 'prop-types';
 const SplashScreen = ({ onComplete }) => {
-  const { colorMode } = useColorMode();
+  const { colorMode } = useTheme();
 
   return (
     <motion.div
@@ -53,7 +53,7 @@ const SplashScreen = ({ onComplete }) => {
 };
 
 SplashScreen.propTypes = {
-  onComplete: PropTypes.func.isRequired,
+  onComplete: PropTypes.func.isRequired
 };
 
 export default SplashScreen;

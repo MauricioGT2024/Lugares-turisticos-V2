@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useColorMode } from '@chakra-ui/react';
+import { useTheme } from '../../context/ThemeContext';
 import { FaHome, FaMapMarkedAlt, FaBed, FaInfoCircle } from 'react-icons/fa';
 import SidebarLink from './SidebarLink';
 import SidebarToggle from './SidebarToggle';
@@ -17,7 +17,7 @@ const Sidebar = () => {
 	const [isOpen, setIsOpen] = useState(false); // sidebar expanded or collapsed on desktop
 	const [isMobileOpen, setIsMobileOpen] = useState(false); // sidebar visible on mobile
 	const { pathname } = useLocation();
-	const { colorMode } = useColorMode();
+	const { isDark } = useTheme();
 
 	const toggleSidebar = useCallback(() => setIsOpen((v) => !v), []);
 	const toggleMobileSidebar = useCallback(() => setIsMobileOpen((v) => !v), []);
@@ -27,8 +27,8 @@ const Sidebar = () => {
 		setIsMobileOpen(false);
 	}, [pathname]);
 
-	const bgColor = colorMode === 'light' ? 'bg-white' : 'bg-gray-900';
-	const textColor = colorMode === 'light' ? 'text-gray-800' : 'text-white';
+	const bgColor = isDark ? 'bg-gray-900' : 'bg-white';
+	const textColor = isDark ? 'text-white' : 'text-gray-800';
 
 	return (
 		<>
