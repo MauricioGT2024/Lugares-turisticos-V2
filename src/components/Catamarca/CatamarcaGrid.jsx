@@ -1,40 +1,48 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
 import CatamarcaCard from './CatamarcaCard';
-import CatamarcaModal from './CatamarcaModal';
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
 
 const CatamarcaGrid = ({ locations, onLocationClick }) => {
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
+  if (!locations || locations.length === 0) return null;
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
+  // Handler para clic y teclado
+  const handleKeyDown = (e, id) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onLocationClick(id);
+    }
   };
 
   return (
     <motion.div
-      variants={container}
+      variants={containerVariants}
       initial="hidden"
       animate="show"
       className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
     >
-      {locations.map((location, index) => (
+      {locations.map((location) => (
         <motion.div
-          key={location.id || index}
-          variants={item}
+          key={location.id}
+          variants={itemVariants}
           className="h-full"
         >
           <CatamarcaCard
             item={location}
             onClick={() => onLocationClick(location.id)}
+            tabIndex={0}
+            onKeyDown={(e) => handleKeyDown(e, location.id)}
           />
         </motion.div>
       ))}

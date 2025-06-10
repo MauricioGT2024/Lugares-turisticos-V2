@@ -1,86 +1,81 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { motion } from 'framer-motion';
-import { location } from '../data/antofagasta';
 import AntofagastaHero from '../components/Antofagasta/AntofagastaHero';
 import AntofagastaGrid from '../components/Antofagasta/AntofagastaGrid';
 import AntofagastaModal from '../components/Antofagasta/AntofagastaModal';
 import AntofagastaFilter from '../components/Antofagasta/AntofagastaFilter';
 import { pageStyles } from '../styles/pageStyles';
+import { location } from '../data/antofagasta';
 
 const Antofagasta = () => {
-	const [categoryFilter, setCategoryFilter] = useState('Todos');
-	const [selectedLocationData, setSelectedLocationData] = useState(null);
-	const { colorMode } = useTheme();
-	const [isOpen, setIsOpen] = useState(false);
-	const isDark = colorMode === 'dark';
+  const [categoryFilter, setCategoryFilter] = useState('Todos');
+  const [selectedLocationData, setSelectedLocationData] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-	// Obtener categorías únicas
-	const categories = useMemo(() => {
-		return [...new Set(location.map((loc) => loc.categoria))].sort();
-	}, []);
+  // Obtener categorías únicas
+  const categories = useMemo(() => {
+    const uniqueCategories = location.map((loc) => loc.categoria);
+    return [...new Set(uniqueCategories)].sort();
+  }, []);
 
-	// Filtrar ubicaciones según la categoría seleccionada
-	const filteredLocations = useMemo(() => {
-		return categoryFilter === 'Todos'
-			? location
-			: location.filter((loc) => loc.categoria === categoryFilter);
-	}, [categoryFilter]);
+  // Filtrar ubicaciones según la categoría seleccionada
+  const filteredLocations = useMemo(() => {
+    return categoryFilter === 'Todos'
+      ? location
+      : location.filter((loc) => loc.categoria === categoryFilter);
+  }, [categoryFilter]);
 
-	// Manejadores de eventos
-	const handleLocationClick = (id) => {
-		const selectedLocation = location.find((loc) => loc.id === id);
-		if (selectedLocation) {
-			setSelectedLocationData(selectedLocation);
-			setIsOpen(true);
-		}
-	};
+  // Manejador de clic en ubicación
+  const handleLocationClick = useCallback((id) => {
+    const selectedLocation = location.find((loc) => loc.id === id);
+    if (selectedLocation) {
+      setSelectedLocationData(selectedLocation);
+      setIsOpen(true);
+    }
+  }, []);
 
-	const handleCloseModal = () => {
-		setIsOpen(false);
-		setTimeout(() => setSelectedLocationData(null), 300);
-	};
+  // Cerrar el modal y resetear el estado
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    setTimeout(() => setSelectedLocationData(null), 300);
+  };
 
-	const mainBg = isDark
-		? 'bg-gradient-to-b from-gray-900 to-gray-800'
-		: 'bg-gradient-to-b from-gray-50 to-white';
+  return (
+    <main className="min-h-screen py-12 bg-gradient-to-b from-gray-50 to-white dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
+      <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+        <div className="space-y-10">
+          {/* Hero Section */}
+          <AntofagastaHero
+            badge="Puna de Atacama"
+            title="Antofagasta de la Sierra"
+            subtitle="Donde el desierto de altura se encuentra con volcanes milenarios y salares brillantes, creando paisajes únicos en la Puna catamarqueña"
+          />
 
-	return (
-		<main
-			className={`min-h-screen py-12 ${mainBg} transition-colors duration-300`}
-		>
-			<div className='container mx-auto px-4 md:px-8 max-w-7xl'>
-				<div className='space-y-10'>
-					<AntofagastaHero
-						badge='Puna de Atacama'
-						title='Antofagasta de la Sierra'
-						subtitle='Donde el desierto de altura se encuentra con volcanes milenarios y salares brillantes, creando paisajes únicos en la Puna catamarqueña'
-						isDark={isDark}
-					/>
+          {/* Filter Section */}
+          <AntofagastaFilter
+            title="Categorías"
+            items={categories}
+            selected={categoryFilter}
+            onSelect={setCategoryFilter}
+          />
 
-					<AntofagastaFilter
-						title='Categorías'
-						items={categories}
-						selected={categoryFilter}
-						onSelect={setCategoryFilter}
-					/>
+          {/* Grid Section */}
+          <AntofagastaGrid
+            locations={filteredLocations}
+            onLocationClick={handleLocationClick}
+          />
+        </div>
 
-					<AntofagastaGrid
-						locations={filteredLocations}
-						onLocationClick={handleLocationClick}
-					/>
-				</div>
-
-				<AntofagastaModal
-					isOpen={isOpen}
-					onClose={handleCloseModal}
-					location={selectedLocationData}
-					isDark={isDark}
-					gradient={pageStyles.antofagasta.modal.gradient}
-				/>
-			</div>
-		</main>
-	);
+        {/* Modal */}
+        <AntofagastaModal
+          isOpen={isOpen}
+          onClose={handleCloseModal}
+          location={selectedLocationData}
+          gradient={pageStyles.antofagasta.modal.gradient}
+        />
+      </div>
+    </main>
+  );
 };
 
 export default Antofagasta;

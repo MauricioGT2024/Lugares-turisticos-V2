@@ -4,31 +4,43 @@ const CatamarcaModal = ({ isOpen, onClose, location, isDark }) => {
   if (!location) return null;
 
   return (
-    <Dialog 
-      open={isOpen} 
+    <Dialog
+      open={isOpen}
       onClose={onClose}
       className="relative z-50"
+      aria-modal="true"
     >
-      <div className="fixed inset-0 bg-gradient-to-br from-blue-900/90 to-indigo-900/90 backdrop-blur-sm" aria-hidden="true" />
+      {/* Fondo oscuro con blur */}
+      <div
+        className="fixed inset-0 bg-gradient-to-br from-blue-900/90 to-indigo-900/90 backdrop-blur-sm"
+        aria-hidden="true"
+      />
+
+      {/* Contenedor modal */}
       
       <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
         <DialogPanel className="w-full max-w-3xl transform overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-6 shadow-2xl transition-all">
+          {/* Imagen con botón cerrar */}
           <div className="relative">
             <img
               src={location.imgSrc}
               alt={location.title}
               className="w-full h-72 object-cover rounded-xl"
+              loading="lazy"
             />
             <div className="absolute top-0 right-0 m-4">
               <button
+                type="button"
                 onClick={onClose}
-                className="p-2 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 transition-colors"
+                aria-label="Cerrar modal"
+                className="p-2 rounded-full bg-white/10 backdrop-blur-md text-white hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white transition-colors"
               >
                 <svg
                   className="w-6 h-6"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden="true"
                 >
                   <path
                     strokeLinecap="round"
@@ -41,6 +53,7 @@ const CatamarcaModal = ({ isOpen, onClose, location, isDark }) => {
             </div>
           </div>
 
+          {/* Contenido textual */}
           <div className="mt-6">
             <DialogTitle
               as="h3"

@@ -1,30 +1,27 @@
-import { memo } from 'react';
 import { motion } from 'framer-motion';
-import { departamentos } from '../data/departamentos';
-import { useTheme } from '../context/ThemeContext';
 import DepartamentoCard from '../components/Provincia/DepartamentoCard';
+import { departamentos } from '../data/departamentos';
 
-const Provincia = memo(() => {
-  const { colorMode } = useTheme();
-  const isDark = colorMode === 'dark';
-
+const Provincia = () => {
   return (
-    <div className={`min-h-screen py-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'} transition-colors duration-300`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: -30 }}
+    <main className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 py-16 px-4 sm:px-6 lg:px-8">
+      <section className="max-w-7xl mx-auto">
+        {/* Título */}
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-center mb-12 space-y-4"
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
         >
-          <h1 className={`text-4xl md:text-5xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
             Explora los Departamentos
           </h1>
-          <p className={`max-w-3xl mx-auto text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            Descubre la diversidad y belleza de cada rincón de esta hermosa provincia.
+          <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+            Descubrí la belleza y diversidad de cada rincón de la provincia.
           </p>
-        </motion.div>
+        </motion.header>
 
+        {/* Grid de tarjetas */}
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -33,11 +30,11 @@ const Provincia = memo(() => {
             hidden: {},
             visible: {
               transition: {
-                staggerChildren: 0.2,
+                staggerChildren: 0.1,
               },
             },
           }}
-          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           {departamentos.map((loc) => (
             <motion.div
@@ -46,17 +43,15 @@ const Provincia = memo(() => {
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
+              transition={{ duration: 0.4 }}
             >
               <DepartamentoCard loc={loc} />
             </motion.div>
           ))}
         </motion.div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
-});
-
-Provincia.displayName = 'Provincia';
+};
 
 export default Provincia;
