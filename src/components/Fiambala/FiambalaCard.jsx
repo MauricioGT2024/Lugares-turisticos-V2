@@ -1,8 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { motion } from 'framer-motion';
+import React from "react";
+import PropTypes from "prop-types";
+import { motion } from "framer-motion";
 
-const FiambalaCard = ({ image: imgSrc, title, description, category, onClick }) => {
+const FiambalaCard = ({
+  image: imgSrc,
+  title,
+  description,
+  category,
+  onClick,
+}) => {
   return (
     <motion.article
       onClick={onClick}
@@ -10,9 +16,7 @@ const FiambalaCard = ({ image: imgSrc, title, description, category, onClick }) 
       whileTap={{ scale: 0.98 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="group relative h-[450px] cursor-pointer rounded-2xl overflow-hidden 
-                 bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl 
-                 transition-all duration-300"
+      className="group relative h-[450px] cursor-pointer rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow-lg hover:shadow-2xl transition-all duration-300"
     >
       {/* Imagen de fondo */}
       <div className="absolute inset-0">
@@ -27,18 +31,18 @@ const FiambalaCard = ({ image: imgSrc, title, description, category, onClick }) 
       {/* Contenido */}
       <div className="absolute bottom-0 p-6 w-full">
         {category && (
-          <span className="inline-block px-3 py-1 rounded-full 
+          <span
+            className="inline-block px-3 py-1 rounded-full 
                          bg-orange-500/90 dark:bg-orange-600/90 
-                         text-white text-sm font-medium">
+                         text-white text-sm font-medium"
+          >
             {category}
           </span>
         )}
         <h3 className="text-2xl font-bold mt-2 text-white dark:text-gray-100">
           {title}
         </h3>
-        <p className="text-gray-200 dark:text-gray-300">
-          {description}
-        </p>
+        <p className="text-gray-200 dark:text-gray-300 line-clamp-2">{description}</p>
       </div>
     </motion.article>
   );

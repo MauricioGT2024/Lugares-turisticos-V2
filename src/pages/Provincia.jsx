@@ -1,15 +1,29 @@
-import { motion } from 'framer-motion';
-import DepartamentoCard from '../components/Provincia/DepartamentoCard';
-import { departamentos } from '../data/departamentos';
+import { motion } from "framer-motion";
+import DepartamentoCard from "../components/Provincia/DepartamentoCard";
+import { departamentos } from "../data/departamentos";
 
-const Provincia = () => {
+const staggerContainer = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+};
+
+export default function Provincia() {
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 py-16 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-white dark:bg-gray-900 py-16 px-4 sm:px-6 lg:px-8">
       <section className="max-w-7xl mx-auto">
-        {/* Título */}
         <motion.header
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
@@ -21,30 +35,15 @@ const Provincia = () => {
           </p>
         </motion.header>
 
-        {/* Grid de tarjetas */}
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
-          variants={{
-            hidden: {},
-            visible: {
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
+          viewport={{ once: true, amount: 0.2 }}
+          variants={staggerContainer}
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
         >
           {departamentos.map((loc) => (
-            <motion.div
-              key={loc.id}
-              variants={{
-                hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.4 }}
-            >
+            <motion.div key={loc.id} variants={fadeInUp}>
               <DepartamentoCard loc={loc} />
             </motion.div>
           ))}
@@ -52,6 +51,4 @@ const Provincia = () => {
       </section>
     </main>
   );
-};
-
-export default Provincia;
+}

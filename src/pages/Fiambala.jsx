@@ -1,84 +1,72 @@
+import { useMemo, useState } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { locations } from "../data/fiambala";
 import FiambalaHero from "../components/Fiambala/FiambalaHero";
 import FiambalaGrid from "../components/Fiambala/FiambalaGrid";
 import FiambalaModal from "../components/Fiambala/FiambalaModal";
 import FiambalaFilter from "../components/Fiambala/FiambalaFilter";
-import { pageStyles } from "../styles/pageStyles";
-import { useMemo, useState } from "react";
-
 
 const Fiambala = () => {
-  const [categoryFilter, setCategoryFilter] = useState("Todos");
-  const [selectedLocationData, setSelectedLocationData] = useState(null);
-  const { colorMode } = useTheme();
+  const [category, setCategory] = useState("Todos");
+  const [selected, setSelected] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [modal, setModal] = useState({ isOpen: false, data: null });
+
+  const { colorMode } = useTheme();
   const isDark = colorMode === "dark";
 
-  // Obtener categorías únicas
-  const categories = useMemo(() => {
-    return [...new Set(locations.map(loc => loc.category))].sort();
-  }, []);
+  const categories = useMemo(
+    () => [...new Set(locations.map(loc => loc.category))].sort(),
+    []
+  );
 
-  // Filtrar ubicaciones según la categoría seleccionada
-  const filteredLocations = useMemo(() => {
-    return categoryFilter === "Todos"
-      ? locations
-      : locations.filter(loc => loc.category === categoryFilter);
-  }, [categoryFilter]);
+  const filtered = useMemo(
+    () => (category === "Todos" ? locations : locations.filter(loc => loc.category === category)),
+    [category]
+  );
 
-  // Manejadores de eventos
-  const handleLocationClick = (id) => {
-    const location = locations.find(loc => loc.id === id);
-    if (location) {
-      setSelectedLocationData(location);
+  const openModal = (id) => {
+    const loc = locations.find(l => l.id === id);
+    if (loc) {
+      setSelected(loc);
       setIsOpen(true);
     }
   };
 
-  const handleCloseModal = () => {
+  const closeModal = () => {
     setIsOpen(false);
-    setTimeout(() => setSelectedLocationData(null), 300);
-  };
-
-  const styles = {
-    mainBg: 'bg-white dark:bg-gray-900',
-    textColor: 'text-gray-900 dark:text-gray-100',
-    sectionBg: 'bg-gray-50 dark:bg-gray-800'
+    setTimeout(() => setSelected(null), 300);
   };
 
   return (
-    <main className={`min-h-screen py-12 ${styles.mainBg} transition-colors duration-300`}>
-      <div className="container mx-auto px-4 md:px-8 max-w-7xl">
-        <div className="space-y-10">
-          <FiambalaHero
-            badge="Explora Fiambalá"
-            title="Fiambalá"
-            subtitle="Donde el desierto se encuentra con las termas, creando un oasis de aventura y relax en el corazón de Catamarca."
-            isDark={isDark}
-          />
-
-          <FiambalaFilter
-            title="Categorías"
-            items={categories}
-            selected={categoryFilter}
-            onSelect={setCategoryFilter}
-          />
-
-          <FiambalaGrid
-            locations={filteredLocations}
-            onLocationClick={handleLocationClick}
-          />
-        </div>
+    <main className={`min-h-screen py-12 ${isDark ? "bg-white" : " dark:bg-gray-900"} transition-colors`}>
+      <div className="container mx-auto max-w-7xl px-4 md:px-8 space-y-10">
+        <FiambalaHero
+          badge="Explora Fiambalá"
+          title="Fiambalá"
+          subtitle="Donde el desierto se encuentra con las termas..."
+          isDark={isDark}
+        />
+        <FiambalaFilter
+          title="Categorías"
+          items={categories}
+          selected={category}
+          onSelect={setCategory}
+        />
+        <FiambalaGrid
+          locations={filtered}
+          onLocationClick={openModal}
+        />
       </div>
+      {selected && (
+  <FiambalaModal
+    isOpen={isOpen}
+    onClose={closeModal}
+    location={selected}
+    isDark={isDark}
 
-      <FiambalaModal
-        isOpen={isOpen}
-        onClose={handleCloseModal}
-        location={selectedLocationData}
-        isDark={isDark}
-        gradient={pageStyles.fiambala.modal.gradient}
-      />
+  />
+)}
     </main>
   );
 };

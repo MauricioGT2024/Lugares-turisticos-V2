@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
-import { ThemeToggle } from "./components/UI/ThemeToggle";
+import { ThemeToggle } from "./components/ThemeToggle";
 
 import SplashScreen from "./components/SplashScreen";
 import AppRoutes from "./routes/AppRoutes";

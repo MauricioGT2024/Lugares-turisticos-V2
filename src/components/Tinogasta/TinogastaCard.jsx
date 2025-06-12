@@ -1,55 +1,83 @@
 import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 
-const TinogastaCard = ({ location, onClick }) => {
-	if (!location) return null;
+/**
+ * @typedef {object} Location
+ * @property {number} id
+ * @property {string} name
+ * @property {string} description
+ * @property {string} imgSrc
+ * @property {string} [category]
+ */
 
-	return (
-		<motion.article
-			whileHover={{ scale: 1.02, y: -5 }}
-			whileTap={{ scale: 0.98 }}
-			className='group relative break-inside-avoid h-[500px] cursor-pointer rounded-3xl overflow-hidden shadow-2xl hover:shadow-purple-500/20 transition-all duration-500'
-			onClick={onClick}
-		>
-			<div className='absolute inset-0 transform group-hover:scale-110 transition-transform duration-700'>
-				<img
-					src={location.imgSrc}
-					alt={location.name}
-					className='h-full w-full object-cover'
-				/>
-				<div className='absolute inset-0 bg-gradient-to-t from-purple-900/90 via-purple-900/50 to-transparent opacity-80 group-hover:opacity-70 transition-opacity duration-300' />
-			</div>
+/**
+ * Card component to display a tourist location.
+ * @param {object} props - Component props.
+ * @param {Location} props.location - The location data.
+ * @param {() => void} props.onClick - Function to call when the card is clicked.
+ * @returns {JSX.Element | null} The card component or null if location is not provided.
+ */
+const TinogastaCard = ({ location, onClick }) => (
+  location ? (
+    <motion.article
+      onClick={onClick}
+      whileHover={{ scale: 1.02, y: -6 }}
+      whileTap={{ scale: 0.98 }}
+      className="group cursor-pointer overflow-hidden rounded-2xl shadow-md transition-all duration-300 dark:bg-gray-800 bg-white"
+    >
+      {/* Image Section */}
+      <div className="relative w-full h-48 overflow-hidden">
+        <img
+          src={location.imgSrc}
+          alt={location.name}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {location.category && (
+        <span className="absolute top-3 left-3 bg-purple-600/90 text-white text-xs font-medium px-3 py-1 rounded-full backdrop-blur-md shadow-sm">
+          {location.category}
+        </span>
+        )}
+      </div>
 
-			{/* Contenido con animación */}
-			<div className='absolute inset-x-0 bottom-0 p-8 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500'>
-				{location.category && (
-					<motion.span
-						initial={{ opacity: 0, x: -20 }}
-						animate={{ opacity: 1, x: 0 }}
-						className='inline-block px-4 py-2 rounded-lg bg-purple-600/90 text-white text-sm font-medium mb-4 backdrop-blur-sm'
-					>
-						{location.category}
-					</motion.span>
-				)}
-				<h3 className='text-3xl font-bold text-white mb-4 transform -translate-y-2 group-hover:translate-y-0 transition-all duration-500'>
-					{location.name}
-				</h3>
-				<p className='text-gray-200 leading-relaxed opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100'>
-					{location.description}
-				</p>
-			</div>
-		</motion.article>
-	);
-};
+      {/* Content Section */}
+      <div className="p-4 space-y-2">
+        <h3 className="text-lg font-bold text-gray-800 dark:text-white line-clamp-1">
+          {location.name}
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">
+          {location.description}
+        </p>
+        <button
+          type="button" // Good practice for buttons
+          className="mt-2 inline-block text-sm font-semibold text-purple-600 hover:underline dark:text-purple-400"
+          aria-label={`Ver más sobre ${location.name}`}
+        >
+          Ver más
+        </button>
+      </div>
+    </motion.article>
+  ) : null
+  );
 
+// PropTypes for type checking and documentation
 TinogastaCard.propTypes = {
-	location: PropTypes.shape({
-		imgSrc: PropTypes.string.isRequired,
-		name: PropTypes.string.isRequired,
-		description: PropTypes.string.isRequired,
-		category: PropTypes.string,
-	}).isRequired,
-	onClick: PropTypes.func.isRequired,
+  /**
+   * The location data to display.
+   */
+  location: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    imgSrc: PropTypes.string.isRequired,
+    category: PropTypes.string,
+  }).isRequired,
+  /**
+   * Function to call when the card is clicked.
+   */
+  onClick: PropTypes.func.isRequired,
 };
+
+// Set a display name for the component
+TinogastaCard.displayName = 'TinogastaCard';
 
 export default TinogastaCard;

@@ -1,32 +1,53 @@
-import { motion } from 'framer-motion';
+import { useState } from "react";
 
 const AntofagastaFilter = ({ title, items, selected, onSelect }) => {
-  // Definir clases de estilo de los botones
-  const baseButtonClasses = "px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 border";
-  const selectedButtonClasses = "bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-lg border-transparent";
-  const defaultButtonClasses = "bg-teal-50 text-teal-700 hover:bg-teal-100 border-teal-200 dark:bg-teal-900/20 dark:text-teal-300 dark:border-teal-700";
-  
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <div className="space-y-4">
-      <h3 className="text-xl font-semibold text-teal-800 dark:text-teal-400">{title}</h3>
-      <div className="flex flex-wrap gap-3">
-        {['Todos', ...items].map((item) => {
-          const isSelected = selected === item;
-          return (
-            <motion.button
-              key={item}
-              onClick={() => onSelect(item)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`${baseButtonClasses} ${isSelected ? selectedButtonClasses : defaultButtonClasses}`}
-              aria-label={`Filtrar por ${item}`} // Mejora de accesibilidad
-            >
-              {item}
-            </motion.button>
-          );
-        })}
+    <section className="mb-6 flex justify-center lg:justify-start">
+      <div className="w-full max-w-xs">
+        <h2 className="text-xl font-semibold mb-2 text-center lg:text-left">{title}</h2>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="w-full px-4 py-2 bg-blue-600 text-white rounded-md flex justify-between items-center"
+          aria-expanded={isOpen}
+          aria-controls="category-list"
+        >
+          {selected}
+          <span className="ml-2">{isOpen ? '▲' : '▼'}</span>
+        </button>
+
+        {isOpen && (
+          <ul
+            id="category-list"
+            className="mt-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-md shadow-lg overflow-hidden"
+          >
+            {items.map((item) => (
+              <li
+                key={item}
+                onClick={() => {
+                  onSelect(item);
+                  setIsOpen(false);
+                }}
+                className={`cursor-pointer px-4 py-2 hover:bg-blue-100 dark:hover:bg-blue-900 ${
+                  item === selected ? 'bg-blue-200 dark:bg-blue-700 font-semibold' : ''
+                }`}
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    onSelect(item);
+                    setIsOpen(false);
+                  }
+                }}
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-    </div>
+    </section>
   );
 };
 

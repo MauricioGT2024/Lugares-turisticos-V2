@@ -1,69 +1,103 @@
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  Description,
-} from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 
-import { motion } from "framer-motion";
-
-const AntofagastaModal = ({ location, isOpen, onClose }) => {
+const AntofagastaModal = ({ isOpen, onClose, location, gradient }) => {
   if (!location) return null;
-
-  const { title, imgSrc, description } = location;
-
-  // Clases reutilizables con soporte dark
-  const buttonClasses =
-    "inline-flex justify-center rounded-lg px-6 py-3 text-sm font-medium text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 transition-colors duration-200 dark:bg-teal-700 dark:hover:bg-teal-600";
-  const panelClasses =
-    "w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 shadow-xl transition-all dark:bg-gray-900 dark:shadow-black/60";
-  const titleClasses =
-    "text-3xl font-bold text-teal-900 mb-4 dark:text-teal-400";
-  const descriptionClasses =
-    "text-lg text-teal-700 leading-relaxed dark:text-teal-300";
-  const imgClasses = "w-full h-80 object-cover rounded-lg mb-6";
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      {/* Backdrop */}
+      {/* Fondo oscuro */}
       <div
-        className="fixed inset-0 bg-teal-900/75 dark:bg-black/80"
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm"
         aria-hidden="true"
       />
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="fixed inset-0 flex w-screen items-center justify-center p-4"
-      >
-        <DialogPanel className={panelClasses}>
-          <div className="relative">
-            <img src={imgSrc} alt={title} className={imgClasses} />
-            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-teal-400 to-teal-600 dark:from-teal-700 dark:to-teal-500" />
+      {/* Centro modal */}
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <DialogPanel className="w-full max-w-6xl rounded-lg shadow-xl bg-white dark:bg-gray-900 overflow-hidden">
+          {/* Header (solo texto) */}
+          <div
+            className="p-6"
+            style={{
+              background:
+                gradient || "linear-gradient(to right, #4f46e5, #9333ea)",
+            }}
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <DialogTitle className="text-3xl font-bold text-white mb-2">
+                  {location.title}
+                </DialogTitle>
+                {location.categoria && (
+                  <span className="inline-block bg-white/30 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    {location.categoria}
+                  </span>
+                )}
+              </div>
+              <button
+                onClick={onClose}
+                className="text-white text-2xl font-bold hover:text-gray-200"
+                aria-label="Cerrar modal"
+              >
+                &times;
+              </button>
+            </div>
           </div>
 
-          <DialogTitle as="h3" className={titleClasses}>
-            {title}
-          </DialogTitle>
+          {/* Body: descripción + imagen + iframe */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+            {/* Izquierda: texto */}
+            <div className="text-gray-800 dark:text-gray-200 whitespace-pre-line text-base leading-relaxed">
+              <p>{location.description}</p>
+            </div>
 
-          <Description className="mt-4">
-            <p className={descriptionClasses}>{description}</p>
-          </Description>
+            {/* Derecha: imagen + iframe */}
+            <div className="space-y-4">
+              <img
+                src={location.imgSrc}
+                alt={location.title}
+                className="w-full h-48 object-cover rounded-md shadow-md"
+                loading="lazy"
+              />
+              <div className="aspect-video w-full">
+                <iframe
+                  src={
+                    location.mapSrc ||
+                    "https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  }
+                  title={`Contenido de ${location.name}`}
+                  frameBorder="0"
+                  allowFullScreen
+                  className="w-full h-full rounded-md shadow-md"
+                ></iframe>
+              </div>
+            </div>
+          </div>
 
-          <div className="mt-8 flex justify-end">
-            <button
-              type="button"
-              className={buttonClasses}
-              onClick={onClose}
-              aria-label="Cerrar modal"
-            >
-              Cerrar
-            </button>
+          {/* Footer */}
+          <div className="flex justify-end gap-4 px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+            {location.mapUrl && (
+              <a
+                href={location.mapUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold"
+              >
+                Ver Mapa
+              </a>
+            )}
+            {location.path && (
+              <a
+                href={location.path}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold"
+              >
+                Ver más
+              </a>
+            )}
           </div>
         </DialogPanel>
-      </motion.div>
+      </div>
     </Dialog>
   );
 };
