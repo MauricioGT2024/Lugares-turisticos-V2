@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
-import { Hero } from "../components/Hospedaje/Hero";
-import { Filter } from "../components/Hospedaje/Filter";
-import { LocationGrid } from "../components/Hospedaje/LocationGrid";
+import { Hero, Filter, Grid, Modal } from "../components/Hospedaje";
 import { useHospedajes } from "../hooks/useHospedaje";
-import Modal from "../components/Hospedaje/Modal";
 
 const Hospedaje = () => {
   const { colorMode } = useTheme();
@@ -82,7 +79,7 @@ const Hospedaje = () => {
 
           {/* Grid de Hospedajes */}
           <AnimatePresence mode="wait">
-            <LocationGrid
+            <Grid
               locations={filteredHospedajes}
               onLocationClick={handleLocationClick}
               isDark={isDark}

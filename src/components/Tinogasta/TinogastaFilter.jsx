@@ -4,7 +4,7 @@ const TinogastaFilter = ({ title, items, selected, onSelect }) => {
   return (
     <div className="flex justify-center lg:justify-start">
       <div className="space-y-4">
-        <h3 className="text-xl font-semibold text-purple-800 dark:text-purple-400">
+        <h3 className="text-xl font-semibold text-yellow-800 dark:text-yellow-400">
           {title}
         </h3>
         <div className="flex flex-wrap gap-3">
@@ -20,8 +20,8 @@ const TinogastaFilter = ({ title, items, selected, onSelect }) => {
               transition-colors duration-200 backdrop-blur-sm
               ${
                 selected === item
-                  ? "bg-gradient-to-r from-purple-500 to-purple-700 text-white shadow-lg"
-                  : "bg-purple-100/80 text-purple-700 hover:bg-purple-200/80 dark:bg-purple-900/20 dark:text-purple-300"
+                  ? "bg-gradient-to-r from-yellow-400 to-yellow-600 text-yellow-900 dark:from-yellow-400 dark:to-yellow-600 dark:text-yellow-900 shadow-lg"
+                  : "bg-yellow-100/80 text-yellow-700 dark:bg-yellow-900/60 dark:text-yellow-300 hover:bg-yellow-200/80 dark:hover:bg-yellow-800/60"
               }
             `}
               >
