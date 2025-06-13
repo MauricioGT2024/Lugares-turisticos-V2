@@ -1,125 +1,138 @@
-import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import PropTypes from "prop-types";
-import { FaXmark } from "react-icons/fa6";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
+import { XMarkIcon, BookOpenIcon, MapPinIcon } from "@heroicons/react/24/solid";
+import { motion } from "framer-motion";
 
-const FiambalaModal = ({ isOpen, onClose, location, gradient }) => {
+const modalVariants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.3 } },
+  exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } },
+};
+
+const FiambalaModal = ({ isOpen, onClose, location }) => {
   if (!location) return null;
 
   return (
-    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
-      <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-sm"
-        aria-hidden="true"
-      />
+    <Transition appear show={isOpen} as={Fragment}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
+        {/* Overlay oscuro */}
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-black/40 dark:bg-black/60" />
+        </Transition.Child>
 
-      <div className="fixed inset-0 flex items-center justify-center p-4">
-        <DialogPanel className="w-full max-w-5xl bg-white dark:bg-gray-900 rounded-xl shadow-lg overflow-hidden">
-          {/* Header */}
-          {location.imgSrc && (
-            <div className="w-full h-64 rounded overflow-hidden">
-              <img
-                src={location.imgSrc}
-                alt={location.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          )}
-
-          <div className={`p-6 ${gradient}`}>
-            <div className="flex justify-between items-start">
-              <div>
-                <DialogTitle className="text-3xl font-bold dark:text-white ">
-                  {location.title}
-                </DialogTitle>
-              </div>
-              <button
-                onClick={onClose}
-                className="text-white hover:text-gray-200"
+        {/* Contenedor modal con animación framer-motion */}
+        <div className="fixed inset-0 overflow-y-auto">
+          <div className="flex min-h-full items-center justify-center p-6">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <motion.div
+                variants={modalVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="w-full max-w-5xl transform overflow-hidden rounded-xl bg-white dark:bg-gray-900 shadow-xl transition-all"
               >
-                <FaXmark className="w-6 h-6" />
-              </button>
-            </div>
-          </div>
+                {/* HEADER */}
+                <div className="flex flex-col md:flex-row p-6 gap-6 border-b dark:border-gray-700 items-center">
+                  {/* Izquierda: título + badge */}
+                  <div className="md:w-1/2 space-y-1 flex flex-col justify-center items-center">
+                    <Dialog.Title className="text-xl font-semibold text-gray-800 dark:text-white">
+                      {location.title}
+                    </Dialog.Title>
+                    <span className="inline-block px-2 py-1 text-xs font-medium text-white bg-orange-500/90 dark:bg-orange-600/90   rounded w-16 self-center text-center m-40">
+                      {location.category}
+                    </span>
+                  </div>
 
-          {/* Body */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-            {/* Izquierda: Descripción + Imagen */}
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-xl text-gray-800 dark:text-white mb-1 font-bold ">
-                  Descripción
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300 whitespace-pre-line font-mono font-bold line">
-                  {location.description}
-                </p>
-              </div>
-            </div>
-
-            {/* Derecha: Iframe */}
-            <div>
-              {location.mapSrc ? (
-                <div className="aspect-video rounded-lg overflow-hidden shadow">
-                  <iframe
-                    src={location.mapSrc}
-                    title={location.title}
-                    allowFullScreen
-                    className="w-full h-full border-none"
-                  />
+                  {/* Derecha: imagen */}
+                  <div className="md:w-1/2">
+                    <img
+                      src={location.imgSrc}
+                      alt={location.title}
+                      className="w-full h-48 md:h-64 object-cover rounded"
+                    />
+                  </div>
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500 italic">
-                  Sin contenido multimedia disponible
-                </p>
-              )}
-            </div>
-          </div>
 
-          {/* Footer */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-t border-gray-200 dark:border-gray-700 px-6 py-4">
-            <div className="text-md text-gray-700 dark:text-gray-300">
-              <span className="mt-1 inline-block text-sm bg-white text-gray-900 font-medium px-2 py-1 rounded-full">
-                {location.category}
-              </span>
-            </div>
-            <div className="flex gap-3">
-              {location.wiki && (
-                <a
-                  href={location.wiki}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-md text-sm font-medium"
-                >
-                  Ver más
-                </a>
-              )}
-              <button
-                onClick={onClose}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm font-medium"
-              >
-                Cerrar
-              </button>
-            </div>
+                {/* BODY */}
+                <div className="flex flex-col md:flex-row p-6 gap-6">
+                  {/* Descripción */}
+                  <div className="md:w-1/2 text-gray-700 dark:text-gray-300 overflow-y-auto">
+                    <p className="text-base leading-relaxed">{location.description}</p>
+                  </div>
+
+                  {/* Mapa */}
+                  <div className="md:w-1/2 h-64">
+                    <iframe
+                      src={location.mapSrc}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      allowFullScreen=""
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      className="rounded"
+                      title={`Mapa de ${location.title}`}
+                    ></iframe>
+                  </div>
+                </div>
+
+                {/* FOOTER */}
+                <div className="flex justify-between items-center px-6 py-4 border-t dark:border-gray-700">
+                  <div className="flex space-x-6">
+                    {location.wiki && (
+                      <a
+                        href={location.wiki}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 hover:underline"
+                        aria-label="Ir a Wikipedia"
+                      >
+                        <BookOpenIcon className="w-5 h-5" />
+                      </a>
+                    )}
+                    {location.path && (
+                      <a
+                        href={location.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 hover:underline"
+                        aria-label="Ver en Google Maps"
+                      >
+                        <MapPinIcon className="w-5 h-5" />
+                      </a>
+                    )}
+                  </div>
+                  <button
+                    onClick={onClose}
+                    className="flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white"
+                    aria-label="Cerrar modal"
+                  >
+                    <XMarkIcon className="w-6 h-6" />
+                  </button>
+                </div>
+              </motion.div>
+            </Transition.Child>
           </div>
-        </DialogPanel>
-      </div>
-    </Dialog>
+        </div>
+      </Dialog>
+    </Transition>
   );
-};
-
-FiambalaModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  location: PropTypes.shape({
-    title: PropTypes.string,
-    category: PropTypes.string,
-    description: PropTypes.string,
-    image: PropTypes.string,
-    mapSrc: PropTypes.string,
-    ubicacion: PropTypes.string,
-    url: PropTypes.string,
-  }),
-  isDark: PropTypes.bool,
-  gradient: PropTypes.string,
 };
 
 export default FiambalaModal;

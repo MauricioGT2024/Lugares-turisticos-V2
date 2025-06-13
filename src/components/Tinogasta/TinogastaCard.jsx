@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import { motion } from 'framer-motion';
+import PropTypes from "prop-types";
+import { motion } from "framer-motion";
 
 /**
  * @typedef {object} Location
@@ -17,7 +17,7 @@ import { motion } from 'framer-motion';
  * @param {() => void} props.onClick - Function to call when the card is clicked.
  * @returns {JSX.Element | null} The card component or null if location is not provided.
  */
-const TinogastaCard = ({ location, onClick }) => (
+const TinogastaCard = ({ location, onClick }) =>
   location ? (
     <motion.article
       onClick={onClick}
@@ -33,9 +33,9 @@ const TinogastaCard = ({ location, onClick }) => (
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         {location.category && (
-        <span className="absolute top-3 left-3 bg-purple-600/90 text-white text-xs font-medium px-3 py-1 rounded-full backdrop-blur-md shadow-sm">
-          {location.category}
-        </span>
+          <span className="absolute top-3 left-3 text-yellow-800 bg-yellow-300 dark:bg-yellow-600 dark:text-yellow-50  text-xs font-medium px-3 py-1 rounded-full backdrop-blur-md shadow-sm">
+            {location.category}
+          </span>
         )}
       </div>
 
@@ -48,16 +48,15 @@ const TinogastaCard = ({ location, onClick }) => (
           {location.description}
         </p>
         <button
-          type="button" // Good practice for buttons
-          className="mt-2 inline-block text-sm font-semibold text-purple-600 hover:underline dark:text-purple-400"
+          type="button"
+          className="mt-2 inline-block text-sm font-semibold rounded-full p-2 hover:underline text-yellow-900 dark:text-yellow-600 dark:hover:text-yellow-500"
           aria-label={`Ver más sobre ${location.name}`}
         >
           Ver más
         </button>
       </div>
     </motion.article>
-  ) : null
-  );
+  ) : null;
 
 // PropTypes for type checking and documentation
 TinogastaCard.propTypes = {
@@ -78,6 +77,6 @@ TinogastaCard.propTypes = {
 };
 
 // Set a display name for the component
-TinogastaCard.displayName = 'TinogastaCard';
+TinogastaCard.displayName = "TinogastaCard";
 
 export default TinogastaCard;

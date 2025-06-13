@@ -10,40 +10,38 @@ import React from "react";
 
 const Catamarca = () => {
   const [selectedArea, setSelectedArea] = useState("Todos");
-  const [selectedLocationData, setSelectedLocationData] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const { colorMode } = useTheme();
   const isDark = colorMode === "dark";
 
+  // Extraer áreas únicas desde los datos
   const areas = useMemo(() => {
-    return [...new Set(locations.map((loc) => loc.area))].sort();
+    const uniqueAreas = new Set(locations.map((loc) => loc.area));
+    return [...Array.from(uniqueAreas).sort()];
   }, []);
 
+  // Filtrar lugares según el área seleccionada
   const filteredLocations = useMemo(() => {
     return selectedArea === "Todos"
       ? locations
       : locations.filter((loc) => loc.area === selectedArea);
   }, [selectedArea]);
 
+  // Abrir modal con lugar por ID
   const openModal = useCallback((id) => {
-    const foundLocation = locations.find((loc) => loc.id === id);
-    if (foundLocation) {
-      setSelectedLocationData(foundLocation);
-      setIsOpen(true);
-    }
+    const found = locations.find((loc) => loc.id === id);
+    if (found) setSelectedLocation(found);
   }, []);
 
+  // Cerrar modal
   const closeModal = useCallback(() => {
-    setIsOpen(false);
-  }, []);
-  const clearSelectedLocationData = useCallback(() => {
-    setSelectedLocationData(null);
+    setSelectedLocation(null);
   }, []);
 
   return (
     <LayoutGroup>
       <main
-        className={`min-h-screen py-12 bg-gradient-to-b from-gray-50 to-white dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 transition-colors duration-300`}
+        className="min-h-screen py-12 transition-colors duration-300 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-gradient-to-b from-gray-50 to-white"
       >
         <div className="container mx-auto max-w-7xl px-4">
           <div className="space-y-10">
@@ -64,7 +62,7 @@ const Catamarca = () => {
               title="Áreas"
               items={areas}
               selected={selectedArea}
-              onSelect={setSelectedArea} // podrías memorizar con useCallback si quieres
+              onSelect={setSelectedArea}
               isDark={isDark}
             />
 
@@ -74,12 +72,12 @@ const Catamarca = () => {
             />
           </div>
         </div>
+
+        {/* Modal dinámico */}
         <CatamarcaModal
-          isOpen={isOpen}
+          isOpen={!!selectedLocation}
           onClose={closeModal}
-          location={selectedLocationData}
-          isDark={isDark}
-          
+          location={selectedLocation}
         />
       </main>
     </LayoutGroup>
