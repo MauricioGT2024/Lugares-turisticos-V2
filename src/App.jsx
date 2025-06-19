@@ -2,7 +2,7 @@
 import "./App.css";
 import { BrowserRouter as Router } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ThemeProvider } from "./context/ThemeContext";
 import { ThemeToggle } from "./components/ThemeToggle";
 
@@ -13,19 +13,32 @@ import Sidebar from "./components/Sidebar/Sidebar";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    handleResize(); // detectar al inicio
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const handleSplashComplete = () => {
     setIsLoading(false);
   };
   return (
-    <ThemeProvider>
-      <main
-        className={`min-h-screen flex-0 transition-all duration-300 ease-in-out dark:bg-gray-900`}
-        style={{
-          marginLeft: sidebarOpen ? 240 : 5,
-        }}
-      >
+    <main
+      className={`min-h-screen flex-0 transition-all duration-300 ease-in-out `}
+      style={{
+        marginLeft:
+          !isMobile && sidebarOpen ? "1rem" : !isMobile ? "3rem" : "0",
+      }}
+    >
+      <ThemeProvider>
         <Router>
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             {isLoading ? (
               <SplashScreen onComplete={handleSplashComplete} />
             ) : (
@@ -37,8 +50,8 @@ function App() {
             )}
           </AnimatePresence>
         </Router>
-      </main>
-    </ThemeProvider>
+      </ThemeProvider>
+    </main>
   );
 }
 

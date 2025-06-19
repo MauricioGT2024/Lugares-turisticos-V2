@@ -10,10 +10,8 @@ const Hospedaje = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
 
-  const { locations, locationFilter, setLocationFilter, filteredHospedajes } =
-    useHospedajes();
+  const { locations, locationFilter, setLocationFilter, filteredHospedajes } = useHospedajes();
 
-  // Estilos dinámicos basados en el tema
   const styles = {
     mainBg: "bg-gray-50 dark:bg-gray-900",
     textColor: "text-gray-900 dark:text-gray-100",
@@ -24,7 +22,6 @@ const Hospedaje = () => {
   const handleLocationClick = (id) => {
     const location = filteredHospedajes.find((loc) => loc.id === id);
     if (location) {
-      // Sanitizar la URL del iframe antes de establecer la ubicación
       const sanitizedLocation = {
         ...location,
         iframe: location.iframe?.replace(/&amp;/g, "&"),
@@ -40,18 +37,14 @@ const Hospedaje = () => {
   };
 
   return (
-    <main
-      className={`min-h-screen transition-colors duration-300 ${styles.mainBg}`}
-    >
+    <main className={`min-h-screen transition-colors duration-300 ${styles.mainBg}`}>
       <div className="container mx-auto max-w-7xl px-4 py-12 md:px-8">
         <div className="space-y-10">
           {/* Hero Section */}
           <Hero
             badge="Alojamiento"
             title={
-              <h1
-                className={`text-4xl font-bold ${styles.textColor} md:text-5xl`}
-              >
+              <h1 className={`text-4xl font-bold ${styles.textColor} md:text-5xl`}>
                 Hospedajes en Catamarca
               </h1>
             }
@@ -62,7 +55,7 @@ const Hospedaje = () => {
             }
           />
 
-          {/* Filtros */}
+          {/* Filtros con animación */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -73,7 +66,6 @@ const Hospedaje = () => {
               items={locations}
               selected={locationFilter}
               onSelect={setLocationFilter}
-              isDark={isDark}
             />
           </motion.section>
 

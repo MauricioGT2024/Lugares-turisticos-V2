@@ -24,7 +24,6 @@ const AntofagastaFilter = ({ title, items, selected, onSelect }) => {
           >
             {items.map((item) => (
               <li
-                key={item}
                 onClick={() => {
                   onSelect(item);
                   setIsOpen(false);

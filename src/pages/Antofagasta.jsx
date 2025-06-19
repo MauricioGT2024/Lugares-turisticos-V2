@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useTransition } from "react";
+import { useState, useTransition } from "react";
 import {
   AntofagastaHero,
   AntofagastaGrid,
@@ -10,38 +10,30 @@ import { location } from "../data/antofagasta";
 
 const Antofagasta = () => {
   const [categoryFilter, setCategoryFilter] = useState("Todos");
-  const [selectedLocationData, setSelectedLocationData] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [, startTransition] = useTransition();
 
-  const categories = useMemo(() => {
-    const uniqueCategories = Array.from(
-      new Set(location.map((loc) => loc.categoria))
-    ).sort();
-    return ["Todos", ...uniqueCategories.filter((cat) => cat !== "Todos")];
-  }, []);
+  const categories = ["Todos", ...Array.from(new Set(location.map(l => l.categoria))).filter(c => c !== "Todos")];
+  const filtered = categoryFilter === "Todos"
+    ? location
+    : location.filter(l => l.categoria === categoryFilter);
 
-  const filteredLocations = useMemo(() => {
-    return categoryFilter === "Todos"
-      ? location
-      : location.filter((loc) => loc.categoria === categoryFilter);
-  }, [categoryFilter]);
-
-  const handleLocationClick = useCallback((id) => {
-    const selected = location.find((loc) => loc.id === id);
-    if (selected) {
-      setSelectedLocationData(selected);
+  const openModal = (id) => {
+    const loc = location.find(l => l.id === id);
+    if (loc) {
+      setSelectedLocation(loc);
       setIsOpen(true);
     }
-  }, []);
+  };
 
-  const handleCloseModal = useCallback(() => {
+  const closeModal = () => {
     setIsOpen(false);
-    setTimeout(() => setSelectedLocationData(null), 300);
-  }, []);
+    setTimeout(() => setSelectedLocation(null), 300);
+  };
 
-  const handleCategoryChange = (category) => {
-    startTransition(() => setCategoryFilter(category));
+  const changeCategory = (cat) => {
+    startTransition(() => setCategoryFilter(cat));
   };
 
   return (
@@ -50,25 +42,23 @@ const Antofagasta = () => {
         <AntofagastaHero
           badge="Puna de Atacama"
           title="Antofagasta de la Sierra"
-          subtitle="Donde el desierto de altura se encuentra con volcanes milenarios y salares brillantes, creando paisajes únicos en la Puna catamarqueña"
+          subtitle="Donde el desierto de altura se encuentra con volcanes milenarios y salares brillantes"
         />
-
         <AntofagastaFilter
           title="Categorías"
           items={categories}
           selected={categoryFilter}
-          onSelect={handleCategoryChange}
+          onSelect={changeCategory}
         />
-
         <AntofagastaGrid
-          locations={filteredLocations}
-          onLocationClick={handleLocationClick}
+          locations={filtered}
+          onLocationClick={openModal}
         />
       </div>
       <AntofagastaModal
         isOpen={isOpen}
-        onClose={handleCloseModal}
-        location={selectedLocationData}
+        onClose={closeModal}
+        location={selectedLocation}
         gradient={pageStyles.antofagasta.modal.gradient}
       />
     </main>

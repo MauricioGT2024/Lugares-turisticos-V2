@@ -3,9 +3,14 @@ import { hospedajes } from '../data/hospedajes';
 
 export const useHospedajes = () => {
   const [locationFilter, setLocationFilter] = useState('Todos');
-  
+
   const locations = useMemo(() => {
-    return [...new Set(hospedajes.map((hotel) => hotel.location))].sort();
+    const uniqueLocations = [...new Set(hospedajes.map(h => h.location))];
+    return ["Todos", ...uniqueLocations].sort((a, b) => {
+      if (a === "Todos") return -1;
+      if (b === "Todos") return 1;
+      return a.localeCompare(b);
+    });
   }, []);
 
   const filteredHospedajes = useMemo(() => {

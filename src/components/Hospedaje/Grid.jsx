@@ -1,30 +1,18 @@
 const Grid = ({ locations, onLocationClick }) => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
-    {locations.map((location) => (
+    {locations.map(({ id, image, title, description, category }) => (
       <div
-        key={location.id}
-        onClick={() => onLocationClick(location.id)}
-        className="group bg-white dark:bg-slate-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
+        key={id}
+        onClick={() => onLocationClick(id)}
+        className="cursor-pointer bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-xl transition overflow-hidden group"
       >
         <div className="relative w-full pb-[56.25%]">
-          <img
-            src={location.image}
-            alt={location.title}
-            className="absolute top-0 left-0 w-full h-full object-cover transform transition-transform duration-300 ease-in-out group-hover:scale-105"
-          />
+          <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
         </div>
-        <div className="p-5 space-y-3">
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white">
-            {location.title}
-          </h3>
-          <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2">
-            {location.description}
-          </p>
-          <div className="flex items-center">
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              {location.category}
-            </span>
-          </div>
+        <div className="p-5 space-y-2">
+          <h3 className="text-xl font-semibold text-gray-800 dark:text-white">{title}</h3>
+          <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{description}</p>
+          <span className="text-sm text-gray-500 dark:text-gray-400">{category}</span>
         </div>
       </div>
     ))}

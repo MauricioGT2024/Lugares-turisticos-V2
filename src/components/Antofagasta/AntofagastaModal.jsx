@@ -9,7 +9,7 @@ const modalVariants = {
   exit: { opacity: 0, scale: 0.95, transition: { duration: 0.2 } },
 };
 
-const FiambalaModal = ({ isOpen, onClose, location }) => {
+const AntofagastaModal = ({ isOpen, onClose, location }) => {
   if (!location) return null;
 
   return (
@@ -52,10 +52,10 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
                   {/* Izquierda: título + badge */}
                   <div className="md:w-1/2 space-y-1 flex flex-col justify-center items-center">
                     <Dialog.Title className="text-xl font-semibold text-gray-800 dark:text-white">
-                      {location.name}
+                      {location.title}
                     </Dialog.Title>
                     <span className="inline-block px-2 py-1 text-xs font-medium text-white bg-purple-600/90 rounded w-16 self-center text-center m-40">
-                      {location.category}
+                      {location.lugar}
                     </span>
                   </div>
 
@@ -63,7 +63,7 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
                   <div className="md:w-1/2">
                     <img
                       src={location.imgSrc}
-                      alt={location.name}
+                      alt={location.title}
                       className="w-full h-48 md:h-64 object-cover rounded"
                     />
                   </div>
@@ -81,7 +81,7 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
                   {/* Mapa */}
                   <div className="md:w-1/2 h-64">
                     <iframe
-                      src={location.iframe}
+                      src={location.mapSrc}
                       width="100%"
                       height="100%"
                       style={{ border: 0 }}
@@ -89,7 +89,7 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
                       className="rounded"
-                      name={`Mapa de ${location.name}`}
+                      name={`Mapa de ${location.title}`}
                     ></iframe>
                   </div>
                 </div>
@@ -97,9 +97,9 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
                 {/* FOOTER */}
                 <div className="flex justify-between items-center px-6 py-4 border-t dark:border-gray-700">
                   <div className="flex space-x-6">
-                    {location.wiki && (
+                    {location.path && (
                       <a
-                        href={location.wiki}
+                        href={location.path}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center space-x-1 text-blue-600 dark:text-blue-400 hover:underline"
@@ -137,4 +137,4 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
   );
 };
 
-export default FiambalaModal;
+export default AntofagastaModal;

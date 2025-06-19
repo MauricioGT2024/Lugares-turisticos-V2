@@ -14,71 +14,32 @@ const Catamarca = () => {
   const { colorMode } = useTheme();
   const isDark = colorMode === "dark";
 
-  // Extraer áreas únicas desde los datos
-  const areas = useMemo(() => {
-    const uniqueAreas = new Set(locations.map((loc) => loc.area));
-    return [...Array.from(uniqueAreas).sort()];
-  }, []);
+  // Áreas únicas
+  const areas = useMemo(() => [...new Set(locations.map((loc) => loc.area))].sort(), []);
 
-  // Filtrar lugares según el área seleccionada
-  const filteredLocations = useMemo(() => {
-    return selectedArea === "Todos"
-      ? locations
-      : locations.filter((loc) => loc.area === selectedArea);
-  }, [selectedArea]);
+  // Filtrar lugares
+  const filteredLocations = useMemo(() => 
+    selectedArea === "Todos" ? locations : locations.filter((loc) => loc.area === selectedArea), 
+    [selectedArea]
+  );
 
-  // Abrir modal con lugar por ID
-  const openModal = useCallback((id) => {
-    const found = locations.find((loc) => loc.id === id);
-    if (found) setSelectedLocation(found);
-  }, []);
-
-  // Cerrar modal
-  const closeModal = useCallback(() => {
-    setSelectedLocation(null);
-  }, []);
+  // Manejar el modal
+  const openModal = useCallback(id => setSelectedLocation(locations.find((loc) => loc.id === id)), []);
+  const closeModal = useCallback(() => setSelectedLocation(null), []);
 
   return (
     <LayoutGroup>
-      <main
-        className="min-h-screen py-12 transition-colors duration-300 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-gradient-to-b from-gray-50 to-white"
-      >
+      <main className="min-h-screen py-12 transition-colors duration-300 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-gradient-to-b from-gray-50 to-white">
         <div className="container mx-auto max-w-7xl px-4">
           <div className="space-y-10">
-            <CatamarcaHero
-              badge="Capital Histórica"
-              title="San Fernando del Valle"
-              subtitle="Descubre los tesoros escondidos de la capital catamarqueña"
-              isDark={isDark}
-            />
-
-            <div aria-live="polite" className="sr-only">
-              {selectedArea === "Todos"
-                ? "Mostrando todas las áreas"
-                : `Área seleccionada: ${selectedArea}`}
-            </div>
-
-            <CatamarcaFilter
-              title="Áreas"
-              items={areas}
-              selected={selectedArea}
-              onSelect={setSelectedArea}
-              isDark={isDark}
-            />
-
-            <CatamarcaGrid
-              locations={filteredLocations}
-              onLocationClick={openModal}
-            />
+            <CatamarcaHero badge="Capital Histórica" title="San Fernando del Valle" subtitle="Descubre los tesoros escondidos de la capital catamarqueña" isDark={isDark} />
+            <div aria-live="polite" className="sr-only">{selectedArea === "Todos" ? "Mostrando todas las áreas" : `Área seleccionada: ${selectedArea}`}</div>
+            <CatamarcaFilter title="Áreas" items={areas} selected={selectedArea} onSelect={setSelectedArea} isDark={isDark} />
+            <CatamarcaGrid locations={filteredLocations} onLocationClick={openModal} />
           </div>
         </div>
 
-        {/* Modal dinámico */}
-        <CatamarcaModal
-          isOpen={!!selectedLocation}
-          onClose={closeModal}
-          location={selectedLocation}
-        />
+        <CatamarcaModal isOpen={!!selectedLocation} onClose={closeModal} location={selectedLocation} />
       </main>
     </LayoutGroup>
   );
