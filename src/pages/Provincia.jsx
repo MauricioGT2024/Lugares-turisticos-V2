@@ -19,7 +19,7 @@ const fadeInUp = {
 export default function Provincia() {
   return (
     <main className="min-h-screen bg-white dark:bg-gray-900 py-16 px-4 sm:px-6 lg:px-8">
-      <section className="max-w-7xl mx-auto">
+      <section className="container mx-auto">
         <motion.header
           initial="hidden"
           animate="visible"
@@ -40,10 +40,10 @@ export default function Provincia() {
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
           variants={staggerContainer}
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
         >
           {departamentos.map((loc) => (
-            <motion.div key={loc.id} variants={fadeInUp}>
+            <motion.div key={String(loc.id)} variants={fadeInUp}>
               <DepartamentoCard loc={loc} />
             </motion.div>
           ))}

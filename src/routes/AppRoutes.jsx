@@ -16,7 +16,6 @@ const LazyProvincia = lazy(() => import("../pages/Provincia"));
 const LazyCatamarca = lazy(() => import("../pages/Catamarca"));
 const LazyHospedaje = lazy(() => import("../pages/Hospedaje"));
 const LazyFiambala = lazy(() => import("../pages/Fiambala"));
-const LazyDepartamento = lazy(() => import("../pages/Departamento"));
 
 const pageTransition = {
   initial: {
@@ -132,14 +131,6 @@ function AppRoutes() {
               element={
                 <motion.div {...pageTransition}>
                   <Error404 />
-                </motion.div>
-              }
-            />
-            <Route
-              path="/departamento/:nombre"
-              element={
-                <motion.div {...pageTransition}>
-                  <LazyDepartamento />
                 </motion.div>
               }
             />

@@ -12,7 +12,7 @@ const FiambalaGrid = ({ locations, onLocationClick }) => {
       {locations.map((location) => (
         <motion.div
           key={location.id}
-          layout
+          layoutId={location.id} // Added layoutId for smoother transitions
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}

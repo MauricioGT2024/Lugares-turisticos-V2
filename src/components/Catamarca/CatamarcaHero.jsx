@@ -1,88 +1,74 @@
 import { motion } from "framer-motion";
+import React from "react";
 
 const fadeUpVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
 };
 
-const scaleFadeVariants = {
-  hidden: { scale: 0, opacity: 0 },
-  visible: { scale: 1, opacity: 1 },
-};
-
-const CatamarcaHero = ({ badge, title, subtitle, isDark }) => {
+const CatamarcaHero = ({ badge, title, subtitle, isDark = false }) => {
+  // Gradientes con colores RGBA para mejor soporte cross-browser
   const gradientClass = isDark
-    ? "bg-gradient-to-r from-blue-700/80 via-blue-600/70 to-transparent"
-    : "bg-gradient-to-r from-blue-900/90 via-blue-800/80 to-transparent";
+    ? "bg-gradient-to-r from-[rgba(10,10,10,0.8)] via-[rgba(10,10,10,0.6)] to-transparent"
+    : "bg-gradient-to-r from-[rgba(0,31,63,0.8)] via-[rgba(0,51,102,0.4)] to-transparent";
 
   return (
     <section
-      className="relative overflow-hidden rounded-2xl"
-      aria-label="Hero section"
+      className="relative h-[550px] md:h-[650px] lg:h-[750px] rounded-3xl overflow-hidden shadow-2xl flex items-center justify-center text-center"
+      aria-label="Hero de Catamarca"
+      role="region"
     >
-      {/* Background image with gradient overlay */}
-      <div className="absolute inset-0" aria-hidden="true">
+      {/* Imagen de fondo */}
+      <div className="absolute inset-0">
         <img
           src="/hero-catamarca.webp"
-          alt="San Fernando del Valle de Catamarca"
-          className="w-full h-full object-cover"
+          alt="Vista panorámica de Catamarca"
+          className="w-full h-full object-cover object-center brightness-75"
           loading="lazy"
         />
-        <div className={`absolute inset-0 ${gradientClass}`} />
+        {/* Overlay con gradiente */}
+        <div className={`absolute inset-0 ${gradientClass} pointer-events-none`} />
       </div>
 
-      {/* Content container */}
-      <div className="relative py-20 px-6 md:px-12 lg:px-16 max-w-7xl mx-auto">
+      {/* Contenido */}
+      <motion.div
+        className="relative z-10 px-6 md:px-12 lg:px-16 max-w-5xl mx-auto flex flex-col items-center justify-center text-white"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: {},
+          visible: {
+            transition: {
+              staggerChildren: 0.2,
+            },
+          },
+        }}
+      >
         <motion.span
+          className="inline-block px-6 py-2 rounded-full bg-white/20 text-white text-sm md:text-base font-semibold mb-4 uppercase tracking-wide backdrop-blur-md shadow-lg border border-white/30"
           variants={fadeUpVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.6 }}
-          className="inline-block px-4 py-1.5 rounded-full bg-blue-100 text-blue-800 text-sm font-medium mb-4"
         >
           {badge}
         </motion.span>
 
         <motion.h1
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 leading-tight drop-shadow-lg"
           variants={fadeUpVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 max-w-4xl"
+          transition={{ delay: 0.15 }}
         >
           {title}
         </motion.h1>
 
         <motion.p
+          className="text-lg md:text-xl lg:text-2xl max-w-3xl opacity-90 drop-shadow-md"
           variants={fadeUpVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-lg md:text-xl text-blue-50 max-w-2xl"
+          transition={{ delay: 0.3 }}
         >
           {subtitle}
         </motion.p>
-      </div>
-
-      {/* Decorative circles */}
-      <motion.div
-        variants={scaleFadeVariants}
-        initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.8, delay: 0.6 }}
-        className="absolute top-0 right-0 -mt-12 -mr-12 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"
-        aria-hidden="true"
-      />
-      <motion.div
-        variants={scaleFadeVariants}
-        initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.8, delay: 0.8 }}
-        className="absolute bottom-0 left-1/2 -mb-24 w-96 h-96 bg-indigo-400/20 rounded-full blur-3xl pointer-events-none"
-        aria-hidden="true"
-      />
+      </motion.div>
     </section>
   );
 };
 
-export default CatamarcaHero;
+export default React.memo(CatamarcaHero);

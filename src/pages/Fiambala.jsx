@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTheme } from "../context/ThemeContext";
 import { locations } from "../data/fiambala";
 import FiambalaHero from "../components/Fiambala/FiambalaHero";
@@ -14,8 +14,12 @@ const Fiambala = () => {
   const [selected, setSelected] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const categories = [...new Set(locations.map(({ category }) => category))];
-  const filtered = category === "Todos" ? locations : locations.filter(({ category: c }) => c === category);
+  const categories = useMemo(() => [...new Set(locations.map(({ category }) => category))], [locations]);
+  const filtered = useMemo(() => {
+    return category === "Todos"
+      ? locations
+      : locations.filter(({ category: c }) => c === category);
+  }, [category, locations]);
 
   const openModal = (id) => {
     const loc = locations.find(({ id: locId }) => locId === id);
@@ -34,7 +38,12 @@ const Fiambala = () => {
     <main className="min-h-screen py-12 transition-colors dark:bg-gray-900 bg-white">
       <div className="container mx-auto max-w-7xl px-4 md:px-8 space-y-10">
         <FiambalaHero badge="Explora Fiambalá" title="Fiambalá" subtitle="Donde el desierto se encuentra con las termas..." isDark={isDark} />
-        <FiambalaFilter title="Categorías" items={categories} selected={category} onSelect={setCategory} />
+        <FiambalaFilter
+          title="Categorías"
+          items={categories}
+          selected={category}
+          onSelect={setCategory}
+        />
         <FiambalaGrid locations={filtered} onLocationClick={openModal} />
       </div>
 
