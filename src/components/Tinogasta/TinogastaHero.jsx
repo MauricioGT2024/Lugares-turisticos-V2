@@ -25,7 +25,7 @@ const TinogastaHero = ({ badge, title, subtitle }) => {
         transition={{ duration: 1.5, ease: "easeOut" }}
       >
         <img
-          src="/public/img/Tinogasta/Capital.webp"
+          src="/img/Tinogasta/Capital.webp"
           alt="Panorámica de Tinogasta, con paisajes desérticos y montañas"
           className="w-full h-full object-cover object-center brightness-[0.7]"
           loading="eager"
