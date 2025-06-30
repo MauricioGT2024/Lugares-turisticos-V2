@@ -45,16 +45,22 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="w-full max-w-5xl transform overflow-hidden rounded-xl bg-white dark:bg-gray-900 shadow-xl transition-all"
+                className="w-full max-w-4xl transform overflow-hidden rounded-xl bg-white dark:bg-gray-900 shadow-xl transition-all"
               >
                 {/* HEADER */}
                 <div className="flex flex-col md:flex-row p-6 gap-6 border-b dark:border-gray-700 items-center">
                   {/* Izquierda: título + badge */}
                   <div className="md:w-1/2 space-y-1 flex flex-col justify-center items-center">
-                    <Dialog.Title className="text-xl font-semibold text-gray-800 dark:text-white">
+                    <Dialog.Title
+                      className="text-xl font-semibold text-gray-800 dark:text-white"
+                      id="modal-title"
+                    >
                       {location.title}
                     </Dialog.Title>
-                    <span className="inline-block px-2 py-1 text-xs font-medium text-white bg-orange-500/90 dark:bg-orange-600/90   rounded w-16 self-center text-center m-40">
+                    <span
+                      className="inline-block px-2 py-1 text-xs font-medium text-white bg-orange-500/90 dark:bg-orange-600/90 rounded-lg shadow-md w-32 text-center"
+                      id="location-category"
+                    >
                       {location.category}
                     </span>
                   </div>
@@ -64,7 +70,7 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
                     <img
                       src={location.imgSrc}
                       alt={location.title}
-                      className="w-full h-48 md:h-64 object-cover rounded"
+                      className="w-full h-48 md:h-64 object-cover rounded-xl"
                     />
                   </div>
                 </div>
@@ -86,7 +92,7 @@ const FiambalaModal = ({ isOpen, onClose, location }) => {
                       allowFullScreen=""
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      className="rounded"
+                      className="rounded-xl"
                       title={`Mapa de ${location.title}`}
                     ></iframe>
                   </div>

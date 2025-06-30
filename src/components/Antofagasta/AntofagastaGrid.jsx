@@ -6,22 +6,22 @@ const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.15 }
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 50, scale: 0.8 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 120, damping: 14 } }
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring", stiffness: 150, damping: 18 } }
 };
 
 const AntofagastaGrid = ({ locations, onLocationClick }) => {
   if (!locations || locations.length === 0) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center py-10 text-gray-600 dark:text-gray-400 text-xl font-medium"
+        className="text-center py-8 text-gray-500 dark:text-gray-400 text-lg font-normal"
       >
         Lo sentimos, no hay lugares disponibles en esta categoría.
       </motion.div>
@@ -31,12 +31,12 @@ const AntofagastaGrid = ({ locations, onLocationClick }) => {
   return (
     <motion.section
       aria-label="Listado de ubicaciones turísticas"
-      className="my-10"
+      className="my-8"
       variants={containerVariants}
       initial="hidden"
       animate="show"
     >
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 lg:gap-9">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
         <AnimatePresence>
           {locations.map(location => (
             <motion.div

@@ -8,9 +8,9 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
   if (!location) return null;
 
   const modalVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.9 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: "easeOut" } },
-    exit: { opacity: 0, y: 50, scale: 0.9, transition: { duration: 0.3, ease: "easeIn" } },
+    hidden: { opacity: 0, y: 30, scale: 0.98 },
+    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.3, ease: "easeOut" } },
+    exit: { opacity: 0, y: 30, scale: 0.98, transition: { duration: 0.2, ease: "easeIn" } },
   };
 
   return (
@@ -26,7 +26,7 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-sm transition-opacity" aria-hidden="true" />
+          <div className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm transition-opacity" aria-hidden="true" />
         </Transition.Child>
 
         {/* Modal Container */}
@@ -46,46 +46,47 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="w-full max-w-3xl lg:max-w-4xl transform rounded-3xl bg-white dark:bg-gray-900 shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700"
+                className="relative w-full max-w-3xl lg:max-w-4xl transform rounded-2xl bg-white dark:bg-gray-800 shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 dark:border-gray-700"
               >
-                {/* Header with Image */}
+                {/* Close Button */}
+                <button
+                  onClick={onClose}
+                  className="absolute top-3 right-3 z-10 p-2.5 rounded-full bg-white/15 text-white hover:bg-white/25 backdrop-blur-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/60"
+                  aria-label="Cerrar modal"
+                >
+                  <XMarkIcon className="w-6 h-6" />
+                </button>
+
+                {/* Header with Image and Title */}
                 <div className="relative h-56 sm:h-64 md:h-72 lg:h-80 overflow-hidden">
                   <img
                     src={location.imgSrc}
                     alt={location.title}
-                    className="w-full h-full object-cover brightness-75"
+                    className="w-full h-full object-cover brightness-[0.75]"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" />
                   
-                  <div className="absolute bottom-0 left-0 p-6 sm:p-8 w-full text-white">
-                    <Dialog.Title className="text-3xl sm:text-4xl font-extrabold leading-tight drop-shadow-md">
+                  <div className="absolute bottom-0 left-0 p-5 sm:p-7 w-full text-white">
+                    <Dialog.Title className="text-2xl sm:text-3xl md:text-4xl font-extrabold leading-tight drop-shadow-sm">
                       {location.title}
                     </Dialog.Title>
-                    <span className="inline-flex items-center mt-2 px-4 py-1 text-sm font-semibold rounded-full bg-orange-600 text-white shadow-lg">
+                    <span className="inline-flex items-center mt-2 px-3 py-1 text-xs font-medium rounded-full bg-orange-500/80 text-white uppercase tracking-wide">
                       {location.lugar}
                     </span>
                   </div>
-
-                  <button
-                    onClick={onClose}
-                    className="absolute top-4 right-4 p-2 rounded-full bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
-                    aria-label="Cerrar modal"
-                  >
-                    <XMarkIcon className="w-7 h-7" />
-                  </button>
                 </div>
 
                 {/* Modal Content - Description and Map */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 sm:p-8">
                   {/* Description */}
-                  <div className="text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[300px] pr-2">
+                  <div className="text-gray-700 dark:text-gray-300 overflow-y-auto max-h-[300px] pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
                     <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">Acerca de {location.title}</h3>
                     <p className="text-base leading-relaxed whitespace-pre-wrap">{location.description}</p>
                   </div>
 
                   {/* Map */}
-                  <div className="rounded-xl overflow-hidden shadow-lg aspect-w-16 aspect-h-9 w-full h-64 md:h-auto border border-gray-200 dark:border-gray-700">
+                  <div className="rounded-lg overflow-hidden shadow-md aspect-w-16 aspect-h-9 w-full h-64 md:h-auto border border-gray-100 dark:border-gray-700">
                     <iframe
                       src={location.mapSrc}
                       width="100%"
@@ -94,23 +95,23 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
                       allowFullScreen=""
                       loading="lazy"
                       referrerPolicy="no-referrer-when-downgrade"
-                      className="rounded-xl"
+                      className="rounded-lg"
                       title={`Mapa de ${location.title}`}
                     ></iframe>
                   </div>
                 </div>
 
                 {/* Footer - Links */}
-                <div className="flex flex-wrap justify-center sm:justify-end items-center px-6 py-5 sm:p-8 border-t border-gray-200 dark:border-gray-800 gap-4">
+                <div className="flex flex-wrap justify-center sm:justify-end items-center px-6 py-5 sm:p-8 border-t border-gray-100 dark:border-gray-800 gap-3">
                   {location.path && (
                     <a
                       href={location.path}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-2 px-5 py-2 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 transition-colors duration-200 shadow-md transform hover:scale-105"
+                      className="inline-flex items-center space-x-2 px-5 py-2 bg-blue-500 text-white rounded-full text-sm font-medium hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 transition-colors duration-200 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
                       aria-label="Más información"
                     >
-                      <BookOpenIcon className="w-5 h-5" />
+                      <BookOpenIcon className="w-4 h-4" />
                       <span>Más Información</span>
                     </a>
                   )}
@@ -119,10 +120,10 @@ const AntofagastaModal = ({ isOpen, onClose, location }) => {
                       href={location.mapSrc}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center space-x-2 px-5 py-2 bg-green-600 text-white rounded-full text-sm font-medium hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 transition-colors duration-200 shadow-md transform hover:scale-105"
+                      className="inline-flex items-center space-x-2 px-5 py-2 bg-green-500 text-white rounded-full text-sm font-medium hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-500 transition-colors duration-200 shadow-sm focus:outline-none focus:ring-1 focus:ring-green-400"
                       aria-label="Ver en Google Maps"
                     >
-                      <MapPinIcon className="w-5 h-5" />
+                      <MapPinIcon className="w-4 h-4" />
                       <span>Ver en Mapa</span>
                     </a>
                   )}

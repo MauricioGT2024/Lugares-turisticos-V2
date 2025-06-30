@@ -1,67 +1,71 @@
 import { motion } from "framer-motion";
 import React from "react";
 
-const fadeUpVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0 },
+const textVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1, 
+      duration: 0.6,
+      ease: [0.25, 0.46, 0.45, 0.94], // Elegant ease-out cubic-bezier
+    },
+  }),
 };
 
 const AntofagastaHero = ({ badge, title, subtitle }) => {
   return (
-    <section
-      className="relative overflow-hidden rounded-3xl shadow-2xl transform transition-all duration-500 ease-in-out
-                 bg-gradient-to-br from-yellow-500 to-orange-600 dark:from-yellow-700 dark:to-orange-800"
-      aria-label="Hero section for Antofagasta"
-    >
-      {/* Optional: Background image with subtle overlay */}
-      <div className="absolute inset-0" aria-hidden="true">
+    <section className="relative h-[200px] md:h-[250px] lg:h-[400px] rounded-3xl overflow-hidden shadow-2xl flex items-center justify-center text-center group">
+      {/* Background Image with subtle parallax and enhanced overlay */}
+      <motion.div
+        className="absolute inset-0"
+        initial={{ scale: 1.08, opacity: 0.9 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1.8, ease: "easeOut" }}
+      >
         <img
-          src="/public/hero-catamarca.webp" // Assuming a generic hero image or replace with Antofagasta specific
-          alt="Landscape of Antofagasta de la Sierra"
-          className="w-full h-full object-cover opacity-20"
-          loading="lazy"
+          src="/img/Antofagasta-de-la-Sierra/Capital.webp"
+          alt="Panorámica de Antofagasta de la Sierra"
+          className="w-full h-full object-cover object-center brightness-[0.65] group-hover:brightness-[0.7] transition-all duration-500"
+          loading="eager"
         />
-        <div className="absolute inset-0 bg-black/10" />
-      </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" aria-hidden="true" />
+      </motion.div>
 
-      {/* Content container */}
-      <div className="relative z-10 py-20 px-6 md:py-28 md:px-12 lg:px-20 max-w-7xl mx-auto text-center text-white">
+      {/* Content */}
+      <div className="relative z-10 p-4 md:p-8 lg:p-12 text-white max-w-5xl mx-auto flex flex-col items-center justify-center">
         <motion.span
-          variants={fadeUpVariants}
+          className="inline-block px-4 py-1.5 rounded-full bg-white/25 text-white text-sm md:text-base font-semibold mb-3 uppercase tracking-wider backdrop-blur-sm shadow-xl border border-white/40"
+          variants={textVariants}
           initial="hidden"
           animate="visible"
-          transition={{ duration: 0.7, ease: "easeOut" }}
-          className="inline-block px-5 py-2 rounded-full bg-white/20 text-white text-sm font-semibold mb-5 uppercase tracking-wide backdrop-blur-sm shadow-md"
+          custom={0}
         >
           {badge}
         </motion.span>
-
         <motion.h1
-          variants={fadeUpVariants}
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-3 leading-tight drop-shadow-lg text-shadow-lg"
+          variants={textVariants}
           initial="hidden"
           animate="visible"
-          transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
-          className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight drop-shadow-lg"
+          custom={1}
         >
           {title}
         </motion.h1>
-
         <motion.p
-          variants={fadeUpVariants}
+          className="text-base md:text-lg lg:text-xl opacity-90 drop-shadow-md max-w-3xl mx-auto"
+          variants={textVariants}
           initial="hidden"
           animate="visible"
-          transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
-          className="text-lg md:text-xl max-w-3xl mx-auto opacity-90"
+          custom={2}
         >
           {subtitle}
         </motion.p>
       </div>
 
-      {/* Subtle decorative elements for depth */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-0 left-0 w-24 h-24 bg-white/10 rounded-full mix-blend-overlay transform -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/10 rounded-full mix-blend-overlay transform translate-x-1/2 translate-y-1/2" />
-      </div>
+      {/* Decorative line - subtle golden accent with hover effect */}
+      <div className="absolute bottom-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-400 to-amber-500 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out" />
     </section>
   );
 };

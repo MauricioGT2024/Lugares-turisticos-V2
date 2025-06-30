@@ -37,15 +37,15 @@ const Antofagasta = () => {
   };
 
   return (
-    <main className="min-h-screen py-12 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
-      <div className="container mx-auto px-4 md:px-8 max-w-7xl space-y-10">
+    <main className="min-h-screen py-16 bg-gradient-to-br from-gray-100 to-white dark:from-gray-900 dark:to-gray-950 transition-colors duration-500">
+      <div className="container mx-auto px-4 md:px-8 max-w-7xl space-y-12">
         <AntofagastaHero
           badge="Puna de Atacama"
           title="Antofagasta de la Sierra"
           subtitle="Donde el desierto de altura se encuentra con volcanes milenarios y salares brillantes"
         />
         <AntofagastaFilter
-          title="Categorías"
+          title="Explora por Categoría"
           items={categories}
           selected={categoryFilter}
           onSelect={changeCategory}
