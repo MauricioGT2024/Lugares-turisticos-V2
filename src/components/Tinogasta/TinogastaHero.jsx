@@ -30,7 +30,7 @@ const TinogastaHero = ({ badge, title, subtitle }) => {
           className="w-full h-full object-cover object-center brightness-[0.7]"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent" aria-hidden="true" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/30 to-transparent" aria-hidden="true" />
       </motion.div>
 
       {/* Content */}
@@ -65,7 +65,7 @@ const TinogastaHero = ({ badge, title, subtitle }) => {
       </div>
 
       {/* Decorative line - subtle golden accent */}
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-amber-600" />
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-linear-to-r from-yellow-500 to-amber-600" />
     </section>
   );
 };

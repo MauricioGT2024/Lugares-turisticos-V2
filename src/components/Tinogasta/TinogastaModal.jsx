@@ -71,7 +71,7 @@ const TinogastaModal = ({ isOpen, onClose, location }) => {
                   alt={location.name}
                   className="w-full h-full object-cover object-center"
                 />
-                <div className="absolute bottom-0 left-0 p-5 text-white w-full bg-gradient-to-t from-black/60 to-transparent">
+                <div className="absolute bottom-0 left-0 p-5 text-white w-full bg-linear-to-t from-black/60 to-transparent">
                   <h2 className="text-2xl font-bold leading-tight drop-shadow-md">
                     {location.name}
                   </h2>

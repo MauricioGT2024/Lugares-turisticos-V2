@@ -37,7 +37,7 @@ const Antofagasta = () => {
   };
 
   return (
-    <main className="min-h-screen py-16 bg-gradient-to-br from-gray-100 to-white dark:from-gray-900 dark:to-gray-950 transition-colors duration-500">
+    <main className="min-h-screen py-16 bg-linear-to-br from-gray-100 to-white dark:from-gray-900 dark:to-gray-950 transition-colors duration-500">
       <div className="container mx-auto px-4 md:px-8 max-w-7xl space-y-12">
         <AntofagastaHero
           badge="Puna de Atacama"

@@ -15,7 +15,7 @@ const SplashScreen = ({ onComplete }) => {
       onAnimationComplete={onComplete}
     >
       {/* Background según tema */}
-      <div className="absolute inset-0 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800  bg-gradient-to-b from-white to-gray-100 " />
+      <div className="absolute inset-0 dark:bg-linear-to-b dark:from-gray-900 dark:to-gray-800  bg-linear-to-b from-white to-gray-100 " />
 
       {/* Contenedor del logo y texto */}
       <motion.div

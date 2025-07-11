@@ -1,49 +1,58 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-}
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Base styles */
-body {
-  background-color: white;
-  color: #111827;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Dark mode styles */
-.dark body {
-  background-color: #111827;
-  color: #f3f4f6;
-}
-
-/* Dark mode transitions */
-* {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-}
-
-/* Mejoras de accesibilidad */
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
 @layer base {
-  :focus-visible {
-    @apply outline-2 outline-offset-2 outline-teal-500;
-  }
-  
-  .dark :focus-visible {
-    @apply outline-teal-400;
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
   }
 }
 
+@layer utilities {
+  :root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
+  :root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Base styles */
+  body {
+    background-color: white;
+    color: #111827;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Dark mode styles */
+  .dark body {
+    background-color: #111827;
+    color: #f3f4f6;
+  }
+
+  /* Dark mode transitions */
+  * {
+    transition: background-color 0.3s ease, border-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  /* Mejoras de accesibilidad */
+}

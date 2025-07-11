@@ -30,7 +30,7 @@ const AntofagastaHero = ({ badge, title, subtitle }) => {
           className="w-full h-full object-cover object-center brightness-[0.65] group-hover:brightness-[0.7] transition-all duration-500"
           loading="eager"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" aria-hidden="true" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/40 to-transparent" aria-hidden="true" />
       </motion.div>
 
       {/* Content */}
@@ -65,7 +65,7 @@ const AntofagastaHero = ({ badge, title, subtitle }) => {
       </div>
 
       {/* Decorative line - subtle golden accent with hover effect */}
-      <div className="absolute bottom-0 left-0 w-full h-1.5 bg-gradient-to-r from-yellow-400 to-amber-500 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out" />
+      <div className="absolute bottom-0 left-0 w-full h-1.5 bg-linear-to-r from-yellow-400 to-amber-500 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-500 ease-out" />
     </section>
   );
 };

@@ -39,7 +39,7 @@ const About = () => {
     <main className="bg-white dark:bg-gray-900 min-h-screen py-16 px-4 sm:px-6 lg:px-8">
       <section className="max-w-7xl mx-auto text-center">
         <motion.h1
-          className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-blue-500"
+          className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-linear-to-r from-teal-400 to-blue-500"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}

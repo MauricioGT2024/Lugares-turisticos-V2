@@ -18,7 +18,7 @@ const fadeInUp = {
 
 export default function Provincia() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-800 py-16 px-4 sm:px-6 lg:px-8">
+    <main className="min-h-screen bg-linear-to-br from-gray-50 to-gray-200 dark:from-gray-900 dark:to-gray-800 py-16 px-4 sm:px-6 lg:px-8">
       <section className="container mx-auto">
         <motion.header
           initial="hidden"

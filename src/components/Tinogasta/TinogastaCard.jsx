@@ -37,7 +37,7 @@ const TinogastaCard = ({ location, onClick }) =>
         />
         {location.category && (
           <span className="absolute top-3 left-3 px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide 
-                           bg-gradient-to-r from-amber-400 to-yellow-500 text-yellow-900 
+                           bg-linear-to-r from-amber-400 to-yellow-500 text-yellow-900 
                            dark:from-yellow-600 dark:to-orange-700 dark:text-white 
                            shadow-sm backdrop-blur-sm">
             {location.category}

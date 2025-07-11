@@ -13,6 +13,7 @@
     "@headlessui/react": "^2.2.4",
     "@heroicons/react": "^2.2.0",
     "@material-tailwind/react": "^2.1.10",
+    "@tailwindcss/vite": "^4.1.11",
     "flowbite": "^3.1.2",
     "flowbite-react": "^0.11.8",
     "framer-motion": "^11.0.5",
@@ -35,7 +36,7 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "globals": "^15.15.0",
     "postcss": "^8.4.35",
-    "tailwindcss": "^3.4.1",
+    "tailwindcss": "^4.1.11",
     "vite": "^6.3.5"
   }
 }

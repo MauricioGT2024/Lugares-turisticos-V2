@@ -42,7 +42,7 @@ const Tinogasta = () => {
   };
 
   return (
-    <main className="min-h-screen py-12 px-4 md:px-8 transition-colors duration-300 bg-gradient-to-b from-gray-50 to-white text-gray-800 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 dark:text-white ">
+    <main className="min-h-screen py-12 px-4 md:px-8 transition-colors duration-300 bg-linear-to-b from-gray-50 to-white text-gray-800 dark:bg-linear-to-b dark:from-gray-900 dark:to-gray-800 dark:text-white ">
       <div className="max-w-7xl mx-auto space-y-16">
         <TinogastaHero
           badge="Capital del Oeste"

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 
 const LoadingSpinner = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-full dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-gradient-to-b from-white to-gray-100">
+    <div className="flex flex-col items-center justify-center h-screen w-full dark:bg-linear-to-b dark:from-gray-900 dark:to-gray-800 bg-linear-to-b from-white to-gray-100">
       <motion.div
         animate={{ rotate: 360 }}
         transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}

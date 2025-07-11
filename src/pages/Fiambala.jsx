@@ -54,7 +54,7 @@ const Fiambala = () => {
 
   return (
     <LayoutGroup>
-      <main className="min-h-screen py-12 transition-colors duration-300 dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-800 bg-gradient-to-b from-gray-50 to-white">
+      <main className="min-h-screen py-12 transition-colors duration-300 dark:bg-linear-to-b dark:from-gray-900 dark:to-gray-800 bg-linear-to-b from-gray-50 to-white">
         <motion.div
           className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
           variants={containerVariants}

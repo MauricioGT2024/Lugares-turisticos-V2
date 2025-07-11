@@ -33,7 +33,7 @@ const AntofagastaCard = ({ item: { title, categoria, imgSrc, id }, onClick }) =>
         loading="lazy"
         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-103 brightness-95"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent" />
       <div className="absolute top-3 right-3">
         <span className="inline-flex items-center px-2.5 py-0.5 text-xs font-medium rounded-full bg-blue-500/80 text-white uppercase tracking-tight">
           {categoria}
@@ -67,7 +67,7 @@ const AntofagastaCard = ({ item: { title, categoria, imgSrc, id }, onClick }) =>
       </div>
     </div>
 
-    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-400 to-indigo-500 origin-left scale-x-0 group-hover:scale-x-100 transform transition-transform duration-200 ease-out" />
+    <div className="absolute bottom-0 left-0 w-full h-0.5 bg-linear-to-r from-blue-400 to-indigo-500 origin-left scale-x-0 group-hover:scale-x-100 transform transition-transform duration-200 ease-out" />
   </motion.article>
 );
 

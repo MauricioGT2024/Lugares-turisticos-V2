@@ -7,7 +7,7 @@ const FiambalaFilter = ({ title, items, selected, onSelect, isDark }) => {
     "px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-in-out transform focus:outline-none focus:ring-2 focus:ring-offset-2";
 
   const activeButtonClasses =
-    "bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg focus:ring-orange-400";
+    "bg-linear-to-r from-orange-500 to-red-600 text-white shadow-lg focus:ring-orange-400";
 
   const darkButtonClasses =
     "bg-gray-700 text-gray-200 hover:bg-gray-600 border border-gray-600 focus:ring-gray-500 hover:shadow-md";

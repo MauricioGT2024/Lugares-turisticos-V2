@@ -21,7 +21,7 @@ const TinogastaFilter = ({ title, items, selected, onSelect }) => {
                   transition-all duration-300 transform
                   ${
                     selected === item
-                      ? "bg-gradient-to-r from-yellow-500 to-amber-600 text-white shadow-lg ring-2 ring-yellow-400 dark:ring-amber-500"
+                      ? "bg-linear-to-r from-yellow-500 to-amber-600 text-white shadow-lg ring-2 ring-yellow-400 dark:ring-amber-500"
                       : "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
                   }
                 `}

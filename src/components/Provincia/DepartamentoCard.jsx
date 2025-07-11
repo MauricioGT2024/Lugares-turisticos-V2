@@ -29,7 +29,7 @@ const DepartamentoCard = memo(function DepartamentoCard({ loc }) {
             className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
           
           <span className="absolute bottom-4 left-4 text-sm font-semibold px-3 py-1 rounded-full bg-blue-500 text-white shadow-md">
             {loc.description}

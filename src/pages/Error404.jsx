@@ -28,7 +28,7 @@ const Error404 = () => {
         </motion.div>
 
         <motion.h1
-          className="text-8xl font-bold bg-gradient-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent"
+          className="text-8xl font-bold bg-linear-to-r from-teal-400 to-blue-500 bg-clip-text text-transparent"
           initial={{ scale: 0.5 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.5 }}
@@ -49,7 +49,7 @@ const Error404 = () => {
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Link
             to="/"
-            className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-white shadow-lg transition-all duration-300 transform hover:-translate-y-1 bg-gradient-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700"
+            className="inline-flex items-center px-6 py-3 rounded-lg font-medium text-white shadow-lg transition-all duration-300 transform hover:-translate-y-1 bg-linear-to-r from-teal-500 to-blue-600 hover:from-teal-600 hover:to-blue-700"
           >
             <FaHome className="mr-2 text-xl" />
             Volver al inicio

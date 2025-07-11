@@ -36,7 +36,7 @@ const FiambalaHero = ({ badge, title, subtitle, isDark }) => {
           loading="lazy"
         />
         <div
-          className={`absolute inset-0 bg-gradient-to-t ${overlayColor}`}
+          className={`absolute inset-0 bg-linear-to-t ${overlayColor}`}
           aria-hidden="true"
         />
       </motion.div>
@@ -86,7 +86,7 @@ const FiambalaHero = ({ badge, title, subtitle, isDark }) => {
         >
           <Button
             color="orange"
-            className="bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-10 py-4 rounded-full text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-linear-to-br from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white px-10 py-4 rounded-full text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300"
             ripple={true}
             size="lg"
           >
@@ -96,7 +96,7 @@ const FiambalaHero = ({ badge, title, subtitle, isDark }) => {
       </div>
 
       {/* Línea decorativa inferior (opcional, mantener si se desea) */}
-      {/* <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-orange-400 to-red-500" /> */}
+      {/* <div className="absolute bottom-0 left-0 w-full h-2 bg-linear-to-r from-orange-400 to-red-500" /> */}
     </section>
   );
 };
